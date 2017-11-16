@@ -37,8 +37,9 @@ doing a group activity, or doing family friendly events.
 - react-dom 15.4.2
 - request 2.81.0
 - sequelize 4.22.6
-- mysql": 2.13.0
-- mysql2": 1.4.2
+- mysql: 2.13.0
+- mysql2: 1.4.2
+- yelp: 1.0.2
 
 ## Development
 
