@@ -16,3 +16,4 @@ app.get('/testYelp', function (req, res) {
   yelp.getYelpResults()
   res.send('GET request to the homepage')
 })
+
