@@ -8,8 +8,8 @@
     "node": ">=6.4.0"
   },
   "scripts": {
-    "start": "webpack",
-    "test": "nodemon ./src/index.js"
+    "start": "webpack -d --watch ",
+    "test": "nodemon ./server/index.js"
   },
   "dependencies": {
     "body-parser": "^1.17.0",
