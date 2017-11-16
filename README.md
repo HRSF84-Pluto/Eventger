@@ -25,7 +25,7 @@ doing a group activity, or doing family friendly events.
 
 ## Usage
 
-> Some usage instructions
+>'need to fill these in'
 
 ## Requirements
 
