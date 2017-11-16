@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "webpack -d --watch ",
-    "test": "nodemon ./server/index.js"
+    "server": "nodemon ./server/index.js"
   },
   "dependencies": {
     "body-parser": "^1.17.0",
