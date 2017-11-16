@@ -12,4 +12,3 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.listen(PORT, function () { console.log('Event-gers app listening on port 3000!') });
 
-
