@@ -4,12 +4,12 @@
 for the Greenfield Project. Our app is quick aggregator of local events
 with a minimalist touch. The app targets users who
 need event suggestions when they are going on a date,
-doing a group activity, or doing family friendly events. 
+doing a group activity, or doing family friendly events.
 
 ## Team
 
   - Begoña Guereca
-  - Sally Eng 
+  - Sally Eng
   - Briceida Mariscal
   - Garrett Hara
 
@@ -25,15 +25,20 @@ doing a group activity, or doing family friendly events.
 
 ## Usage
 
-> Some usage instructions
+>'need to fill these in'
 
 ## Requirements
 
-- Node 6.4.x
-- Redis 2.6.x
-- Postgresql 9.1.x
-- etc
-- etc
+- Node 6.4.0
+- body-parser 1.17.0
+- express  4.15.0
+- jquery 3.1.1
+- react 15.4.2
+- react-dom 15.4.2
+- request 2.81.0
+- sequelize 4.22.6
+- mysql": 2.13.0
+- mysql2": 1.4.2
 
 ## Development
 
@@ -42,9 +47,9 @@ doing a group activity, or doing family friendly events.
 From within the root directory:
 
 ```sh
-npm install -g bower
 npm install
-bower install
+npm start
+npm run server
 ```
 
 ### Roadmap
