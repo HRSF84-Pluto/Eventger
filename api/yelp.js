@@ -6,6 +6,7 @@ var Yelp = require('yelp');
 
 var getYelpResults = function(params, callback){
 
+
   var yelp = new Yelp({
     consumer_key: 'kOB5y3x9eCHEslUBmZ7MsQ',
     consumer_secret: 'D7eJ7E8MYfx-BBAcRmMRRmOulKk',
