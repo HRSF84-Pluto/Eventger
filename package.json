@@ -41,6 +41,7 @@
     "eslint-plugin-react": "^7.4.0",
     "nodemon": "^1.12.1",
     "webpack": "^2.2.1"
+
   },
   "babel": {
     "presets": [
