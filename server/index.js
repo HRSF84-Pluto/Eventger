@@ -11,7 +11,6 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../client/')));
 app.use(bodyParser.urlencoded({ extended: false }));
 
-
 app.get('/testYelp', function (req, res) {
   yelpAPI.getYelpResults()
   res.send('GET request to the homepage')
