@@ -45,6 +45,33 @@ When writing any block of code that is logically subordinate to the line immedia
     * use sublime's arrow collapsing as a guide. do the collapsing lines seem like they should be 'contained' by the line with an arrow on it?
 
 
+### ES6 Class Instantiation
+
+*Use ES6 to instantiate classes and subclasses
+
+    ```javascript
+    //good:
+    class Car {
+      constructor() {
+        this.gas = 1;
+      }
+
+      drive(){
+        this.gas = this.gas - 1; 
+      }
+    }
+
+    //bad
+    var Car = function() {
+      this.gas = 1;
+    }
+
+    Car.prototype.drive() {
+      this.gas = this.gas - 1;
+    }
+    ```
+
+
 ### Variable names
 
 * A single descriptive word is best.
