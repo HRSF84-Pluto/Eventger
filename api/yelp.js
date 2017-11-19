@@ -4,7 +4,8 @@ var Yelp = require('yelp');
 
 // See http://www.yelp.com/developers/documentation/v2/search_api
 
-var getYelpResults = function(){
+var getYelpResults = function(params, callback){
+
 
   var yelp = new Yelp({
     consumer_key: 'kOB5y3x9eCHEslUBmZ7MsQ',
@@ -15,12 +16,11 @@ var getYelpResults = function(){
 
   yelp.search({ term: 'food', location: 'Montreal' })
   .then(function (data) {
-    console.log(data);
-  })
-  .catch(function (err) {
-    console.error(err);
+    callback(data);
   });
-
+  // .catch(function (err) {
+  //   console.log(err);
+  // });
 }
 
 
