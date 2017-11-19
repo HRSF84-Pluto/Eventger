@@ -10,7 +10,8 @@
   },
   "scripts": {
     "react-dev": "webpack -d --watch ",
-    "start": "node ./server/index.js"
+    "start": "node ./server/index.js",
+    "test": "nodemon server/index.js"
   },
   "dependencies": {
     "body-parser": "^1.17.0",
