@@ -137,14 +137,14 @@ module.exports = Promise.promisifyAll(db);
 
 
 //-------------ASYNC TESTING ONLY WORKS IF INCLUDED AFTER EXPORT STATEMENT---------------------
-db.saveUsernameAsync({username: 'Jock', password: '', location: 'the BAY'})
-    .then(() => {
-      return db.findUsernameAsync('Jared')
-    }).then((data) => {
-        console.log('Mission Complete!', data)
-    }).catch((err) => {
-        console.log('Mission Failed!', err)
-    })
+// db.saveUsernameAsync({username: 'Jarvis', password: '', location: 'the BAY'})
+//     .then(() => {
+//       return db.findUsernameAsync('Mickey')
+//     }).then((data) => {
+//         console.log('Mission Complete!', data)
+//     }).catch((err) => {
+//         console.log('Mission Failed!', err)
+//     })
 
 
 //------------------------------------Sequelize Format-------------------------------------------
