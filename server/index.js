@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const path = require('path');
-const dataAgg = require('../api/dataAggregator.js');
+const fetchHelpers = require('../api/fetchHelpers.js');
 
 const PORT = process.env.PORT || 3000;
 
@@ -15,10 +15,44 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 //Pulling new data when params change
 app.get('/eventData', function (req, res) {
-   res.status(201).end();
-  dataAgg.finalResults('ADD PARAMS HERE', function(data) {
-    res.status(200).send(data);
-  });
+  console.log('inside get handler')
+  
+  // to test a sample req.body from front-end's get request
+  let testRequestBody = {
+    postalCode: '94134',
+    startDateTime: '2018-11-11T18:00:00Z',
+    endDateTime: '2018-11-12T03:00:00Z',
+    food: 'Thai',
+    location: 'San Francisco'
+  }
+
+  let returnedYelpTMDataArr = [];
+
+  // API helper call //
+
+  // fetch ticketmaster data
+  fetchHelpers.getTMData(testRequestBody)
+  .then(ticketMasterEventsArr => {
+
+    // include TM event data in the object sent back to front-end //
+    returnedYelpTMDataArr.push(ticketMasterEventsArr);
+    return;
+  })
+  .then(placeholder => {
+
+    // fetch Yelp data
+    fetchHelpers.getYelpData(testRequestBody)
+    .then(yelpEventsArr => {
+
+      // include Yelp event data in the object sent back to front-end //
+      returnedYelpTMDataArr.push(yelpEventsArr); 
+      return;    
+    })
+    .then(placeholder => {
+      res.status(201).send(returnedYelpTMDataArr);
+    })
+  })
+
 });
 
 
@@ -55,4 +89,4 @@ app.post('/login', function(req, res) {
 //   //res.send(answer)
 // })
 
-module.exports = app;
+

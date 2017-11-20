@@ -19,9 +19,10 @@ class App extends React.Component {
   componentDidMount(){
     $.ajax({
       type: 'GET',
-      url: '/testYelp',
+      url: '/eventData',
       success: (response)=> {
         console.log('Inside React componentDidMount')
+        console.log('returned from GET Request: ', response)
       },
       failure: (err)=> {
         console.err(err)
