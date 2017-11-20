@@ -5,6 +5,8 @@ const path = require('path');
 const fetchHelpers = require('../api/fetchHelpers.js');
 
 const PORT = process.env.PORT || 3000;
+const db = require('../db/db.js')
+
 
 
 app.listen(PORT, function () { console.log('Event-gers app listening on port 3000!') });
@@ -88,5 +90,4 @@ app.post('/login', function(req, res) {
 //     //they are not in our DB
 //   //res.send(answer)
 // })
-
 
