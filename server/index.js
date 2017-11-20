@@ -3,9 +3,10 @@ const app = express();
 const bodyParser = require('body-parser');
 const path = require('path');
 const fetchHelpers = require('../api/fetchHelpers.js');
+const db =  require('../db/db.js');
 
 const PORT = process.env.PORT || 3000;
-const db = require('../db/db.js')
+
 
 
 
@@ -60,13 +61,17 @@ app.get('/eventData', function (req, res) {
 
 //Add user to DB
 app.post('/signup', function(req, res) {
-  //req.body.userName
   // check DB if user exisits
-    //If YES, then send back message that says
-    //the user is already signed up
-    //If NO, then add the user to DB
-  //res.send(answer)
-})
+  db.findUsernameAsync('req.body.username')
+    .then((userObj) => {
+  //save user
+  db.saveUsernameAsync(req.body)
+    .then((results) => res.send('User Added'))
+    //will send message if already in DB
+    .catch((err)=> res.send('User already in DB'))
+  })
+});
+
 
 
 //Check to see if user is in DB, and return saved results
