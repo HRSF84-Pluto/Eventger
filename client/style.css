@@ -1,0 +1,176 @@
+@import url('https://fonts.googleapis.com/css?family=Francois+One|PT+Serif:400,400i,700,700i');
+body{
+  height:100%;
+  margin:0;
+  padding:0;
+}
+.main {
+  font-family: 'PT Serif', sans-serif;
+  margin: 0;
+  min-height: 730px;
+  width: 100%;
+  color: #fafafa;
+  font-size: 1.1em;
+  background-size: 100%;
+  background: url('https://s3-media2.fl.yelpcdn.com/assets/srv0/yelp_large_assets/af415bdd2cda/assets/img/home/hero_photos/uq7E1Tf9g8IxXLSO9cMDOw.jpg') repeat;
+}
+
+@media only screen and (max-width: 1000px) {
+  .main {
+    height: 1000px;
+    width: 1000px;
+    background: url('https://s3-media2.fl.yelpcdn.com/assets/srv0/yelp_large_assets/af415bdd2cda/assets/img/home/hero_photos/uq7E1Tf9g8IxXLSO9cMDOw.jpg') repeat;
+  }
+}
+
+.signUpForm{
+  margin-top: 40px;
+  margin-left: 500px;
+  margin-right: 500px;
+}
+.logInForm{
+  margin-top: 40px;
+  margin-left: 500px;
+  margin-right: 500px;
+}
+
+.close {
+  position: absolute;
+  right: 32px;
+  top: 32px;
+  width: 32px;
+  height: 32px;
+  opacity: 0.3;
+}
+.close:hover {
+  opacity: 1;
+}
+.close:before, .close:after {
+  position: absolute;
+  left: 15px;
+  content: ' ';
+  height: 33px;
+  width: 2px;
+  background-color: #333;
+}
+.close:before {
+  transform: rotate(45deg);
+}
+.close:after {
+  transform: rotate(-45deg);
+}
+
+.selectionBox{
+  width: 50%;
+  height: 500px;
+}
+
+.allBoxes{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+h1{
+  text-align: center;
+  color: #5e5f6a;
+  font-family: sans-serif;
+}
+.loginButtons{
+  display: flex;
+  flex-direction: row;
+  height: 50px;
+  padding: 20px;
+  margin-left: 80%;
+}
+
+.signup-btn{
+  margin-left: 50px;
+}
+.login-btn{
+  margin-left: 50px;
+}
+
+.signup-btn:hover{
+  border-bottom: 2px solid currentColor;
+  display: inline-block;
+  line-height: 0.85;
+}
+
+.login-btn:hover{
+  border-bottom: 2px solid currentColor;
+  display: inline-block;
+  line-height: 0.85;
+}
+
+.dateNight-btn{
+  height: 21vw;
+  width: 21vw;
+  background-color: white;
+  background-size: 400px 400px;
+  margin-left:100px;
+  margin-top: 50px;
+  border: none;
+  transition: all .5s ease-in-out;
+}
+
+.groupEvents-btn{
+  height: 21vw;
+  width: 21vw;
+  background-color: white;
+  margin-left:100px;
+  margin-top: 50px;
+  transition: all .5s ease-in-out;
+}
+
+.family-btn{
+  height: 21vw;
+  width: 21vw;
+  background-color: white;
+  margin-left:100px;
+  margin-top: 50px;
+  transition: all .5s ease-in-out;
+}
+
+.family-btn:hover{
+  opacity: 0.8;
+  transition: width 0.5s ease;
+  transform: scale(1.1);
+}
+
+.groupEvents-btn:hover{
+  opacity: 0.8;
+  transition: width 0.5s ease;
+  transform: scale(1.1);
+}
+.dateNight-btn:hover{
+  opacity: 0.8;
+  transition: width 0.5s ease;
+  transform: scale(1.1);
+}
+
+.signUpPage{
+  margin-top: 20px;
+  background-color: #ffffff;
+  height:900px;
+}
+
+.loginPage{
+  margin-top: 20px;
+  background-color: #ffffff;
+  height:900px;
+}
+
+h3{
+  color: black;
+  text-align: center;
+}
+
+
+.input{
+  margin: auto;
+  margin-left: 30%;
+  width: 40%;
+}
+
