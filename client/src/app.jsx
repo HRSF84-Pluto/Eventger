@@ -20,12 +20,14 @@ class App extends React.Component {
 
 
   componentDidMount(){
+    var dataSign = {username: 'begona', password:'', location: 'nowhere'}
+    //dataSign = JSON.stringify(dataSign);
     $.ajax({
-      type: 'GET',
-      url: '/eventData',
+      type: 'POST',
+      url: '/signup',
+      data: dataSign,
       success: (response)=> {
-        console.log('Inside React componentDidMount')
-        console.log('returned from GET Request: ', response)
+        console.log('returned from POST Request: ', response)
       },
       failure: (err)=> {
         console.err(err)
