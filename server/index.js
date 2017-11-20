@@ -15,8 +15,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 //Pulling new data when params change
 app.get('/eventData', function (req, res) {
-  dataAgg.finalResults('ADD PARAMS HERE',function(data) {
-    res.send(data)
+   res.status(201).end();
+  dataAgg.finalResults('ADD PARAMS HERE', function(data) {
+    res.status(200).send(data);
   });
 });
 
@@ -54,3 +55,4 @@ app.post('/login', function(req, res) {
 //   //res.send(answer)
 // })
 
+module.exports = app;
