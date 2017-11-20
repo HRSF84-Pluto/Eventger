@@ -5,8 +5,8 @@ class SignUp extends Component {
   constructor(props) {
     super(props);
     this.state = {username: '',
-                 password: '',
-
+      password: '',
+      errorMessage : 'Username already exists, please try again'
     };
   }
   handleUsernameInput(e){
@@ -46,7 +46,7 @@ class SignUp extends Component {
             <Form.Field>
               <Checkbox label='I agree to the Terms and Conditions' />
             </Form.Field>
-            <Button type='submit' onClick={()=> this.handleSignUpInput() ? this.props.handleViewChange('login') : this.props.handleViewChange('login') }>Submit</Button>
+            <Button type='submit' onClick={()=> this.handleSignUpInput() ? this.props.handleViewChange('login') : this.props.handleViewChange('signup') }>Submit</Button>
           </Form>
         </div>
       </div>

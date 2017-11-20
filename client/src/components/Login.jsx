@@ -5,8 +5,7 @@ class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {username: '',
-                  password: '',
-    };
+      password: '' };
   }
   handleUsernameInput(e) {
     this.setState({username: e.target.value});
