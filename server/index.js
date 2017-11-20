@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 //Pulling new data when params change
 app.get('/eventData', function (req, res) {
   console.log('inside get handler')
-  
+
   // to test a sample req.body from front-end's get request
   let testRequestBody = {
     postalCode: '94134',
@@ -45,8 +45,8 @@ app.get('/eventData', function (req, res) {
     .then(yelpEventsArr => {
 
       // include Yelp event data in the object sent back to front-end //
-      returnedYelpTMDataArr.push(yelpEventsArr); 
-      return;    
+      returnedYelpTMDataArr.push(yelpEventsArr);
+      return;
     })
     .then(placeholder => {
       res.status(201).send(returnedYelpTMDataArr);
@@ -76,17 +76,3 @@ app.post('/login', function(req, res) {
     //thye are not in our DB
   //res.send(answer)
 })
-
-
-/////**** this is repetitive******
-// //Return saved Events to users
-// app.post('/savedevents', function(req, res) {
-//   //req.body.userName
-//   //check DB if user exisits
-//     //if YES, then return saved db results
-//     //If NO, then return message taht says that
-//     //they are not in our DB
-//   //res.send(answer)
-// })
-
-
