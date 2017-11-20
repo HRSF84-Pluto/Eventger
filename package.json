@@ -10,11 +10,12 @@
   },
   "scripts": {
     "react-dev": "webpack -d --watch ",
-    "start": "node ./server/index.js",
+    "start": "nodemon ./server/index.js",
     "test": "mocha ./tests/server/ServerSpecs.js",
     "heroku-postbuild": "webpack -d"
   },
   "dependencies": {
+    "axios": "^0.17.1",
     "babel-core": "^6.23.1",
     "babel-loader": "^6.3.2",
     "babel-preset-es2015": "^6.24.1",
