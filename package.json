@@ -29,6 +29,7 @@
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "request": "^2.81.0",
+    "semantic-ui-react": "^0.76.0",
     "sequelize": "^4.22.6",
     "supertest": "^3.0.0",
     "webpack": "^2.7.0",
