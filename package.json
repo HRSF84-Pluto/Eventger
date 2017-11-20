@@ -10,7 +10,7 @@
   },
   "scripts": {
     "react-dev": "webpack -d --watch ",
-    "st": "nodemon ./server/index.js",
+    "start": "nodemon ./server/index.js",
     "test": "mocha ./tests/server/ServerSpecs.js",
     "heroku-postbuild": "webpack -d"
   },
