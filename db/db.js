@@ -69,9 +69,87 @@ db.saveUsername = (userObj, callback) => {
   })
 }
 
+db.findUserEvents = (username, callback) => {
+  var findQuery = "SELECT events.id, eventName, date, time, events.location, price, url, photoUrl, category \
+                   FROM events INNER JOIN usersEvents INNER JOIN users \
+                   WHERE events.id=usersEvents.event_id \
+                   AND usersEvents.user_id=users.id \
+                   AND (users.username=?)";
+  var queryInput = username;
+  db.query(findQuery, [queryInput], function(err, results, fields) {
+    if (err) {
+      callback(err, null);
+    };
+    if(results !== undefined) {
+      results.map((result) => {
+        result.location = JSON.parse(result.location);
+      });  
+    }
+    callback(null, results);
+  })
+};
+
+db.saveEvent = (eventObj, callback) => {
+  var insertQuery = "INSERT INTO events (eventName, date, time, location, price, url, photoUrl, category) VALUES ?";
+  var queryInput = [[ eventObj.eventName, eventObj.date, eventObj.time, JSON.stringify(eventObj.location),
+                      eventObj.price, eventObj.url, eventObj.photoUrl, eventObj.category ]]
+  db.query(insertQuery, [queryInput], function(err, result, fields) {
+    if (err) {
+      callback(err, null);
+    };
+    callback(null, result);
+  })
+}
+
+db.saveUserEvent = (userId, eventId, callback) => {
+  var insertQuery = "INSERT INTO usersEvents (user_id, event_id) VALUES ?"
+  var queryInput = [[userId, eventId]]
+  db.query(insertQuery, [queryInput], function(err, result, fields) {
+    if (err) {
+      callback(err, null);
+    };
+    callback(null, result);
+  })
+}
 
 module.exports = Promise.promisifyAll(db);
 
+//----------------------------Event DB Helper Function Tests--------------------------
+
+var fakeEvent = {
+    eventName: 'Blink 182 Concert',
+    date: 'January 18, 2018',
+    time: '4:00pm',
+    location: {
+        line_1: '1080 Folsom St',
+        city: 'San Francisco',
+        state: 'CA',
+        zip: '94102'
+    },
+    price: '$50.00',
+    url: 'https://www.ticketmaster.com/Blink-182-tickets/artist/790708',
+    photoUrl: 'https://s1.ticketm.net/tm/en-us/dam/a/9ec/f80aa88d-71fb-4b5f-955c-a3a3e87109ec_118051_CUSTOM.jpg',
+    category: 'music'
+}
+
+
+db.saveEventAsync(fakeEvent).then( (data) => {
+  console.log('Successfully Saved Event', data)
+})
+
+db.saveUserEventAsync(1,1).then( (data) => {
+  console.log('Successfully Saved User Event Relationship', data)
+})
+
+db.findUserEventsAsync('Jarvis').then((data) => {
+    console.log('Successfully Found Events', data)
+})
+
+
+
+// db.findUserEvents
+
+//--------------------------------------------------------------------------
 // db.connect((error) => {
 //   if (error) {console.log('ERROR', error)}
 
