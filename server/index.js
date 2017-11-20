@@ -40,15 +40,3 @@ app.post('/login', function(req, res) {
     //thye are not in our DB
   //res.send(answer)
 })
-
-
-/////**** this is repetitive******
-// //Return saved Events to users
-// app.post('/savedevents', function(req, res) {
-//   //req.body.userName
-//   //check DB if user exisits
-//     //if YES, then return saved db results
-//     //If NO, then return message taht says that
-//     //they are not in our DB
-//   //res.send(answer)
-// })
