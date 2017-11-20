@@ -29,6 +29,7 @@
     "mysql2": "^1.4.2",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
+    "nodemon": "^1.12.1",
     "request": "^2.81.0",
     "semantic-ui-react": "^0.76.0",
     "sequelize": "^4.22.6",

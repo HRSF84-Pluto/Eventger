@@ -17,23 +17,16 @@ body{
 
 @media only screen and (max-width: 1000px) {
   .main {
-    height: 1000px;
     width: 1000px;
     background: url('https://s3-media2.fl.yelpcdn.com/assets/srv0/yelp_large_assets/af415bdd2cda/assets/img/home/hero_photos/uq7E1Tf9g8IxXLSO9cMDOw.jpg') repeat;
   }
 }
 
-.signUpForm{
-  margin-top: 40px;
-  margin-left: 500px;
-  margin-right: 500px;
-}
-.logInForm{
-  margin-top: 40px;
-  margin-left: 500px;
-  margin-right: 500px;
-}
 
+.ui.form{
+  width: 30%;
+  margin: 0 auto;
+}
 .close {
   position: absolute;
   right: 32px;

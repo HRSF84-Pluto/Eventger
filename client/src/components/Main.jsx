@@ -11,16 +11,16 @@ class Main extends Component {
     return (
       <div>
         <div className="loginButtons">
-      <div>
-        <div className="login-btn" onClick={() => this.props.onClick('login')}>Login</div>
-      </div>
-      <div>
-      <div className="signup-btn" onClick={() => this.props.onClick('signup')}>Sign Up</div>
-      </div>
+          <div>
+            <div className="login-btn" onClick={() => this.props.onClick('login')}>Login</div>
+          </div>
+          <div>
+            <div className="signup-btn" onClick={() => this.props.onClick('signup')}>Sign Up</div>
+          </div>
         </div>
-      <Choices />
+        <Choices onClick={this.props.onClickbtn}/>
         <div className="search-bar">
-        <Search />
+          <Search onClick={this.props.onSubmit}/>
         </div>
       </div>
     );
