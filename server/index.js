@@ -79,7 +79,6 @@ app.post('/login', function(req, res) {
   //res.send(answer)
 })
 
-<<<<<<< HEAD
 
 /////**** this is repetitive******
 // //Return saved Events to users
@@ -92,6 +91,3 @@ app.post('/login', function(req, res) {
 //   //res.send(answer)
 // })
 
-
-=======
->>>>>>> Create database schema and functions to find/save username

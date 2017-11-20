@@ -29,6 +29,16 @@ var Promise = require('bluebird');
 // -- }
 
 
+//FUNCTIONS HAVE BEEN PROMISIFIED
+//USE
+//findUsernameAsync
+//  .then((userObj) => {})  //obj will be undefined if it doesn't exist
+//saveUsernameAsync
+//  .then(() => {})
+//  .catch(username already exists => {})
+
+
+
 var db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -44,7 +54,7 @@ db.findUsername = (username, callback) => {
     if (err) {
       callback(err, null);
     };
-    callback(null, result);
+    callback(null, result[0]);
   })
 };
 
@@ -127,12 +137,14 @@ module.exports = Promise.promisifyAll(db);
 
 
 //-------------ASYNC TESTING ONLY WORKS IF INCLUDED AFTER EXPORT STATEMENT---------------------
-// db.saveUsernameAsync({username: 'Jesus', password: '', location: 'the BAY'})
-//     .then(() => {
-//       return db.findUsernameAsync('Johnny')
-//     }).then((data) => {
-//         console.log('Mission Complete!', data)
-//     })
+db.saveUsernameAsync({username: 'Jock', password: '', location: 'the BAY'})
+    .then(() => {
+      return db.findUsernameAsync('Jared')
+    }).then((data) => {
+        console.log('Mission Complete!', data)
+    }).catch((err) => {
+        console.log('Mission Failed!', err)
+    })
 
 
 //------------------------------------Sequelize Format-------------------------------------------
