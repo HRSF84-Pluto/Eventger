@@ -56,8 +56,6 @@ app.get('/eventData', function (req, res) {
   })
 
 });
-///test
-
 
 
 //Add user to DB
@@ -80,5 +78,3 @@ app.post('/login', function(req, res) {
     //thye are not in our DB
   //res.send(answer)
 })
-
-///testtwo
