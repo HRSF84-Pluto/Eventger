@@ -14,6 +14,7 @@ class App extends React.Component {
       view: 'main',
       location: '',
       activity: '',
+      username: 'Login',
     };
   }
 
@@ -31,8 +32,9 @@ class App extends React.Component {
       }
     });
   }
-  handleClick(view) {
+  handleViewChange(view, username) {
     this.setState({ view });
+    this.setState({ username });
   }
   handleLocationInput(location) {
     console.log(location, 'location inside app.jsx');
@@ -46,11 +48,14 @@ class App extends React.Component {
   renderView() {
     const { view } = this.state;
     if (view === 'main') {
-      return <Main onClickbtn={chosenActivity => this.handleActivity(chosenActivity)} onSubmit={inputLocation => this.handleLocationInput(inputLocation)} onClick={currentView => this.handleClick(currentView)} />;
+      return <Main currentUsername={this.state.username}
+        handleActivity={chosenActivity => this.handleActivity(chosenActivity)}
+        handleLocationInput={inputLocation => this.handleLocationInput(inputLocation)}
+        handleViewChange={currentView => this.handleViewChange(currentView)} />;
     } else if (view === 'login') {
-      return <Login onClick={currentView => this.handleClick(currentView)} />;
+      return <Login handleViewChange={(currentView, username) => this.handleViewChange(currentView, username)} />;
     } else if (view === 'signup') {
-      return <SignUp onClick={currentView => this.handleClick(currentView)} />;
+      return <SignUp handleViewChange={currentView => this.handleViewChange(currentView)} />;
     }
   }
 
