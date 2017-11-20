@@ -8,7 +8,6 @@ class Search extends Component {
   }
   handleLocationInput(e){
     this.setState({location: e.target.value});
-
   }
   render() {
     return (
@@ -19,7 +18,7 @@ class Search extends Component {
           <i aria-hidden="true" className="dropdown icon"></i>
           <br/>
         </div>
-        <button type="submit" className="ui button" role="button" onClick={()=> this.props.onClick(this.state.location)}>Enter</button>
+        <button type="submit" className="ui button" role="button" onClick={()=> this.props.onLocationSearch(this.state.location)}>Enter</button>
       </div>
     );
   }

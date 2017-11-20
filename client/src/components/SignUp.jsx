@@ -12,7 +12,7 @@ class SignUp extends Component {
         <div>
           <h3>Sign Up</h3>
         </div>
-        <div onClick={()=> this.props.onClick('main')} className='close'>
+        <div onClick={()=> this.props.handleViewChange('main')} className='close'>
         </div>
         <div className="signUpForm">
           <Form>

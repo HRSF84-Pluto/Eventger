@@ -12,15 +12,15 @@ class Main extends Component {
       <div>
         <div className="loginButtons">
           <div>
-            <div className="login-btn" onClick={() => this.props.onClick('login')}>Login</div>
+            <div className="login-btn" onClick={() => this.props.handleViewChange('login')}>Login</div>
           </div>
           <div>
-            <div className="signup-btn" onClick={() => this.props.onClick('signup')}>Sign Up</div>
+            <div className="signup-btn" onClick={() => this.props.handleViewChange('signup')}>Sign Up</div>
           </div>
         </div>
-        <Choices onClick={this.props.onClickbtn}/>
+        <Choices handleActivity={this.props.handleActivity}/>
         <div className="search-bar">
-          <Search onClick={this.props.onSubmit}/>
+          <Search onLocationSearch={this.props.handleLocationInput}/>
         </div>
       </div>
     );
