@@ -12,6 +12,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       view: 'main',
+      location: '',
+      activity: '',
     };
   }
 
@@ -32,11 +34,19 @@ class App extends React.Component {
   handleClick(view) {
     this.setState({ view });
   }
+  handleLocationInput(location) {
+    console.log(location, 'location inside app.jsx');
+    this.setState({ location });
+  }
+  handleActivity(activity){
+    console.log(activity, 'Activity inside handleActivity');
+    this.setState({ activity });
+  }
 
   renderView() {
     const { view } = this.state;
     if (view === 'main') {
-      return <Main onClick={currentView => this.handleClick(currentView)} />;
+      return <Main onClickbtn={chosenActivity => this.handleActivity(chosenActivity)} onSubmit={inputLocation => this.handleLocationInput(inputLocation)} onClick={currentView => this.handleClick(currentView)} />;
     } else if (view === 'login') {
       return <Login onClick={currentView => this.handleClick(currentView)} />;
     } else if (view === 'signup') {
