@@ -10,4 +10,3 @@ module.exports = {
 // tmApiKey - get from Sally
 // consumer_key, consumer_secret, token, token_secret - (Yelp API specific)
 // use your own or ask Begona cause Sally didn't make one
-

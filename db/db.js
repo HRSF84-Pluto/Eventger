@@ -2,7 +2,7 @@ var Sequelize = require('sequelize');
 var mysql = require('mysql');
 var Promise = require('bluebird');
 
-// -- OBJECT Example 
+// -- OBJECT Example
 // -- User Object
 // -- {
 // --   username: string
@@ -20,7 +20,7 @@ var Promise = require('bluebird');
 // --     line_2: string
 // --     city: string
 // --     state: string two letter
-// --     zip: string 
+// --     zip: string
 // --     }
 // --   price: string
 // --   url: string
@@ -92,7 +92,7 @@ module.exports = Promise.promisifyAll(db);
 //   // });
 
 //   var eventInput2 = [['Hello World', '3/25/2012', '3:15', 'Earth', 'Free', 'blah', 'blah', 'doom']]
-  
+
 //   var manyInsert = "INSERT INTO usersEvents (user_id, event_id) VALUES ((SELECT id FROM users WHERE username= ?), (SELECT id FROM events WHERE eventName= ?))"
 //   var manyInput = ['Johnny','End of the World']
 //   // db.query(manyInsert, manyInput, function(err, result) {
@@ -259,6 +259,3 @@ module.exports = Promise.promisifyAll(db);
 
 // const Eventger = sequelize.define( 'Eventger Profile')
 // module.exports = sequelize
-
-
-
