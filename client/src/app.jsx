@@ -20,11 +20,12 @@ class App extends React.Component {
 
 
   componentDidMount(){
-    var data = {username: 'begona', password:'', location: 'nowhere'}
+    var dataSign = {username: 'begona', password:'', location: 'nowhere'}
+    //dataSign = JSON.stringify(dataSign);
     $.ajax({
       type: 'POST',
       url: '/signup',
-      data: '',
+      data: dataSign,
       success: (response)=> {
         console.log('returned from POST Request: ', response)
       },
