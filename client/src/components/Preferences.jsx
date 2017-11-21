@@ -3,6 +3,7 @@ import FilterOptions from './FilterOptions';
 import { Button } from 'semantic-ui-react';
 
 
+
 class Preferences extends Component{
   constructor(props) {
     super(props);

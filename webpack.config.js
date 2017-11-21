@@ -1,7 +1,11 @@
+const path = require('path');
+
 module.exports = {
   entry: './client/src/app.jsx',
   output: {
-    filename: './client/dist/bundle.js',
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, './client/dist'),
+    publicPath: './client/dist',
   },
   module: {
     loaders: [
@@ -21,6 +25,13 @@ module.exports = {
         ],
       },
     ],
+  },
+  devServer: {
+    historyApiFallback: true,
+    contentBase: './client/',
+    inline:true,
+    host: '127.0.0.1',
+    port: 3000,
   },
   resolve: {
     extensions: ['.jsx', '.js', '.es6'],
