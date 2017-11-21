@@ -56,8 +56,8 @@ db.findUsername = (username, callback) => {
 };
 
 db.saveUsername = (userObj, callback) => {
-  var insertQuery = "INSERT INTO users (username, password, zip) VALUES ?";
-  var queryInput = [[ userObj.username, userObj.password, userObj.zip ]]
+  var insertQuery = "INSERT INTO users (username, password, location) VALUES ?";
+  var queryInput = [[ userObj.username, userObj.password, userObj.location ]]
   db.query(insertQuery, [queryInput], function(err, result, fields) {
     if (err) {
       callback(err, null);
@@ -80,7 +80,7 @@ db.findUserEvents = (username, callback) => {
     if(results !== undefined) {
       results.map((result) => {
         result.location = JSON.parse(result.location);
-      });  
+      });
     }
     callback(null, results);
   })

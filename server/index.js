@@ -67,9 +67,12 @@ app.post('/signup', function(req, res) {
     .then((userObj) => {
   //save user
   db.saveUsernameAsync(req.body)
-    .then((results) => res.send('User Added'))
+    .then((results) => res.send(true))
     //will send message if already in DB
-    .catch((err)=> res.send('User already in DB'))
+    .catch((err)=> {
+      console.log(err)
+      res.send('User already in DB')
+    })
   })
 });
 
