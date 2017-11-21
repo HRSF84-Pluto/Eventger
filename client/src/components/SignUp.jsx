@@ -5,8 +5,8 @@ class SignUp extends Component {
   constructor(props) {
     super(props);
     this.state = {username: '',
-                 password: '',
-
+      password: '',
+      errorMessage : '',
     };
   }
   handleUsernameInput(e){
@@ -23,7 +23,16 @@ class SignUp extends Component {
     console.log(data, 'data object to be sent to db');
     //this function returns true if sign up is successful, and returns false if it's not. This returned Boolean will allow
     //the conditional rendering of the views (done inside the  submit <Button/> below)
-    return true;
+
+    // ajax call to server, if error : testing below, this should be inside ajax call
+    const error = true;
+    if (error){
+      this.setState({error: 'Username already exists, please try again'});
+      return false;
+    }else{
+      return true;
+    }
+
   }
   render() {
     return (
@@ -39,6 +48,7 @@ class SignUp extends Component {
               <label>Username</label>
               <input placeholder='username' onChange={e => this.handleUsernameInput(e)} />
             </Form.Field>
+            <h4 className='error' >{this.state.error}</h4>
             <Form.Field>
               <label>Password</label>
               <input type="password" placeholder='password' onChange={e => this.handlePasswordInput(e)}  />
@@ -46,7 +56,7 @@ class SignUp extends Component {
             <Form.Field>
               <Checkbox label='I agree to the Terms and Conditions' />
             </Form.Field>
-            <Button type='submit' onClick={()=> this.handleSignUpInput() ? this.props.handleViewChange('login') : this.props.handleViewChange('login') }>Submit</Button>
+            <Button type='submit' onClick={()=> this.handleSignUpInput() ? this.props.handleViewChange('login') : this.props.handleViewChange('signup') }>Submit</Button>
           </Form>
         </div>
       </div>
