@@ -37,6 +37,8 @@ class App extends React.Component {
     // });
   }
   handleViewChange(view, username) {
+    console.log('inside view changeusername', username )
+        console.log('inside view', view )
     this.setState({ view });
     this.setState({ username });
   }
@@ -63,7 +65,7 @@ class App extends React.Component {
     }else if (view === 'login') {
       return <Login handleViewChange={(currentView, username) => this.handleViewChange(currentView, username)} />;
     } else if (view === 'signup') {
-      return <SignUp handleViewChange={currentView => this.handleViewChange(currentView)} />;
+      return <SignUp handleViewChange={(currentView, username) => this.handleViewChange(currentView, username)} />;
     }
   }
 
