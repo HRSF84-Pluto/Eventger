@@ -61,6 +61,7 @@ app.get('/eventData', function (req, res) {
 
 //Add user to DB
 app.post('/signup', function(req, res) {
+  console.log('INSIDE REQ,', req.body)
   // check DB if user exisits
   db.findUsernameAsync('req.body.username')
     .then((userObj) => {
