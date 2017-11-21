@@ -21,7 +21,8 @@ app.get('/eventData', function (req, res) {
   console.log('inside get handler')
 
   // to test a sample req.body from front-end's get request
-  let testRequestBody = {
+  let sampleReqBody = {
+    queryTerm: 'Music',
     postalCode: '94134',
     startDateTime: '2018-11-11T18:00:00Z',
     endDateTime: '2018-11-12T03:00:00Z',
@@ -34,7 +35,7 @@ app.get('/eventData', function (req, res) {
   // API helper call //
 
   // fetch ticketmaster data
-  fetchHelpers.getTMData(testRequestBody)
+  fetchHelpers.getTMData(sampleReqBody)
   .then(ticketMasterEventsArr => {
 
     // include TM event data in the object sent back to front-end //
@@ -44,7 +45,7 @@ app.get('/eventData', function (req, res) {
   .then(placeholder => {
 
     // fetch Yelp data
-    fetchHelpers.getYelpData(testRequestBody)
+    fetchHelpers.getYelpData(sampleReqBody)
     .then(yelpEventsArr => {
 
       // include Yelp event data in the object sent back to front-end //
