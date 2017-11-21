@@ -7,9 +7,10 @@ const mysql = require('mysql');
 const request = require('request');
 const express = require('express');
 // var httpMocks = require('node-mocks-http');
-const db = require('../../db/db.js')
+// const dbFuncs = require('../../db/db.js')
+const app = express();
+// const app = require('../../server/index.js');
 
-const app = require('../../server/index.js');
 const schema = require('../../db/config.js');
 const port = 3000;
 
@@ -22,6 +23,7 @@ describe('', function() {
     var count = 0;
     tablenames.forEach(function(tablename) {
       connection.query('DROP TABLE IF EXISTS ' + tablename, function() {
+        console.log('DROPPED ' + tablename);
         count++;
         if (count === tablenames.length) {
           return schema(db).then(done);
@@ -36,10 +38,10 @@ describe('', function() {
     /*************************************************************************************/
     /* TODO: Update user and password if different than on your local machine            */
     /*************************************************************************************/
-    // db = mysql.createConnection({
-    //   user: 'root',
-    //   database: 'Eventger'
-    // });
+    db = mysql.createConnection({
+      user: 'root',
+      database: 'Eventger'
+    });
 
     /**************************************************************************************/
     /* TODO: If you create a new MySQL tables, add it to the tablenames collection below. */
@@ -51,10 +53,11 @@ describe('', function() {
     //     console.log(err);
     //     return done(err); 
     //   }
-      console.log('MADE A CONNECTION');
+      console.log('INTO BEFORE EACH');
       /* Empties the db table before each test so that multiple tests
        * (or repeated runs of the tests) won't screw each other up: */
       clearDB(db, tablenames, function() {
+        console.log('Cleared the DB');
         server = app.listen(port, done);
       });
     // });

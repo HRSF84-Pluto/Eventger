@@ -8,7 +8,7 @@ const database = 'Eventger';
 // -- User Object
 // -- {
 // --   username: string
-// --   zip: string with zipcode
+// --   location: string with zipcode
 // --   password: leave blank
 // -- }
 
@@ -42,6 +42,7 @@ const database = 'Eventger';
 var db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
+  database: 'Eventger'
 })
 
 db.findUsername = (username, callback) => {
@@ -65,6 +66,17 @@ db.saveUsername = (userObj, callback) => {
     callback(null, result);
   })
 }
+
+db.findEvent = (id, callback) => {
+  var findQuery = "SELECT * FROM events WHERE (id=?)";
+  var queryInput = id;
+  db.query(findQuery, [queryInput], function(err, result, fields) {
+    if (err) {
+      callback(err, null);
+    };
+    callback(null, result[0]);
+  })
+};
 
 db.findUserEvents = (username, callback) => {
   var findQuery = "SELECT events.id, eventName, date, time, events.location, price, url, photoUrl, category \
@@ -221,14 +233,16 @@ db.connectAsync()
 
 
 //-------------ASYNC TESTING ONLY WORKS IF INCLUDED AFTER EXPORT STATEMENT---------------------
-// db.saveUsernameAsync({username: 'Jarvis', password: '', zip: 'the BAY'})
-//     .then(() => {
-//       return db.findUsernameAsync('Mickey')
-//     }).then((data) => {
-//         console.log('Mission Complete!', data)
-//     }).catch((err) => {
-//         console.log('Mission Failed!', err)
+// db.saveUsernameAsync({username: 'Sally', password: '', location: 'the BAY'})
+//     .then((data) => {
+//       console.log('DATA ', data)
 //     })
+    //   return db.findUsernameAsync('Mickey')
+    // }).then((data) => {
+    //     console.log('Mission Complete!', data)
+    // }).catch((err) => {
+    //     console.log('Mission Failed!', err)
+    // })
 
 
 //------------------------------------Sequelize Format-------------------------------------------
