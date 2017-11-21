@@ -22,7 +22,7 @@ class Main extends Component {
         </div>
         <Choices handleActivity={this.props.handleActivity}/>
         <div className="search-bar">
-          <Search onLocationSearch={this.props.handleLocationInput}/>
+          <Search dateSelection={this.props.dateSelection} onLocationSearch={this.props.handleLocationInput}/>
         </div>
       </div>
     );

@@ -7,6 +7,7 @@ import Main from './components/Main';
 
 
 
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -14,6 +15,7 @@ class App extends React.Component {
       view: 'main',
       location: '',
       activity: '',
+      date: '',
       username: 'Login',
     };
   }
@@ -42,15 +44,20 @@ class App extends React.Component {
     console.log(location, 'location inside app.jsx');
     this.setState({ location });
   }
-  handleActivity(activity){
+  handleActivity(activity) {
     console.log(activity, 'Activity inside handleActivity');
     this.setState({ activity });
+  }
+  dateSelection(date) {
+    const dateStr = date._d.toString();
+    this.setState({ date: dateStr });
   }
 
   renderView() {
     const { view } = this.state;
     if (view === 'main') {
       return <Main currentUsername={this.state.username}
+        dateSelection={date => this.dateSelection(date)}
         handleActivity={chosenActivity => this.handleActivity(chosenActivity)}
         handleLocationInput={inputLocation => this.handleLocationInput(inputLocation)}
         handleViewChange={currentView => this.handleViewChange(currentView)} />;
