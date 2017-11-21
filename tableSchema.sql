@@ -29,7 +29,7 @@ CREATE TABLE events (
 CREATE TABLE usersEvents (
 
   user_id INT,
-  event_id VARCHAR(20,)
+  event_id VARCHAR(20),
   FOREIGN KEY (user_id)
     REFERENCES users(id),
   FOREIGN KEY (event_id)
