@@ -4,6 +4,7 @@ import $ from 'jquery';
 import SignUp from './components/SignUp';
 import Login from './components/Login';
 import Main from './components/Main';
+import EventFeed from './components/EventFeed';
 
 
 
@@ -39,28 +40,27 @@ class App extends React.Component {
     this.setState({ view });
     this.setState({ username });
   }
-  handleLocationInput(location) {
+  handleLocationInput(location, newsFeedView) {
     console.log(location, 'location inside app.jsx');
+    this.setState({view: newsFeedView});
     this.setState({ location });
   }
   handleActivity(activity) {
     console.log(activity, 'Activity inside handleActivity');
     this.setState({ activity });
   }
-  dateSelection(date) {
-    const dateStr = date._d.toString();
-    this.setState({ date: dateStr });
-  }
 
   renderView() {
     const { view } = this.state;
     if (view === 'main') {
       return <Main currentUsername={this.state.username}
-        dateSelection={date => this.dateSelection(date)}
+        dateSelection={date => this.setState({ date: date._d.toString()})}
         handleActivity={chosenActivity => this.handleActivity(chosenActivity)}
-        handleLocationInput={inputLocation => this.handleLocationInput(inputLocation)}
+        handleLocationInput={(inputLocation, newsFeedView) => this.handleLocationInput(inputLocation, newsFeedView)}
         handleViewChange={currentView => this.handleViewChange(currentView)} />;
-    } else if (view === 'login') {
+    } else if (view === 'newsfeed'){
+      return <EventFeed handleViewChange={currentView => this.handleViewChange(currentView)} />;
+    }else if (view === 'login') {
       return <Login handleViewChange={(currentView, username) => this.handleViewChange(currentView, username)} />;
     } else if (view === 'signup') {
       return <SignUp handleViewChange={currentView => this.handleViewChange(currentView)} />;
