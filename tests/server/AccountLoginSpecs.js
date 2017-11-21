@@ -122,3 +122,12 @@ describe('', function() {
       });
     });
   });
+
+
+  // var eventArrray = [
+  //   {eventName:'End of the World', time: 'now', id: '1'},
+  //   {eventName:'End of the World2', time: 'later', id: '2'},
+  //   {eventName:'Rock Concert', time: 'later', id: '13'}
+  // ]
+  //var stringEvents = JSON.stringify(eventArrray);
+//  dataSign['events'] = stringEvents;

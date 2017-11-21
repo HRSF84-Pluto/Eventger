@@ -61,11 +61,7 @@ app.get('/eventData', function (req, res) {
 
 //Add user to DB
 app.post('/signup', function(req, res) {
-  console.log('INSIDE REQ,', req.body)
-  // check DB if user exisits
-  db.findUsernameAsync('req.body.username')
-    .then((userObj) => {
-  //save user
+  //Save user
   db.saveUsernameAsync(req.body)
     .then((results) => res.send(true))
     //will send message if already in DB
@@ -73,19 +69,44 @@ app.post('/signup', function(req, res) {
       console.log(err)
       res.send(false)
     })
-  })
+});
+
+//Save Events for logged in User
+app.post('/events', function(req, res) {
+  var events = JSON.parse(req.body.events)
+
+  //Get user ID
+  db.findUsernameAsync(req.body.username)
+    .then(results => {
+      var userId = results.id;
+      //For Each event in array list, save to DB
+      events.forEach(event => {
+        //First check if event is saved to Events table
+        db.findEventAsync(event.id)
+          .then(results => {
+            //If event is not in Events table, save it to Events table
+            if (!results) {
+              db.saveEventAsync(event)
+                .then(results => console.log('Save event into Event DB: ', results))
+                .catch(err => console.err(err))
+            } //Save eventId and userId to UserEvent table
+            db.saveUserEventAsync(userId, event.id)
+              .then(results => res.send('Your Data has been saved!'))
+              .catch(err => res.send(err))
+          })
+        .catch(err => console.err(err))
+      });
+    })
+    .catch(err => console.err(err))
 });
 
 
-
-//Check to see if user is in DB, and return saved results
+//Returns users saved results from db
 app.post('/login', function(req, res) {
-  //req.body.userName
-  // check DB if user exisits
-    //If YES then return saved db results
-    //If NO then return messsage that says
-    //thye are not in our DB
-  //res.send(answer)
+  db.findUserEventsAsync(req.body.username)
+  .then(results => res.send(results))
+  .catch(err => res.send(err))
 })
+
 
 module.exports = app;
