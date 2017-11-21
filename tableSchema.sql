@@ -14,7 +14,7 @@ CREATE TABLE users (
 
 CREATE TABLE events (
 
-  id INT AUTO_INCREMENT UNIQUE,
+  id VARCHAR(20),
   eventName VARCHAR(150),
   date VARCHAR(300),
   time VARCHAR(200),
@@ -29,7 +29,7 @@ CREATE TABLE events (
 CREATE TABLE usersEvents (
 
   user_id INT,
-  event_id INT,
+  event_id VARCHAR(20,)
   FOREIGN KEY (user_id)
     REFERENCES users(id),
   FOREIGN KEY (event_id)

@@ -1,12 +1,14 @@
 var Sequelize = require('sequelize');
 var mysql = require('mysql');
 var Promise = require('bluebird');
+const createTables = require('./config');
+const database = 'Eventger';
 
 // -- OBJECT Example
 // -- User Object
 // -- {
 // --   username: string
-// --   location: string with zipcode
+// --   zip: string with zipcode
 // --   password: leave blank
 // -- }
 
@@ -37,15 +39,10 @@ var Promise = require('bluebird');
 //  .then(() => {})
 //  .catch(username already exists => {})
 
-
-
 var db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  database: 'Eventger'
 })
-
-db.connect((err) => {if (err) console.log('ERROR with Connection', err)});
 
 db.findUsername = (username, callback) => {
   var findQuery = "SELECT * FROM users WHERE (username=?)";
@@ -59,8 +56,8 @@ db.findUsername = (username, callback) => {
 };
 
 db.saveUsername = (userObj, callback) => {
-  var insertQuery = "INSERT INTO users (username, password, location) VALUES ?";
-  var queryInput = [[ userObj.username, userObj.password, userObj.location ]]
+  var insertQuery = "INSERT INTO users (username, password, zip) VALUES ?";
+  var queryInput = [[ userObj.username, userObj.password, userObj.zip ]]
   db.query(insertQuery, [queryInput], function(err, result, fields) {
     if (err) {
       callback(err, null);
@@ -69,13 +66,100 @@ db.saveUsername = (userObj, callback) => {
   })
 }
 
+db.findUserEvents = (username, callback) => {
+  var findQuery = "SELECT events.id, eventName, date, time, events.location, price, url, photoUrl, category \
+                   FROM events INNER JOIN usersEvents INNER JOIN users \
+                   WHERE events.id=usersEvents.event_id \
+                   AND usersEvents.user_id=users.id \
+                   AND (users.username=?)";
+  var queryInput = username;
+  db.query(findQuery, [queryInput], function(err, results, fields) {
+    if (err) {
+      callback(err, null);
+    };
+    if(results !== undefined) {
+      results.map((result) => {
+        result.location = JSON.parse(result.location);
+      });  
+    }
+    callback(null, results);
+  })
+};
+
+db.saveEvent = (eventObj, callback) => {
+  var insertQuery = "INSERT INTO events (eventName, date, time, location, price, url, photoUrl, category) VALUES ?";
+  var queryInput = [[ eventObj.eventName, eventObj.date, eventObj.time, JSON.stringify(eventObj.location),
+                      eventObj.price, eventObj.url, eventObj.photoUrl, eventObj.category ]]
+  db.query(insertQuery, [queryInput], function(err, result, fields) {
+    if (err) {
+      callback(err, null);
+    };
+    callback(null, result);
+  })
+}
+
+db.saveUserEvent = (userId, eventId, callback) => {
+  var insertQuery = "INSERT INTO usersEvents (user_id, event_id) VALUES ?"
+  var queryInput = [[userId, eventId]]
+  db.query(insertQuery, [queryInput], function(err, result, fields) {
+    if (err) {
+      callback(err, null);
+    };
+    callback(null, result);
+  })
+}
 
 module.exports = Promise.promisifyAll(db);
 
+
+
+db.connectAsync()
+.then(() => console.log(`Connected to ${database} database`))
+.then(() => db.queryAsync(`CREATE DATABASE IF NOT EXISTS ${database}`))
+.then(() => db.queryAsync(`USE ${database}`))
+.then(() => createTables(db))
+.catch((err) => {if (err) console.log('ERROR with Connection', err)});
+
+//----------------------------Event DB Helper Function Tests--------------------------
+
+// var fakeEvent = {
+//     eventName: 'Blink 182 Concert',
+//     date: 'January 18, 2018',
+//     time: '4:00pm',
+//     location: {
+//         line_1: '1080 Folsom St',
+//         city: 'San Francisco',
+//         state: 'CA',
+//         zip: '94102'
+//     },
+//     price: '$50.00',
+//     url: 'https://www.ticketmaster.com/Blink-182-tickets/artist/790708',
+//     photoUrl: 'https://s1.ticketm.net/tm/en-us/dam/a/9ec/f80aa88d-71fb-4b5f-955c-a3a3e87109ec_118051_CUSTOM.jpg',
+//     category: 'music'
+// }
+
+
+// db.saveEventAsync(fakeEvent).then( (data) => {
+//   console.log('Successfully Saved Event', data)
+// })
+
+// db.saveUserEventAsync(1,1).then( (data) => {
+//   console.log('Successfully Saved User Event Relationship', data)
+// })
+
+// db.findUserEventsAsync('Jarvis').then((data) => {
+//     console.log('Successfully Found Events', data)
+// })
+
+
+
+// db.findUserEvents
+
+//--------------------------------------------------------------------------
 // db.connect((error) => {
 //   if (error) {console.log('ERROR', error)}
 
-//   var userInsert = "INSERT INTO users (username, location, password) VALUES ?";
+//   var userInsert = "INSERT INTO users (username, zip, password) VALUES ?";
 //   var userInput = [['Johnny', '94125', 'purpleNurple']]
 //   // db.query(userInsert, [userInput], function (err, result) {
 //   //   if (err) throw err;
@@ -120,7 +204,7 @@ module.exports = Promise.promisifyAll(db);
 //                     db.query(manyInsert, manyInput2, function(err, result) {
 //                         if (err) throw err;
 //                         console.log(result);
-//                         db.saveUsername({username: 'Gman', password: '', location: 'the BAY'}, (data) => {
+//                         db.saveUsername({username: 'Gman', password: '', zip: 'the BAY'}, (data) => {
 //                             console.log('DATA AFTER SAVE', data)
 //                         })
 //                         db.findUsername('Johnny', (data) => {
@@ -137,7 +221,7 @@ module.exports = Promise.promisifyAll(db);
 
 
 //-------------ASYNC TESTING ONLY WORKS IF INCLUDED AFTER EXPORT STATEMENT---------------------
-// db.saveUsernameAsync({username: 'Jarvis', password: '', location: 'the BAY'})
+// db.saveUsernameAsync({username: 'Jarvis', password: '', zip: 'the BAY'})
 //     .then(() => {
 //       return db.findUsernameAsync('Mickey')
 //     }).then((data) => {
