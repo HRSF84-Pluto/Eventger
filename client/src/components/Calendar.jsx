@@ -14,16 +14,16 @@ class Calendar extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(date) {
-    this.setState({startDate: date});
+  handleChange() {
     this.props.dateSelection(this.state.startDate);
   }
+
 
   render() {
     return <DatePicker
       dateSelection={this.state.startDate}
       selected={this.state.startDate}
-      onChange={this.handleChange}
+      onChange={date => this.setState({startDate: date}, this.handleChange)}
     />;
   }
 }

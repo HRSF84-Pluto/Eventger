@@ -21,7 +21,7 @@ class Search extends Component {
           </div>
           <br/>
         </div>
-        <button type="submit" className="ui button" role="button" onClick={()=> this.props.onLocationSearch(this.state.location)}>Enter</button>
+        <button type="submit" className="ui button" role="button" onClick={()=> this.props.onLocationSearch(this.state.location, 'newsfeed')}>Enter</button>
       </div>
     );
   }
