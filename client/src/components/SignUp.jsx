@@ -24,17 +24,15 @@ class SignUp extends Component {
   handleSignUpInput() {
     const data = {'username': this.state.username, 'password': this.state.password, 'location': this.state.location};
     //checks for username in db:
-    var results = $.ajax({
+  $.ajax({
       type: 'POST',
       url: '/signup',
       data: data,
       success: (response)=> {
-        console.log('returned from SIGNUP POST Request: ', response)
         //If succesfully add user, return true so they are redirrected to main
         if (response) {
-          return true;
-        } else {
-          //If User already exisits, show an error message
+          this.props.handleViewChange('main', this.state.username) ;
+        } else if (!response){
           this.setState({error: 'Username already exists, please try again'});
         }
       },
@@ -44,8 +42,6 @@ class SignUp extends Component {
         console.err(err)
       }
     });
-
-    return results;
   }
   render() {
     return (
@@ -71,7 +67,7 @@ class SignUp extends Component {
             <Form.Field>
               <Checkbox label='I agree to the Terms and Conditions' />
             </Form.Field>
-            <Button type='submit' onClick={()=> this.handleSignUpInput() ? this.props.handleViewChange('main', this.state.username) : this.props.handleViewChange('signup') }>Submit</Button>
+            <Button type='submit' onClick={()=> this.handleSignUpInput()}>Submit</Button>
           </Form>
         </div>
       </div>

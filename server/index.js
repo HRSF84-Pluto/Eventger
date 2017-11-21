@@ -71,7 +71,7 @@ app.post('/signup', function(req, res) {
     //will send message if already in DB
     .catch((err)=> {
       console.log(err)
-      res.send('User already in DB')
+      res.send(false)
     })
   })
 });
