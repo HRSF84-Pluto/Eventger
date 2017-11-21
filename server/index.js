@@ -83,3 +83,5 @@ app.post('/login', function(req, res) {
     //thye are not in our DB
   //res.send(answer)
 })
+
+module.exports = app;

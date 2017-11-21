@@ -12,7 +12,8 @@
     "react-dev": "webpack -d --watch ",
     "start": "nodemon ./server/index.js",
     "test": "mocha ./tests/server/ServerSpecs.js",
-    "heroku-postbuild": "webpack -d"
+    "heroku-postbuild": "webpack -d",
+    "test-db": "mocha ./tests/db/databaseSpecs.js"
   },
   "dependencies": {
     "axios": "^0.17.1",
