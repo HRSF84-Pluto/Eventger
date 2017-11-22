@@ -4,22 +4,30 @@ const ticketmaster = require('tm-api');
   
 const apiKeys = require('./apiKeys.js');
 
-// Questions/ To Do: // 
-// What happens when they try to specify more preferences?
-// Must figure out how to use zip code instead of dmaID
+// Questions / To Do: // 
+// What happens when they try to specify more preferences? // figured out solution - look into preferences you can account for now
 // bring in $$$ for yelp businesses
 
 const getTMData = (sampleReqBody) => {
   console.log('inside TM api fetch');
 
-  ticketmaster.setSecret(`${apiKeys.tm_consumer_secret}`);
-
-  return ticketmaster.events.search({
+  // Default set of parameters for each search (before additional preferences) //
+  let params = {
+    size: '40',
+    sort: 'date,asc',
     apikey: apiKeys.tm_api_key,
     classificationName: JSON.stringify(sampleReqBody.queryTermForTM),
     startDateTime: sampleReqBody.startDateTime,
-    dmaId: 382
-  })
+    postalCode: sampleReqBody.postalCode
+    // dmaId: 382
+  }
+
+  // Modify if other preferences are selected by user // 
+  Object.assign(params, 
+    sampleReqBody.keyword ? { keyword: sampleReqBody.keyword } : null);
+
+  // API Fetch // 
+  return ticketmaster.events.search(params)
   .then(results => {
     console.log('TM API fetch returns - at index 0 - ', results.data._embedded.events[0])
     if (err => { throw err; })
