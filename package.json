@@ -12,10 +12,9 @@
     "react-dev": "webpack -d --watch ",
     "dev": "nodemon ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "start": "npm run react-dev & npm run dev",
-    "test-server": "mocha ./tests/server/ServerSpecs.js",
+    "test": "mocha ./tests/server/ServerSpecs.js",
     "heroku-postbuild": "webpack -d",
-    "test-db": "mocha ./tests/db/databaseSpecs.js",
-    "test": "npm run test-server & npm run test-db",
+    "test-db": "mocha ./tests/db/databaseSpecs.js"
   },
   "dependencies": {
     "axios": "^0.17.1",

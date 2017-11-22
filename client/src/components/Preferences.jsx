@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
 import FilterOptions from './FilterOptions';
-import { Button } from 'semantic-ui-react';
+
 
 
 
@@ -13,8 +14,8 @@ class Preferences extends Component{
     return (
        <div className='preferences'>
          <div className='profile-options'>
-           <Button>Settings</Button>
-           <Button>Saved</Button>
+           <Link className="settings-btn" to="/Settings">Settings</Link>
+           <Link className="saved-btn" to="/SavedEvents">Saved</Link>
          </div>
          <h1>Preferences</h1>
          <FilterOptions/>

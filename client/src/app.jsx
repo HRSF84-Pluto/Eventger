@@ -10,6 +10,8 @@ import SignUp from './components/SignUp';
 import Login from './components/Login';
 import Main from './components/Main';
 import EventFeed from './components/EventFeed';
+import Saved from './components/Saved';
+import Settings from './components/Settings';
 
 
 
@@ -64,8 +66,12 @@ class App extends React.Component {
       <Router>
       <div>
         <Route path="/EventsFeed"
-        render={(props) => <EventFeed handleViewChange={currentView => this.handleViewChange(currentView)} />}/>
-      <Route exact path="/" render={(props) => {
+        render={props => <EventFeed handleViewChange={currentView => this.handleViewChange(currentView)} />}/>
+        <Route path="/SavedEvents"
+               render={props => <Saved/>}/>
+        <Route path="/Settings"
+               render={props => <Settings/>}/>
+      <Route exact path="/" render={() => {
          if (view === 'login') {
           return (<Login handleViewChange={(currentView, username) => this.handleViewChange(currentView, username)} />);
 
@@ -80,7 +86,6 @@ class App extends React.Component {
                         handleViewChange={currentView => this.handleViewChange(currentView)} />);
         }
       }}/>
-
       </div>
     </Router>);
   }
