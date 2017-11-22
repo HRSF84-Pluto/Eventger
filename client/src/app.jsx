@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {
   BrowserRouter as Router,
-  Route,
+  Route,HashRouter,
   Link
 } from 'react-router-dom';
 import $ from 'jquery';
@@ -63,7 +63,7 @@ class App extends React.Component {
   renderView() {
     const { view } = this.state;
     return (
-      <Router>
+      <HashRouter>
       <div>
         <Route path="/EventsFeed"
         render={props => <EventFeed handleViewChange={currentView => this.handleViewChange(currentView)} />}/>
@@ -87,7 +87,7 @@ class App extends React.Component {
         }
       }}/>
       </div>
-    </Router>);
+    </HashRouter>);
   }
 
 

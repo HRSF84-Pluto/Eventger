@@ -48,6 +48,7 @@ class SignUp extends Component {
       <div className="signUpPage">
         <div>
           <h3>Sign Up</h3>
+          <div onClick={()=> this.props.handleViewChange('main')} className='close'>
         </div>
         <div className="signUpForm">
           <Form>
@@ -67,8 +68,9 @@ class SignUp extends Component {
             <Form.Field>
               <Checkbox label='I agree to the Terms and Conditions' />
             </Form.Field>
-            <Button type='submit' onClick={()=> this.handleSignUpInput()}>Submit</Button>
+            <Button type='submit' onClick={()=> this.handleSignUpInput() ? this.props.handleViewChange('login') : this.props.handleViewChange('signup') }>Submit</Button>
           </Form>
+        </div>
         </div>
       </div>
     );
