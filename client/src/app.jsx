@@ -1,11 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {
+  BrowserRouter as Router,
+  Route,HashRouter,
+  Link
+} from 'react-router-dom';
 import $ from 'jquery';
 import SignUp from './components/SignUp';
 import Login from './components/Login';
 import Main from './components/Main';
 import EventFeed from './components/EventFeed';
-
+import Saved from './components/Saved';
+import Settings from './components/Settings';
 
 
 
@@ -13,7 +19,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      view: 'main',
+      view: '',
       location: '',
       activity: '',
       date: '',
@@ -23,6 +29,7 @@ class App extends React.Component {
 
 
   componentDidMount(){
+
     // var dataSign = {username: 'begona', password:'', location: 'nowhere'}
     // $.ajax({
     //   type: 'POST',
@@ -52,21 +59,35 @@ class App extends React.Component {
     this.setState({ activity });
   }
 
+
   renderView() {
     const { view } = this.state;
-    if (view === 'main') {
-      return <Main currentUsername={this.state.username}
-        dateSelection={date => this.setState({ date: date._d.toString()})}
-        handleActivity={chosenActivity => this.handleActivity(chosenActivity)}
-        handleLocationInput={(inputLocation, newsFeedView) => this.handleLocationInput(inputLocation, newsFeedView)}
-        handleViewChange={currentView => this.handleViewChange(currentView)} />;
-    } else if (view === 'newsfeed'){
-      return <EventFeed handleViewChange={currentView => this.handleViewChange(currentView)} />;
-    }else if (view === 'login') {
-      return <Login handleViewChange={(currentView, username) => this.handleViewChange(currentView, username)} />;
-    } else if (view === 'signup') {
-      return <SignUp handleViewChange={(currentView, username) => this.handleViewChange(currentView, username)} />;
-    }
+    return (
+      <HashRouter>
+      <div>
+        <Route path="/EventsFeed"
+        render={props => <EventFeed handleViewChange={currentView => this.handleViewChange(currentView)} />}/>
+        <Route path="/SavedEvents"
+               render={props => <Saved/>}/>
+        <Route path="/Settings"
+               render={props => <Settings/>}/>
+      <Route exact path="/" render={() => {
+         if (view === 'login') {
+          return (<Login handleViewChange={(currentView, username) => this.handleViewChange(currentView, username)} />);
+
+        } else if (view === 'signup') {
+          return (<SignUp handleViewChange={(currentView, username) => this.handleViewChange(currentView, username)} />);
+        }
+        else{
+           return(<Main currentUsername={this.state.username}
+                        dateSelection={date => this.setState({ date: date._d.toString()})}
+                        handleActivity={chosenActivity => this.handleActivity(chosenActivity)}
+                        handleLocationInput={(inputLocation, eventsFeedView) => this.handleLocationInput(inputLocation, eventsFeedView)}
+                        handleViewChange={currentView => this.handleViewChange(currentView)} />);
+        }
+      }}/>
+      </div>
+    </HashRouter>);
   }
 
 
