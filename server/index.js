@@ -20,10 +20,12 @@ app.get('/eventData', function (req, res) {
 
   // to test a sample req.body from front-end's get request
   let sampleReqBody = {
-    queryTermForTM: ['music', 'sports', 'rap'],
-    queryTermForYelp: 'sports',
-    postalCode: '94134',
-    startDateTime: '2017-01-01T18:00:00Z',
+    keyword: 'Hip-Hop/Rap', // additional keyword search given by user in preferences table
+    sort: 'date,asc',
+    queryTermForTM: ['sports', 'music'], // defined by homepage selection on upon landing on site
+    queryTermForYelp: 'food',
+    postalCode: "94612",
+    startDateTime: '2017-01-01T18:00:00Z'
   }
 
   let returnedYelpTMDataObj = {};
