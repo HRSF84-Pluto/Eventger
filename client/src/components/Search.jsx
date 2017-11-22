@@ -1,10 +1,6 @@
 import React, {Component} from 'react';
 import Calendar from './Calendar';
-import {
-  BrowserRouter as Router,
-  Route,
-  Link
-} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 
 
@@ -26,10 +22,12 @@ class Search extends Component {
           </div>
           <br/>
         </div>
-        <button type="submit" className="ui button" role="button"
-                onClick={()=> this.props.onLocationSearch(this.state.location, 'eventsfeed')}>
-          <Link to="/EventsFeed">Enter</Link>
+        <Link className="ui button" to="/EventsFeed">
+        <button className="ui button"
+                onClick={()=> this.props.onLocationSearch(this.state.location, 'eventsfeed')} >
+            Enter
         </button>
+        </Link>
       </div>
     );
   }

@@ -176,6 +176,10 @@ p{
 
 }
 
+.name{
+  margin-left: 0px;
+}
+
 .event{
   border: 1px solid black;
   width: 50%;
@@ -200,6 +204,7 @@ p{
 
 .profile{
   margin-top: 40px;
+  margin-left: 10px;
 }
 
 .profile-options{
@@ -210,16 +215,78 @@ p{
 
 }
 
+.saved-events{
+  background-color: #ffffff;
+  height:900px;
+}
+.settings-page{
+  background-color: #ffffff;
+  height:900px;
+}
+
+
 .settings-div{
   margin-left: 50%;
 }
 
+.go-back-btn{
+  margin-left: 50px;
+}
+
+.go-back-btn:hover{
+  text-decoration: underline;
+}
 .preferences{
   margin-top: 50px;
   position: relative;
 }
 
+.settings-btn{
+  margin-left:-20px;
+}
+.saved-btn{
+  margin-left:20px;
+}
+.ui.buttons:not(.basic):not(.inverted){
+  float: right;
+  margin-right: 10px;
+  margin-top: 30px;
+}
+.radio-btn-section{
+  margin-top: 20px;
+}
 
+.budget{
+  margin-left: 10%;
+}
+div.ui.small.basic.buttons{
+  margin-left: 7%;
+}
+.saved-btn:hover{
+  text-decoration: underline;
+}
+.settings-btn:hover{
+  text-decoration: underline;
+}
+
+.event-info{
+  text-align: center;
+  margin-top: -80px;
+}
+.ui.small.image{
+  margin-left: 10px;
+  margin-top: 10px;
+}
+.options-div{
+  margin-left:5%;
+}
+
+.saved-bookmark{
+  color: #13B89F
+}
+.dollar-select{
+  color: #13B89F;
+}
 /* The container */
 .container {
   display: block;
