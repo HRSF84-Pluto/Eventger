@@ -28,7 +28,6 @@ module.exports = (db) => {
         );`);
     })
     .then(() => {
-      // Create users table
       return db.queryAsync(`
         CREATE TABLE IF NOT EXISTS usersEvents (
           user_id INT,
