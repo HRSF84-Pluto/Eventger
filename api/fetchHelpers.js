@@ -1,19 +1,20 @@
 
-const apiKeys = require('./apiKeys.js');
 const axios = require('axios');
 var Yelp = require('yelp');
-
 var ticketmaster = require('tm-api');
   
-ticketmaster.setSecret("my-consumer-secret");
+const apiKeys = require('./apiKeys.js');
+
+// Questions: // 
+// What happens when they try to specify more preferences?
 
 var getTMData = (sampleReqBody) => {
   console.log('inside TM api fetch');
+
   ticketmaster.setAPIKey(`${apiKeys.tmApiKey}`);
 
   return ticketmaster.events.search({
-    // classificationName: sampleReqBody.queryTerm,
-    startDateTime: "2017-12-05T00:00:00Z",
+    startDateTime: sampleReqBody.startDateTime,
     dmaId: 382
   })
   .then(results => {
@@ -50,7 +51,7 @@ var getTMData = (sampleReqBody) => {
   })
 }
 
-var getYelpData = (testRequestBody) => {
+var getYelpData = (sampleReqBody) => {
 
   var yelp = new Yelp({
     consumer_key: apiKeys.consumer_key,
@@ -60,15 +61,35 @@ var getYelpData = (testRequestBody) => {
   });
 
   return yelp.search({ 
-    term: testRequestBody.food, 
-    location: testRequestBody.location
+    term: sampleReqBody.food, 
+    location: sampleReqBody.location
   })
-  .then(function (data) {
-    // console.log('YELP API fetch returns - at index 0 - ', data.businesses[0])
+  .then(data => {
+    console.log('YELP API fetch returns - at index 0 - ', data.businesses[0])
     
     if (err => { throw err; })
-
-    return data;
+    return data.businesses;
+  })
+  .then(businesses => {
+    return businesses.map(business => {
+      return {
+        id: business.id.split('-').map(word => {return word[0]; }).join(''),
+        eventName: business.name,
+        location: {
+          line_1: business.location.address[0],
+          line_2: business.location.address[1],
+          city: business.location.city,
+          state: business.location.state_code,
+          zip: business.location.postal_code,
+          display_address: business.location.display_address,
+        },
+        // price: `${event.priceRanges[0].min} ${event.priceRanges[0].currency} - ${event.priceRanges[0].max} ${event.priceRanges[0].currency}`,
+        url: business.url,
+        photoUrl: business.image_url,
+        category: business.categories[0],
+        phone: business.display_phone
+      }
+    })
   })
   .catch(err => {
     console.log('LOOK HERE!! YELP FETCH ERROR: ', err)
