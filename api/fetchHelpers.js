@@ -1,31 +1,69 @@
-
 const axios = require('axios');
-var Yelp = require('yelp');
-var ticketmaster = require('tm-api');
+const Yelp = require('yelp');
+const ticketmaster = require('tm-api');
   
 const apiKeys = require('./apiKeys.js');
 
-// Questions: // 
+// Questions/ To Do: // 
 // What happens when they try to specify more preferences?
+// Must figure out how to use zip code instead of dmaID
+// bring in $$$ for yelp businesses
 
-var getTMData = (sampleReqBody) => {
+const getTMData = (sampleReqBody) => {
   console.log('inside TM api fetch');
 
-  ticketmaster.setAPIKey(`${apiKeys.tmApiKey}`);
+  ticketmaster.setSecret(`${apiKeys.tm_consumer_secret}`);
 
   return ticketmaster.events.search({
+    apikey: apiKeys.tm_api_key,
+    classificationName: JSON.stringify(sampleReqBody.queryTermForTM),
     startDateTime: sampleReqBody.startDateTime,
     dmaId: 382
   })
   .then(results => {
     console.log('TM API fetch returns - at index 0 - ', results.data._embedded.events[0])
-
     if (err => { throw err; })
-
-    // will return an array of event objects // 
     return results.data._embedded.events;
   })
-  .then(results => {
+  .then(events => {
+    return parseForCriticalData(events, 'ticketmaster');
+  })
+  .catch(err => {
+    console.log('LOOK HERE!! TM FETCH ERROR: ', err)
+  })
+}
+
+
+const getYelpData = (sampleReqBody) => {
+
+  const yelp = new Yelp({
+    consumer_key: apiKeys.yelp_api_key,
+    consumer_secret: apiKeys.yelp_consumer_secret,
+    token: apiKeys.token,
+    token_secret: apiKeys.token_secret,
+  });
+
+  return yelp.search({ 
+    term: sampleReqBody.queryTermForYelp, 
+    location: sampleReqBody.postalCode
+  })
+  .then(data => {
+    console.log('YELP API fetch returns - at index 0 - ', data.businesses[0])
+    
+    if (err => { throw err; })
+    return data.businesses;
+  })
+  .then(businesses => {
+    return parseForCriticalData(businesses, 'yelp');
+  })
+  .catch(err => {
+    console.log('LOOK HERE!! YELP FETCH ERROR: ', err)
+  })
+}
+
+const parseForCriticalData = (results, API) => {
+
+  if (API === 'ticketmaster') {
     return results.map(event => {
       return {
         id: event.id,
@@ -39,39 +77,14 @@ var getTMData = (sampleReqBody) => {
           state: event._embedded.venues[0].state.stateCode,
           zip: event._embedded.venues[0].city.postalCode
         },
-        price: `${event.priceRanges[0].min} ${event.priceRanges[0].currency} - ${event.priceRanges[0].max} ${event.priceRanges[0].currency}`,
+        price: event.priceRanges ? `${event.priceRanges[0].min} ${event.priceRanges[0].currency} - ${event.priceRanges[0].max} ${event.priceRanges[0].currency}` : 'Price unavailable',
         url: event.url,
         photoUrl: event.images[0].url,
         category: event.classifications[0].segment.name
       }
     })
-  })
-  .catch(err => {
-    console.log('LOOK HERE!! TM FETCH ERROR: ', err)
-  })
-}
-
-var getYelpData = (sampleReqBody) => {
-
-  var yelp = new Yelp({
-    consumer_key: apiKeys.consumer_key,
-    consumer_secret: apiKeys.consumer_secret,
-    token: apiKeys.token,
-    token_secret: apiKeys.token_secret,
-  });
-
-  return yelp.search({ 
-    term: sampleReqBody.food, 
-    location: sampleReqBody.location
-  })
-  .then(data => {
-    console.log('YELP API fetch returns - at index 0 - ', data.businesses[0])
-    
-    if (err => { throw err; })
-    return data.businesses;
-  })
-  .then(businesses => {
-    return businesses.map(business => {
+  } else if (API === 'yelp') {
+    return results.map(business => {
       return {
         id: business.id.split('-').map(word => {return word[0]; }).join(''),
         eventName: business.name,
@@ -83,17 +96,14 @@ var getYelpData = (sampleReqBody) => {
           zip: business.location.postal_code,
           display_address: business.location.display_address,
         },
-        // price: `${event.priceRanges[0].min} ${event.priceRanges[0].currency} - ${event.priceRanges[0].max} ${event.priceRanges[0].currency}`,
+        price: '$$$ will go here',
         url: business.url,
         photoUrl: business.image_url,
         category: business.categories[0],
         phone: business.display_phone
       }
     })
-  })
-  .catch(err => {
-    console.log('LOOK HERE!! YELP FETCH ERROR: ', err)
-  })
+  } 
 }
 
 module.exports.getTMData = getTMData;
@@ -111,7 +121,7 @@ module.exports.getYelpData = getYelpData;
 
 // *********************** Retired Code *********************** //
 
-// var getTMData = (sampleReqBody) => {
+// const getTMData = (sampleReqBody) => {
 //   console.log('inside TM api fetch');
 
 //   return axios.get(`https://app.ticketmaster.com/discovery/v2/events.json?

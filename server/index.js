@@ -8,8 +8,6 @@ const db =  require('../db/db.js');
 const PORT = process.env.PORT || 3000;
 
 
-
-
 app.listen(PORT, function () { console.log('Event-gers app listening on port 3000!') });
 
 app.use(bodyParser.json());
@@ -22,24 +20,20 @@ app.get('/eventData', function (req, res) {
 
   // to test a sample req.body from front-end's get request
   let sampleReqBody = {
-    queryTerm: 'Music',
+    queryTermForTM: ['music', 'sports', 'rap'],
+    queryTermForYelp: 'sports',
     postalCode: '94134',
-    startDateTime: '2018-11-11T18:00:00Z',
-    endDateTime: '2018-11-12T03:00:00Z',
-    food: 'Thai',
-    location: 'San Francisco'
+    startDateTime: '2017-01-01T18:00:00Z',
   }
 
-  let returnedYelpTMDataArr = [];
-
-  // API helper call //
+  let returnedYelpTMDataObj = {};
 
   // fetch ticketmaster data
   fetchHelpers.getTMData(sampleReqBody)
   .then(ticketMasterEventsArr => {
 
     // include TM event data in the object sent back to front-end //
-    returnedYelpTMDataArr.push(ticketMasterEventsArr);
+    returnedYelpTMDataObj.ticketmaster = ticketMasterEventsArr;
     return;
   })
   .then(placeholder => {
@@ -49,11 +43,11 @@ app.get('/eventData', function (req, res) {
     .then(yelpEventsArr => {
 
       // include Yelp event data in the object sent back to front-end //
-      returnedYelpTMDataArr.push(yelpEventsArr);
+      returnedYelpTMDataObj.yelp = yelpEventsArr;
       return;
     })
     .then(placeholder => {
-      res.status(201).send(returnedYelpTMDataArr);
+      res.status(201).send(returnedYelpTMDataObj);
     })
   })
 
