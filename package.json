@@ -10,7 +10,8 @@
   },
   "scripts": {
     "react-dev": "webpack -d --watch ",
-    "start": "nodemon ./server/index.js",
+    "dev": "nodemon ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
+    "start": "npm run react-dev & npm run dev",
     "test": "mocha ./tests/server/ServerSpecs.js",
     "heroku-postbuild": "webpack -d",
     "test-db": "mocha ./tests/db/databaseSpecs.js"
@@ -37,6 +38,7 @@
     "react-datepicker": "^0.61.0",
     "react-dom": "^15.4.2",
     "react-input-calendar": "^0.5.1",
+    "react-router-dom": "^4.2.2",
     "request": "^2.81.0",
     "semantic-ui-react": "^0.76.0",
     "sequelize": "^4.22.6",
@@ -44,6 +46,7 @@
     "supertest": "^3.0.0",
     "tm-api": "^0.6.1",
     "webpack": "^2.7.0",
+    "webpack-dev-server": "^2.9.4",
     "yelp": "^1.0.2"
   },
   "devDependencies": {

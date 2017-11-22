@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import Choices from './Choices';
 import Search from './Search';
 
+
 class Main extends Component {
   constructor(props) {
     super(props);

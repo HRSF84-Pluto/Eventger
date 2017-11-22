@@ -4,7 +4,9 @@ import Preferences from './Preferences';
 
 const SideBar = (props)=>(
   <div className="sidebar">
-    <div className="name"><h1>Your Name</h1></div>
+    <div className="name">
+      <h1>Your Name</h1>
+    </div>
     <Profile/>
     <Preferences/>
   </div>
