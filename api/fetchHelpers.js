@@ -1,29 +1,29 @@
+
 const Yelp = require('yelp');
 const ticketmaster = require('tm-api');
   
 const apiKeys = require('./apiKeys.js');
 
 // Questions / To Do: // 
-// What happens when they try to specify more preferences? // figured out solution - look into preferences you can account for now
 // bring in $$$ for yelp businesses
+// preferences: budget; indoor/outdoor;
 
 const getTMData = (sampleReqBody) => {
   console.log('inside TM api fetch');
 
   // Default set of parameters for each search (before additional preferences) //
   let params = {
+    apikey: apiKeys.tm_api_key,
     size: '40',
     sort: 'date,asc',
-    apikey: apiKeys.tm_api_key,
     classificationName: JSON.stringify(sampleReqBody.queryTermForTM),
     startDateTime: sampleReqBody.startDateTime,
-    postalCode: sampleReqBody.postalCode
-    // dmaId: 382
+    city: sampleReqBody.city,
   }
 
   // Modify if other preferences are selected by user // 
   Object.assign(params, 
-    sampleReqBody.keyword ? { keyword: sampleReqBody.keyword } : null);
+    sampleReqBody.preferenceForMusicOrLeague ? { keyword: sampleReqBody.preferenceForMusicOrLeague } : null);
 
   // API Fetch // 
   return ticketmaster.events.search(params)
@@ -50,10 +50,16 @@ const getYelpData = (sampleReqBody) => {
     token_secret: apiKeys.token_secret,
   });
 
-  return yelp.search({ 
+  let params = { 
     term: sampleReqBody.queryTermForYelp, 
     location: sampleReqBody.postalCode
-  })
+  }
+
+  // Modify if other preferences are selected by user // 
+  Object.assign(params, 
+    sampleReqBody.preferenceForFoodAndOrSetting ? { term: sampleReqBody.preferenceForFoodAndOrSetting } : null);
+
+  return yelp.search(params)
   .then(data => {
     console.log('YELP API fetch returns - at index 0 - ', data.businesses[0])
     
@@ -125,47 +131,3 @@ module.exports.getYelpData = getYelpData;
 // yelp.business('yelp-san-francisco')
 //   .then(console.log)
 //   .catch(console.error);
-
-// *********************** Retired Code *********************** //
-
-// const getTMData = (sampleReqBody) => {
-//   console.log('inside TM api fetch');
-
-//   return axios.get(`https://app.ticketmaster.com/discovery/v2/events.json?
-//     dmaId=382&
-//     classificationName=${sampleReqBody.queryTerm}&apikey=${apiKeys.tmApiKey}`)
-//   // return axios.get(`https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apiKeys.tmApiKey}`)
-//   .then(results => {
-//     console.log('TM API fetch returns - at index 0 - ', results.data._embedded.events[0])
-
-//     if (err => { throw err; })
-
-//     // will return an array of event objects // 
-//     return results.data._embedded.events;
-//   })
-//   // .then(results => {
-//   //   return results.map(event => {
-//   //     return {
-//   //       id: event.id,
-//   //       eventName: event.name,
-//   //       date: event.dates.start.localDate,
-//   //       time: event.dates.start.localTime,
-//   //       location: {
-//   //         line_1: event._embedded.venues[0].name,
-//   //         line_2: event._embedded.venues[0].address.line1,
-//   //         city: event._embedded.venues[0].city.name,
-//   //         state: event._embedded.venues[0].state.stateCode,
-//   //         zip: event._embedded.venues[0].city.postalCode
-//   //       },
-//   //       // price: `${event.priceRanges[0].min} ${event.priceRanges[0].currency} - ${event.priceRanges[0].max} ${event.priceRanges[0].currency}`,
-//   //       url: event.url,
-//   //       photoUrl: event.images[0].url,
-//   //       category: event.classifications[0].segment.name
-//   //     }
-//   //   })
-//   // })
-//   .catch(err => {
-//     console.log('LOOK HERE!! TM FETCH ERROR: ', err)
-//   })
-// }
-

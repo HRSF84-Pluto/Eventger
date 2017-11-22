@@ -20,11 +20,14 @@ app.get('/eventData', function (req, res) {
 
   // to test a sample req.body from front-end's get request
   let sampleReqBody = {
-    keyword: 'Hip-Hop/Rap', // additional keyword search given by user in preferences table
-    sort: 'date,asc',
-    queryTermForTM: ['sports', 'music'], // defined by homepage selection on upon landing on site
+    queryTermForTM: ['sports', 'music'], // defined by homepage selection upon landing on site
+    preferenceForMusicOrLeague: 'NBA', // additional keyword search given by user in preferences table [max: 1 word]
     queryTermForYelp: 'food',
-    postalCode: "94612",
+    preferenceForFoodAndOrSetting: 'outdoor food', // not reliable for setting since indoor/outdoor isn't a parameter
+    sort: 'date,asc',
+    city: 'Oakland',
+    radius: '100',
+    postalCode: '94134',
     startDateTime: '2017-01-01T18:00:00Z'
   }
 
