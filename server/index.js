@@ -20,10 +20,10 @@ app.get('/eventData', function (req, res) {
   // to test a sample req.body from front-end's get request
   let sampleReqBody = {
     queryTermForTM: ['sports', 'music'], // both query Terms are defined by homepage selection upon landing on site
-    queryTermForYelp: 'food',
-    preferenceForMusicOrLeague: 'Rock', // additional keyword search given by user in preferences table [max: 1 word]
-    preferenceForFoodAndOrSetting: 'outdoor food', // not reliable for setting since indoor/outdoor isn't a parameter
-    sort: 'date,asc',
+    preferenceForMusicOrLeague: 'Rock', // additional keyword given by user in preferences table [max: 1 word] to narrow down sports or music
+    queryTermForYelp: 'food', // default Yelp fetch from homepage 
+    preferenceForFoodAndOrSetting: 'Mexican', // additional keyword given by user to narrow down type of food
+    // activity: 'hiking', // if user doesn't want food but wants an activity - yelp category: https://www.yelp.com/developers/documentation/v2/all_category_list
     city: 'San Francisco',
     postalCode: '94104',
     startDateTime: '2017-01-12T18:00:00Z',
@@ -54,6 +54,8 @@ app.get('/eventData', function (req, res) {
       res.status(201).send(returnedYelpTMDataObj);
     })
   })
+
+  // solo api testing purposes
   // fetchHelpers.getYelpData(sampleReqBody)
   // .then(response => {
   //   res.status(201).send(response);
