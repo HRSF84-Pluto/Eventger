@@ -33,31 +33,31 @@ app.get('/eventData', function (req, res) {
   let returnedYelpTMDataObj = {};
 
   // fetch ticketmaster data
-  // fetchHelpers.getTMData(sampleReqBody)
-  // .then(ticketMasterEventsArr => {
+  fetchHelpers.getTMData(sampleReqBody)
+  .then(ticketMasterEventsArr => {
 
-  //   // include TM event data in the object sent back to front-end //
-  //   returnedYelpTMDataObj.ticketmaster = ticketMasterEventsArr;
-  //   return;
-  // })
-  // .then(placeholder => {
-
-  //   // fetch Yelp data
-  //   fetchHelpers.getYelpData(sampleReqBody)
-  //   .then(yelpEventsArr => {
-
-  //     // include Yelp event data in the object sent back to front-end //
-  //     returnedYelpTMDataObj.yelp = yelpEventsArr;
-  //     return;
-  //   })
-  //   .then(placeholder => {
-  //     res.status(201).send(returnedYelpTMDataObj);
-  //   })
-  // })
-  fetchHelpers.getYelpData(sampleReqBody)
-  .then(response => {
-    res.status(201).send(response);
+    // include TM event data in the object sent back to front-end //
+    returnedYelpTMDataObj.ticketmaster = ticketMasterEventsArr;
+    return;
   })
+  .then(placeholder => {
+
+    // fetch Yelp data
+    fetchHelpers.getYelpData(sampleReqBody)
+    .then(yelpEventsArr => {
+
+      // include Yelp event data in the object sent back to front-end //
+      returnedYelpTMDataObj.yelp = yelpEventsArr;
+      return;
+    })
+    .then(placeholder => {
+      res.status(201).send(returnedYelpTMDataObj);
+    })
+  })
+  // fetchHelpers.getYelpData(sampleReqBody)
+  // .then(response => {
+  //   res.status(201).send(response);
+  // })
 
 });
 

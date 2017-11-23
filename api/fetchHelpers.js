@@ -1,6 +1,5 @@
-
+const ticketmaster = require('tm-api');
 const yelp = require('yelp-fusion');
-// const ticketmaster = require('tm-api');
   
 const apiKeys = require('./apiKeys.js');
 
@@ -41,7 +40,6 @@ const getTMData = (sampleReqBody) => {
 }
 
 const getYelpData = (sampleReqBody) => {
-  console.log('inside getYelpData')
   
   let params = { 
     term: sampleReqBody.queryTermForYelp, 
@@ -55,12 +53,14 @@ const getYelpData = (sampleReqBody) => {
    
   const client = yelp.client(apiKeys.token);
    
+  // BEGIN: API fetch
   return client.search(params)
   .then(res => {
     console.log('YELP API fetch returns - at index 0 - ', res.jsonBody.businesses[0])
     if (err => { throw err; })
     return res.jsonBody.businesses;
   })
+  // only return data we want
   .then(businesses => {
     return parseForCriticalData(businesses, 'yelp');
   })
