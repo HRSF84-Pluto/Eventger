@@ -26,7 +26,8 @@ app.get('/eventData', function (req, res) {
     sort: 'date,asc',
     city: 'San Francisco',
     postalCode: '94104',
-    startDateTime: '2017-01-12T18:00:00Z'
+    startDateTime: '2017-01-12T18:00:00Z',
+    price: '$$',
   }
 
   let returnedYelpTMDataObj = {};

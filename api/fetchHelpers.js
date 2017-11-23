@@ -28,7 +28,7 @@ const getTMData = (sampleReqBody) => {
   // API Fetch // 
   return ticketmaster.events.search(params)
   .then(results => {
-    // console.log('TM API fetch returns - at index 0 - ', results.data._embedded.events[0])
+    console.log('TM API fetch returns - at index 0 - ', results.data._embedded.events[0])
     if (err => { throw err; })
     return results.data._embedded.events;
   })
@@ -50,7 +50,8 @@ const getYelpData = (sampleReqBody) => {
 
   // Modify if other preferences are selected by user // 
   Object.assign(params, 
-    sampleReqBody.preferenceForFoodAndOrSetting ? { term: sampleReqBody.preferenceForFoodAndOrSetting } : null);
+    sampleReqBody.preferenceForFoodAndOrSetting ? { term: sampleReqBody.preferenceForFoodAndOrSetting } : null,
+    sampleReqBody.price ? { price: priceMapper(sampleReqBody.price, 'yelp') }: null);
    
   const client = yelp.client(apiKeys.token);
    
@@ -64,7 +65,7 @@ const getYelpData = (sampleReqBody) => {
     return parseForCriticalData(businesses, 'yelp');
   })
   .catch(err => {
-    console.log('LOOK HERE!! TM FETCH ERROR: ', err)
+    console.log('LOOK HERE!! Yelp FETCH ERROR: ', err)
   });
 
 }
@@ -114,6 +115,27 @@ const parseForCriticalData = (results, API) => {
   } 
 }
 
+const priceMapper = (dollarSigns, API) => {
+  if (API === 'ticketmaster') { // TM: max must be <= the $ given
+    let map = {
+      $: 10,
+      $$: 50,
+      $$$: 100,
+      $$$$: 500
+    }
+    return map[dollarSigns]
+  } else if (API === 'yelp') {
+    let map = {
+      $: 1,
+      $$: 2,
+      $$$: 3,
+      $$$$: 4
+    }
+    console.log('eyayeyay')
+    return map[dollarSigns]
+  }
+}
+
 module.exports.getTMData = getTMData;
 module.exports.getYelpData = getYelpData;
 
@@ -126,3 +148,11 @@ module.exports.getYelpData = getYelpData;
 // yelp.business('yelp-san-francisco')
 //   .then(console.log)
 //   .catch(console.error);
+
+// *************** Preferences built-in ? ************** //
+//                    Ticketmaster        Yelp           //
+//  Music/Sports           Yes             n/a           // 
+//  Food Type              n/a             Yes           // 
+//  Indoor/Outdoor  may not be possible     No           // 
+//  Budget                 No              Yes           // 
+// ***************************************************** //
