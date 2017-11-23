@@ -3,12 +3,11 @@ import Profile from './Profile';
 import Preferences from './Preferences';
 
 const SideBar = (props)=>(
-  <div className="sidebar">
-    <div className="name">
-      <h1>Your Name</h1>
-    </div>
-    <Profile/>
-    <Preferences/>
+  <div className="wrapperSidebar">
+    <div className="boxSidebar headerSidebar"> <Profile/></div>
+    <div className="boxSidebar contentSidebar"> <Preferences/></div>
   </div>
 );
 export default SideBar;
+
+

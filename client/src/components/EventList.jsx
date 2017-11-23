@@ -9,7 +9,7 @@ class EventList extends Component{
   render(){
     const list = [1, 2, 3, 4, 5, 6].map((event, i) => <Event event={event} key={i} idx={i} />);
     return (
-      <div className='eventList'>
+      <div>
         {list}
       </div>
     );

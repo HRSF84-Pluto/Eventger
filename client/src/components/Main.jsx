@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Choices from './Choices';
 import Search from './Search';
+import {Link} from 'react-router-dom';
 
 
 class Main extends Component {
@@ -8,17 +9,20 @@ class Main extends Component {
     super(props);
     this.state = {
       username: this.props.currentUsername || 'Login',
+      logOut: '',
     };
   }
+
   render() {
     return (
-      <div>
+      <div className="main">
         <div className="loginButtons">
           <div>
-            <div className="login-btn" onClick={() => this.props.handleViewChange('login')}>{this.state.username}</div>
+            <Link style={{color: 'white'}} to="/Login"><div className="login-btn">{this.state.username}</div></Link>
+            {this.state.logOut}
           </div>
           <div>
-            <div className="signup-btn" onClick={() => this.props.handleViewChange('signup')}>Sign Up</div>
+            <Link style={{color: 'white'}} to="/SignUp"><div className="signup-btn">Sign Up</div></Link>
           </div>
         </div>
         <Choices handleActivity={this.props.handleActivity}/>

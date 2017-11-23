@@ -18,7 +18,6 @@ class Calendar extends React.Component {
     this.props.dateSelection(this.state.startDate);
   }
 
-
   render() {
     return <DatePicker
       dateSelection={this.state.startDate}

@@ -20,6 +20,7 @@ class Settings extends Component{
        </div>
        <div className="event">
          <h1>Update your info</h1>
+
        </div>
      </div>
    )

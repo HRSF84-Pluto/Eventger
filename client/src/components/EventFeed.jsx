@@ -7,15 +7,22 @@ class EventFeed extends Component{
   constructor(props) {
     super(props);
   }
-
   render(){
     return (
-      <div className="newsFeed">
-        <SideBar/>
-      <EventList/>
+      <div className="wrapper">
+        <div className="box header"/>
+        <div className="box sidebar">
+          <SideBar/>
+        </div>
+        <div className="box content">
+          <EventList/>
+        </div>
+        <div className="box footer">Footer</div>
       </div>
     );
   }
 }
 
 export default EventFeed;
+
+

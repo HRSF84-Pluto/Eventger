@@ -12,6 +12,7 @@ class FilterOptions extends Component {
       classNameOneDollar: "",
       classNameTwoDollars: "",
       classNameThreeDollars: "",
+      classNameFourDollars: ""
     };
   }
 
@@ -39,6 +40,11 @@ class FilterOptions extends Component {
         this.setState({classNameThreeDollars: "dollar-select"}) :
         this.setState({classNameThreeDollars: ""})
 
+    }else if (dollars === '$$$$'){
+      this.state.classNameFourDollars === "" ?
+        this.setState({classNameFourDollars: "dollar-select"}) :
+        this.setState({classNameFourDollars: ""})
+
     }
 
   }
@@ -60,6 +66,12 @@ class FilterOptions extends Component {
             <i aria-hidden="true" className={"dollar icon" + " " + this.state.classNameThreeDollars}/>
             <i aria-hidden="true" className={"dollar icon" + " " + this.state.classNameThreeDollars}/>
             <i aria-hidden="true" className={"dollar icon" + " " + this.state.classNameThreeDollars}/>
+          </button>
+          <button className="ui icon button" role="button" onClick={()=> this.handleClick('$$$$')}>
+            <i aria-hidden="true" className={"dollar icon" + " " + this.state.classNameFourDollars}/>
+            <i aria-hidden="true" className={"dollar icon" + " " + this.state.classNameFourDollars}/>
+            <i aria-hidden="true" className={"dollar icon" + " " + this.state.classNameFourDollars}/>
+            <i aria-hidden="true" className={"dollar icon" + " " + this.state.classNameFourDollars}/>
           </button>
         </div>
         </div>

@@ -29,7 +29,7 @@ class Event extends Component{
         <p> Event details {this.props.event}</p>
           <p><a href="https://www.reddit.com/r/puppies/" target="_blank">Event Link</a></p>
           <div className="ui small icon buttons">
-            <button className="ui button saved-item-btn">
+            <button className="ui button">
               <i onClick={this.handleSavedEvent.bind(this, this.props.idx)} className={this.state.className}/>
             </button>
           </div>
