@@ -3,11 +3,7 @@ const yelp = require('yelp-fusion');
   
 const apiKeys = require('./apiKeys.js');
 
-// Questions / To Do: // 
-// bring in $$$ for yelp businesses
-// preferences: budget; indoor/outdoor;
-
-const getTMData = (sampleReqBody) => {
+const getTMData = (reqBody) => {
   console.log('inside TM api fetch');
 
   // Default set of parameters for each search (before additional preferences) //
@@ -15,22 +11,35 @@ const getTMData = (sampleReqBody) => {
     apikey: apiKeys.tm_api_key,
     size: '40',
     sort: 'date,asc',
-    classificationName: JSON.stringify(sampleReqBody.queryTermForTM),
-    startDateTime: sampleReqBody.startDateTime,
-    city: sampleReqBody.city,
+    classificationName: JSON.stringify(reqBody.queryTermForTM),
+    startDateTime: reqBody.startDateTime,
+    city: reqBody.city,
   }
 
-  // Modify if other preferences are selected by user // 
+  // Modify fetch params if other preferences are selected by user // 
   Object.assign(params, 
-    sampleReqBody.preferenceForMusicOrLeague ? { keyword: sampleReqBody.preferenceForMusicOrLeague } : null);
+    reqBody.preferenceForMusicOrLeague ? { keyword: reqBody.preferenceForMusicOrLeague } : null);
 
-  // API Fetch // 
+  // BEGIN: API fetch
   return ticketmaster.events.search(params)
   .then(results => {
     console.log('TM API fetch returns - at index 0 - ', results.data._embedded.events[0])
     if (err => { throw err; })
     return results.data._embedded.events;
   })
+  .then(events => {
+    if (reqBody.price) { // filter for price preference if exists
+      return events.filter(event => {
+        let eventPrice = event.priceRanges // array w/each element containing a min and max cost
+        if (eventPrice) { // event price is available, compare; otherwise, let it filter through
+          return Number(eventPrice[0].max) <= priceMapper(reqBody.price, 'ticketmaster');
+        }
+        return event;
+      })
+    }
+    return events;
+  })
+  // only return data we want
   .then(events => {
     return parseForCriticalData(events, 'ticketmaster');
   })
@@ -39,17 +48,20 @@ const getTMData = (sampleReqBody) => {
   })
 }
 
-const getYelpData = (sampleReqBody) => {
+const getYelpData = (reqBody) => {
   
   let params = { 
-    term: sampleReqBody.queryTermForYelp, 
-    location: sampleReqBody.postalCode
+    open_now: true,
+    sort_by: 'rating',
+    term: reqBody.queryTermForYelp, 
+    location: reqBody.postalCode,
   }
 
-  // Modify if other preferences are selected by user // 
+  // Modify fetch params if other preferences are selected by user // 
   Object.assign(params, 
-    sampleReqBody.preferenceForFoodAndOrSetting ? { term: sampleReqBody.preferenceForFoodAndOrSetting } : null,
-    sampleReqBody.price ? { price: priceMapper(sampleReqBody.price, 'yelp') }: null);
+    reqBody.preferenceForFoodAndOrSetting ? { term: reqBody.preferenceForFoodAndOrSetting } : null,
+    reqBody.price ? { price: priceMapper(reqBody.price, 'yelp') } : null,
+    reqBody.activity ? { categories: reqBody.activity } : null);
    
   const client = yelp.client(apiKeys.token);
    
@@ -86,7 +98,7 @@ const parseForCriticalData = (results, API) => {
           state: event._embedded.venues[0].state.stateCode,
           zip: event._embedded.venues[0].city.postalCode
         },
-        price: event.priceRanges ? `${event.priceRanges[0].min} ${event.priceRanges[0].currency} - ${event.priceRanges[0].max} ${event.priceRanges[0].currency}` : 'Price unavailable',
+        price: event.priceRanges ? `${event.priceRanges[0].min} ${event.priceRanges[0].currency} - ${event.priceRanges[0].max} ${event.priceRanges[0].currency}` : 'No Price Provided',
         url: event.url,
         photoUrl: event.images[0].url,
         category: event.classifications[0].segment.name
@@ -131,7 +143,6 @@ const priceMapper = (dollarSigns, API) => {
       $$$: 3,
       $$$$: 4
     }
-    console.log('eyayeyay')
     return map[dollarSigns]
   }
 }
@@ -139,20 +150,15 @@ const priceMapper = (dollarSigns, API) => {
 module.exports.getTMData = getTMData;
 module.exports.getYelpData = getYelpData;
 
-// Request API access: http://www.yelp.com/developers/getting_started/api_access
 
-// See http://www.yelp.com/developers/documentation/v2/search_api
+// ***************** Preferences built-in ? ************** //
+//                      Ticketmaster        Yelp           //
+//  Music/Sports             Yes              -            // 
+//  Food Type                 -              Yes           // 
+//  Activity                  -          In Progress       // 
+//  Budget                   Yes             Yes           // 
+// ******************************************************* //
 
-// In case we want a more in-depth search
-// See http://www.yelp.com/developers/documentation/v2/business
-// yelp.business('yelp-san-francisco')
-//   .then(console.log)
-//   .catch(console.error);
+// do we want to filter out events without a provided price? 
 
-// *************** Preferences built-in ? ************** //
-//                    Ticketmaster        Yelp           //
-//  Music/Sports           Yes             n/a           // 
-//  Food Type              n/a             Yes           // 
-//  Indoor/Outdoor  may not be possible     No           // 
-//  Budget                 No              Yes           // 
-// ***************************************************** //
+
