@@ -1,29 +1,28 @@
-const Yelp = require('yelp');
 const ticketmaster = require('tm-api');
+const yelp = require('yelp-fusion');
   
 const apiKeys = require('./apiKeys.js');
 
 // Questions / To Do: // 
-// What happens when they try to specify more preferences? // figured out solution - look into preferences you can account for now
 // bring in $$$ for yelp businesses
+// preferences: budget; indoor/outdoor;
 
 const getTMData = (sampleReqBody) => {
   console.log('inside TM api fetch');
 
   // Default set of parameters for each search (before additional preferences) //
   let params = {
+    apikey: apiKeys.tm_api_key,
     size: '40',
     sort: 'date,asc',
-    apikey: apiKeys.tm_api_key,
     classificationName: JSON.stringify(sampleReqBody.queryTermForTM),
     startDateTime: sampleReqBody.startDateTime,
-    postalCode: sampleReqBody.postalCode
-    // dmaId: 382
+    city: sampleReqBody.city,
   }
 
   // Modify if other preferences are selected by user // 
   Object.assign(params, 
-    sampleReqBody.keyword ? { keyword: sampleReqBody.keyword } : null);
+    sampleReqBody.preferenceForMusicOrLeague ? { keyword: sampleReqBody.preferenceForMusicOrLeague } : null);
 
   // API Fetch // 
   return ticketmaster.events.search(params)
@@ -40,32 +39,35 @@ const getTMData = (sampleReqBody) => {
   })
 }
 
-
 const getYelpData = (sampleReqBody) => {
-
-  const yelp = new Yelp({
-    consumer_key: apiKeys.yelp_api_key,
-    consumer_secret: apiKeys.yelp_consumer_secret,
-    token: apiKeys.token,
-    token_secret: apiKeys.token_secret,
-  });
-
-  return yelp.search({ 
+  
+  let params = { 
     term: sampleReqBody.queryTermForYelp, 
     location: sampleReqBody.postalCode
-  })
-  .then(data => {
-    console.log('YELP API fetch returns - at index 0 - ', data.businesses[0])
-    
+  }
+
+  // Modify if other preferences are selected by user // 
+  Object.assign(params, 
+    sampleReqBody.preferenceForFoodAndOrSetting ? { term: sampleReqBody.preferenceForFoodAndOrSetting } : null,
+    sampleReqBody.price ? { price: priceMapper(sampleReqBody.price, 'yelp') }: null);
+   
+  const client = yelp.client(apiKeys.token);
+   
+  // BEGIN: API fetch
+  return client.search(params)
+  .then(res => {
+    console.log('YELP API fetch returns - at index 0 - ', res.jsonBody.businesses[0])
     if (err => { throw err; })
-    return data.businesses;
+    return res.jsonBody.businesses;
   })
+  // only return data we want
   .then(businesses => {
     return parseForCriticalData(businesses, 'yelp');
   })
   .catch(err => {
-    console.log('LOOK HERE!! YELP FETCH ERROR: ', err)
-  })
+    console.log('LOOK HERE!! Yelp FETCH ERROR: ', err)
+  });
+
 }
 
 const parseForCriticalData = (results, API) => {
@@ -96,21 +98,42 @@ const parseForCriticalData = (results, API) => {
         id: business.id.split('-').map(word => {return word[0]; }).join(''),
         eventName: business.name,
         location: {
-          line_1: business.location.address[0],
-          line_2: business.location.address[1],
+          line_1: business.location.address1,
+          line_2: business.location.address2,
           city: business.location.city,
-          state: business.location.state_code,
-          zip: business.location.postal_code,
+          state: business.location.state,
+          zip: business.location.zip_code,
           display_address: business.location.display_address,
         },
-        price: '$$$ will go here',
+        price: business.price,
         url: business.url,
         photoUrl: business.image_url,
-        category: business.categories[0],
-        phone: business.display_phone
+        category: business.categories[0].title,
+        phone: business.phone
       }
     })
   } 
+}
+
+const priceMapper = (dollarSigns, API) => {
+  if (API === 'ticketmaster') { // TM: max must be <= the $ given
+    let map = {
+      $: 10,
+      $$: 50,
+      $$$: 100,
+      $$$$: 500
+    }
+    return map[dollarSigns]
+  } else if (API === 'yelp') {
+    let map = {
+      $: 1,
+      $$: 2,
+      $$$: 3,
+      $$$$: 4
+    }
+    console.log('eyayeyay')
+    return map[dollarSigns]
+  }
 }
 
 module.exports.getTMData = getTMData;
@@ -126,46 +149,10 @@ module.exports.getYelpData = getYelpData;
 //   .then(console.log)
 //   .catch(console.error);
 
-// *********************** Retired Code *********************** //
-
-// const getTMData = (sampleReqBody) => {
-//   console.log('inside TM api fetch');
-
-//   return axios.get(`https://app.ticketmaster.com/discovery/v2/events.json?
-//     dmaId=382&
-//     classificationName=${sampleReqBody.queryTerm}&apikey=${apiKeys.tmApiKey}`)
-//   // return axios.get(`https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apiKeys.tmApiKey}`)
-//   .then(results => {
-//     console.log('TM API fetch returns - at index 0 - ', results.data._embedded.events[0])
-
-//     if (err => { throw err; })
-
-//     // will return an array of event objects // 
-//     return results.data._embedded.events;
-//   })
-//   // .then(results => {
-//   //   return results.map(event => {
-//   //     return {
-//   //       id: event.id,
-//   //       eventName: event.name,
-//   //       date: event.dates.start.localDate,
-//   //       time: event.dates.start.localTime,
-//   //       location: {
-//   //         line_1: event._embedded.venues[0].name,
-//   //         line_2: event._embedded.venues[0].address.line1,
-//   //         city: event._embedded.venues[0].city.name,
-//   //         state: event._embedded.venues[0].state.stateCode,
-//   //         zip: event._embedded.venues[0].city.postalCode
-//   //       },
-//   //       // price: `${event.priceRanges[0].min} ${event.priceRanges[0].currency} - ${event.priceRanges[0].max} ${event.priceRanges[0].currency}`,
-//   //       url: event.url,
-//   //       photoUrl: event.images[0].url,
-//   //       category: event.classifications[0].segment.name
-//   //     }
-//   //   })
-//   // })
-//   .catch(err => {
-//     console.log('LOOK HERE!! TM FETCH ERROR: ', err)
-//   })
-// }
-
+// *************** Preferences built-in ? ************** //
+//                    Ticketmaster        Yelp           //
+//  Music/Sports           Yes             n/a           // 
+//  Food Type              n/a             Yes           // 
+//  Indoor/Outdoor  may not be possible     No           // 
+//  Budget                 No              Yes           // 
+// ***************************************************** //

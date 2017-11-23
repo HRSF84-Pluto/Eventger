@@ -7,7 +7,6 @@ const db =  require('../db/db.js');
 
 const PORT = process.env.PORT || 3000;
 
-
 app.listen(PORT, function () { console.log('Event-gers app listening on port 3000!') });
 
 app.use(bodyParser.json());
@@ -20,12 +19,15 @@ app.get('/eventData', function (req, res) {
 
   // to test a sample req.body from front-end's get request
   let sampleReqBody = {
-    keyword: 'Hip-Hop/Rap', // additional keyword search given by user in preferences table
-    sort: 'date,asc',
-    queryTermForTM: ['sports', 'music'], // defined by homepage selection on upon landing on site
+    queryTermForTM: ['sports', 'music'], // both query Terms are defined by homepage selection upon landing on site
     queryTermForYelp: 'food',
-    postalCode: "94612",
-    startDateTime: '2017-01-01T18:00:00Z'
+    preferenceForMusicOrLeague: 'Rock', // additional keyword search given by user in preferences table [max: 1 word]
+    preferenceForFoodAndOrSetting: 'outdoor food', // not reliable for setting since indoor/outdoor isn't a parameter
+    sort: 'date,asc',
+    city: 'San Francisco',
+    postalCode: '94104',
+    startDateTime: '2017-01-12T18:00:00Z',
+    price: '$$',
   }
 
   let returnedYelpTMDataObj = {};
@@ -52,6 +54,10 @@ app.get('/eventData', function (req, res) {
       res.status(201).send(returnedYelpTMDataObj);
     })
   })
+  // fetchHelpers.getYelpData(sampleReqBody)
+  // .then(response => {
+  //   res.status(201).send(response);
+  // })
 
 });
 
