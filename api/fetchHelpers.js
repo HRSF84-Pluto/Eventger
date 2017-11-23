@@ -1,4 +1,3 @@
-const axios = require('axios');
 const Yelp = require('yelp');
 const ticketmaster = require('tm-api');
   

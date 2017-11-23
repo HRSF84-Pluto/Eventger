@@ -1,15 +1,11 @@
-/**************************************************************************************/
-/* TODO: Garrett feel free to use this if you would like! I was doing my tests for Server and saw this from shortly -BG */
-/**************************************************************************************/
+//MAY NEED TO UPDATE USERNAME AND PASSWORD TO ACCESS MYSQL DATABASE
 
 const expect = require('chai').expect;
 const mysql = require('mysql');
 const request = require('request');
 const express = require('express');
-// var httpMocks = require('node-mocks-http');
 const dbFuncs = require('../../db/db.js')
 const app = express();
-// const app = require('../../server/index.js');
 
 const schema = require('../../db/config.js');
 const port = 3000;
@@ -25,10 +21,12 @@ describe('', function() {
       connection.query('DROP TABLE IF EXISTS ' + tablename, function(err, result) {
         if (err) {console.log('ERROR', err)}
         console.log('DROPPED ' + tablename + ' ' + result);
+        console.log(JSON.stringify(result));
         count++;
+        console.log('count', count)
+        console.log('Table length',tablenames.length)
         if (count === tablenames.length) {
           return schema(db).then(done);
-          done();
         }
       });
     });
@@ -36,32 +34,22 @@ describe('', function() {
 
   beforeEach(function(done) {
 
-    /*************************************************************************************/
-    /* TODO: Update user and password if different than on your local machine            */
-    /*************************************************************************************/
     db = mysql.createConnection({
       user: 'root',
       database: 'Eventger'
     });
 
-    /**************************************************************************************/
-    /* TODO: If you create a new MySQL tables, add it to the tablenames collection below. */
-    /**************************************************************************************/
     var tablenames = ['usersEvents', 'users', 'events'];
 
-    // db.connect(function(err) {
-    //   if (err) { 
-    //     console.log(err);
-    //     return done(err); 
-    //   }
-      console.log('INTO BEFORE EACH');
-      /* Empties the db table before each test so that multiple tests
-       * (or repeated runs of the tests) won't screw each other up: */
+    db.connect(function(err) {
+      if (err) { 
+        console.log(err);
+        return done(err); 
+      }
       clearDB(db, tablenames, function() {
-        console.log('Cleared the DB');
         server = app.listen(port, done);
       });
-    // });
+    });
 
     afterEach(function() { server.close(); });
   });
@@ -72,7 +60,6 @@ describe('', function() {
     var queryString = 'SELECT * FROM users';
     db.query(queryString, function(err, results) {
       if (err) { return done(err); }
-
       expect(results).to.deep.equal([]);
       done();
     });
@@ -182,32 +169,15 @@ describe('Database Table Schema for events:', function() {
     });
   });
 
-  // it('only allows unique usernames', function(done) {
-  //   var newUser = {
-  //     username: 'Howard',
-  //     password: 'p@ssw0rd',
-  //     zip: '94102'
-  //   };
-  //   db.query('INSERT INTO users SET ?', newUser, function(err, results) {
-  //     var sameUser = newUser;
-  //     db.query('INSERT INTO users SET ?', sameUser, function(err) {
-  //       expect(err).to.exist;
-  //       expect(err.code).to.equal('ER_DUP_ENTRY');
-  //       done();
-  //     });
-  //   });
-  // });
-
   it('should have unique ids for each row provided by APIs', function(done) {
     var newEvent = {
       id: 'abcabc',
       eventName: 'Clippers vs Lakers',
-      date: 'January 18, 2018'
+      date: 'January 18, 2018',
     };
     newEventArr = [newEvent.id, newEvent.eventName, newEvent.date]
-    db.query('INSERT INTO events (id, eventName, date) SET ?', newEvent , function(err, result) {
+    db.query('INSERT INTO events (id, eventName, date) VALUES (?)', [newEventArr] , function(err, result) {
       if (err) {console.log(err)}
-      var newEventId = result.id;
       var otherEvent = {
         id: 'abbbbb',
         eventName: 'Weeknd Concert',
@@ -216,14 +186,13 @@ describe('Database Table Schema for events:', function() {
       otherEventArr = [otherEvent.id, otherEvent.eventName, otherEvent.date]
       db.query('INSERT INTO events (id, eventName, date) VALUES (?)', [otherEventArr], function(err, result) {
         if(err) {console.log(err)}
-        db.query('SELECT id FROM events VALUES ?', newEvent.eventName, function(err, results) {
+        db.query('SELECT id FROM events WHERE eventName=?', newEvent.eventName, function(error, results) {
           if(err) {console.log(err)}
-          var eventId = results.id;
+          var eventId = results[0].id;
           expect(eventId).to.equal('abcabc');
-          done(error || err);
-          db.query('SELECT id FROM events VALUES ?', otherEvent.eventName, function(err, results) {
+          db.query('SELECT id FROM events WHERE eventName=?', otherEvent.eventName, function(err, results) {
             if(err) {console.log(err)}
-            var eventId = results.id;
+            var eventId = results[0].id;
             expect(eventId).to.equal('abbbbb');
             done(error || err);
           });
@@ -234,14 +203,15 @@ describe('Database Table Schema for events:', function() {
 });
 
 describe('Helper Functions for Table users:', function() {
-  it('saveUserAsync saves a new user', function(done) {
+  it('saveUsernameAsync saves a new user', function(done) {
     var newUser = {
       id: 'aaaaa',
       username: 'Howard',
       password: 'p@ssw0rd',
       location: '94102'
     };
-    dbFuncs.saveUserAsync(newUser)
+    // console.dir(dbFuncs.saveEvent)
+    dbFuncs.saveUsernameAsync(newUser)
     .then((results) => {
       db.query('SELECT * FROM users WHERE username = ?', newUser.username, function(err, results) {
         var user = results[0];
@@ -254,31 +224,42 @@ describe('Helper Functions for Table users:', function() {
     });
   });
 
-  it('findUserAsync finds a user', function(done) {
-    var newUser = 'Howard'
-    dbFuncs.findUserAsync(newUser).then((userData) => {
-      expect(userData.username).to.equal('Howard');
-      expect(userData.password).to.equal('p@ssw0rd');
-      expect(userData.id).to.equal('aaaaa');
-      expect(userData.location).to.equal('94102');
-      done();
+  it('findUsernameAsync finds a user', function(done) {
+    var newUser = {
+      username: 'Howard',
+      password: 'p@ssw0rd',
+      location: '94102'
+    };
+    dbFuncs.saveUsernameAsync(newUser)
+    .then(() => {
+      dbFuncs.findUsernameAsync(newUser.username)
+        .then((userData) => {
+          expect(userData.username).to.equal('Howard');
+          expect(userData.password).to.equal('p@ssw0rd');
+          expect(userData.id).to.equal(1);
+          expect(userData.location).to.equal('94102');
+          done();
+        });
+      });
     });
-  });
 
-  it('saveUserAsync only allows unique usernames', function(done) {
+  it('saveUsernameAsync only allows unique usernames', function(done) {
     var newUser = {
       username: 'Howard',
       password: 'p@ssw0rd',
       zip: '94102'
     };
-    db.query('INSERT INTO users SET ?', newUser, function(err, results) {
+    dbFuncs.saveUsernameAsync(newUser).then(() => {
       var sameUser = newUser;
-      db.query('INSERT INTO users SET ?', sameUser, function(err) {
+      dbFuncs.saveUsernameAsync(sameUser).catch((err) => {
         expect(err).to.exist;
         expect(err.code).to.equal('ER_DUP_ENTRY');
         done();
-      });
+        })
+      })
     });
   });
 });
-});
+
+
+
