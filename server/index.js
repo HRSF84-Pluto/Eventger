@@ -7,7 +7,6 @@ const db =  require('../db/db.js');
 
 const PORT = process.env.PORT || 3000;
 
-
 app.listen(PORT, function () { console.log('Event-gers app listening on port 3000!') });
 
 app.use(bodyParser.json());
@@ -20,40 +19,43 @@ app.get('/eventData', function (req, res) {
 
   // to test a sample req.body from front-end's get request
   let sampleReqBody = {
-    queryTermForTM: ['sports', 'music'], // defined by homepage selection upon landing on site
-    preferenceForMusicOrLeague: 'NBA', // additional keyword search given by user in preferences table [max: 1 word]
+    queryTermForTM: ['sports', 'music'], // both query Terms are defined by homepage selection upon landing on site
     queryTermForYelp: 'food',
+    preferenceForMusicOrLeague: 'Rock', // additional keyword search given by user in preferences table [max: 1 word]
     preferenceForFoodAndOrSetting: 'outdoor food', // not reliable for setting since indoor/outdoor isn't a parameter
     sort: 'date,asc',
-    city: 'Oakland',
-    radius: '100',
-    postalCode: '94134',
-    startDateTime: '2017-01-01T18:00:00Z'
+    city: 'San Francisco',
+    postalCode: '94104',
+    startDateTime: '2017-01-12T18:00:00Z'
   }
 
   let returnedYelpTMDataObj = {};
 
   // fetch ticketmaster data
-  fetchHelpers.getTMData(sampleReqBody)
-  .then(ticketMasterEventsArr => {
+  // fetchHelpers.getTMData(sampleReqBody)
+  // .then(ticketMasterEventsArr => {
 
-    // include TM event data in the object sent back to front-end //
-    returnedYelpTMDataObj.ticketmaster = ticketMasterEventsArr;
-    return;
-  })
-  .then(placeholder => {
+  //   // include TM event data in the object sent back to front-end //
+  //   returnedYelpTMDataObj.ticketmaster = ticketMasterEventsArr;
+  //   return;
+  // })
+  // .then(placeholder => {
 
-    // fetch Yelp data
-    fetchHelpers.getYelpData(sampleReqBody)
-    .then(yelpEventsArr => {
+  //   // fetch Yelp data
+  //   fetchHelpers.getYelpData(sampleReqBody)
+  //   .then(yelpEventsArr => {
 
-      // include Yelp event data in the object sent back to front-end //
-      returnedYelpTMDataObj.yelp = yelpEventsArr;
-      return;
-    })
-    .then(placeholder => {
-      res.status(201).send(returnedYelpTMDataObj);
-    })
+  //     // include Yelp event data in the object sent back to front-end //
+  //     returnedYelpTMDataObj.yelp = yelpEventsArr;
+  //     return;
+  //   })
+  //   .then(placeholder => {
+  //     res.status(201).send(returnedYelpTMDataObj);
+  //   })
+  // })
+  fetchHelpers.getYelpData(sampleReqBody)
+  .then(response => {
+    res.status(201).send(response);
   })
 
 });

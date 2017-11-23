@@ -46,7 +46,8 @@
     "tm-api": "^0.6.1",
     "webpack": "^2.7.0",
     "webpack-dev-server": "^2.9.4",
-    "yelp": "^1.0.2"
+    "yelp-fusion": "^1.0.4"
+
   },
   "devDependencies": {
     "babel-cli": "^6.7.5",

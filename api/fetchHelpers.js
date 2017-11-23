@@ -1,6 +1,6 @@
 
-const Yelp = require('yelp');
-const ticketmaster = require('tm-api');
+const yelp = require('yelp-fusion');
+// const ticketmaster = require('tm-api');
   
 const apiKeys = require('./apiKeys.js');
 
@@ -28,7 +28,7 @@ const getTMData = (sampleReqBody) => {
   // API Fetch // 
   return ticketmaster.events.search(params)
   .then(results => {
-    console.log('TM API fetch returns - at index 0 - ', results.data._embedded.events[0])
+    // console.log('TM API fetch returns - at index 0 - ', results.data._embedded.events[0])
     if (err => { throw err; })
     return results.data._embedded.events;
   })
@@ -40,16 +40,9 @@ const getTMData = (sampleReqBody) => {
   })
 }
 
-
 const getYelpData = (sampleReqBody) => {
-
-  const yelp = new Yelp({
-    consumer_key: apiKeys.yelp_api_key,
-    consumer_secret: apiKeys.yelp_consumer_secret,
-    token: apiKeys.token,
-    token_secret: apiKeys.token_secret,
-  });
-
+  console.log('inside getYelpData')
+  
   let params = { 
     term: sampleReqBody.queryTermForYelp, 
     location: sampleReqBody.postalCode
@@ -58,20 +51,22 @@ const getYelpData = (sampleReqBody) => {
   // Modify if other preferences are selected by user // 
   Object.assign(params, 
     sampleReqBody.preferenceForFoodAndOrSetting ? { term: sampleReqBody.preferenceForFoodAndOrSetting } : null);
-
-  return yelp.search(params)
-  .then(data => {
-    console.log('YELP API fetch returns - at index 0 - ', data.businesses[0])
-    
+   
+  const client = yelp.client(apiKeys.token);
+   
+  return client.search(params)
+  .then(res => {
+    console.log('YELP API fetch returns - at index 0 - ', res.jsonBody.businesses[0])
     if (err => { throw err; })
-    return data.businesses;
+    return res.jsonBody.businesses;
   })
   .then(businesses => {
     return parseForCriticalData(businesses, 'yelp');
   })
   .catch(err => {
-    console.log('LOOK HERE!! YELP FETCH ERROR: ', err)
-  })
+    console.log('LOOK HERE!! TM FETCH ERROR: ', err)
+  });
+
 }
 
 const parseForCriticalData = (results, API) => {
@@ -102,18 +97,18 @@ const parseForCriticalData = (results, API) => {
         id: business.id.split('-').map(word => {return word[0]; }).join(''),
         eventName: business.name,
         location: {
-          line_1: business.location.address[0],
-          line_2: business.location.address[1],
+          line_1: business.location.address1,
+          line_2: business.location.address2,
           city: business.location.city,
-          state: business.location.state_code,
-          zip: business.location.postal_code,
+          state: business.location.state,
+          zip: business.location.zip_code,
           display_address: business.location.display_address,
         },
-        price: '$$$ will go here',
+        price: business.price,
         url: business.url,
         photoUrl: business.image_url,
-        category: business.categories[0],
-        phone: business.display_phone
+        category: business.categories[0].title,
+        phone: business.phone
       }
     })
   } 
