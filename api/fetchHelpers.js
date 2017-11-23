@@ -155,7 +155,7 @@ module.exports.getYelpData = getYelpData;
 //                      Ticketmaster        Yelp           //
 //  Music/Sports             Yes              -            // 
 //  Food Type                 -              Yes           // 
-//  Activity                  -              Yes           // 
+//  Activity                  -          In Progress       // 
 //  Budget                   Yes             Yes           // 
 // ******************************************************* //
 
