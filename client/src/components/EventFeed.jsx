@@ -12,12 +12,12 @@ class EventFeed extends Component{
       <div className="wrapper">
         <div className="box header"/>
         <div className="box sidebar">
-          <SideBar/>
+          <SideBar username={this.props.username}/>
         </div>
         <div className="box content">
           <EventList/>
         </div>
-        <div className="box footer">Footer</div>
+        <div className="box footer"/>
       </div>
     );
   }

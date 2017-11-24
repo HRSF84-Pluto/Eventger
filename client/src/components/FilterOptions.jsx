@@ -53,7 +53,7 @@ class FilterOptions extends Component {
     return (
     <div className="options-div">
         <div className="budget">
-          <p style={{marginLeft: "85px"}}>Budget</p>
+          <p style={{marginLeft: "85px", marginTop: "40px"}}>Budget</p>
         <div className="ui small basic buttons">
           <button className="ui icon button" role="button" onClick={()=> this.handleClick('$')} >
             <i aria-hidden="true" className={"dollar icon" + " " + this.state.classNameOneDollar}/>

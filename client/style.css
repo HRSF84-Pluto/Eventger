@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Francois+One|PT+Serif:400,400i,700,700i');
+html, body { height: 100%; }
 body{
   margin:0;
   padding:0;
-  height:100%;
 }
 .main {
   font-family: 'PT Serif', sans-serif;
@@ -10,15 +10,14 @@ body{
   width: 100%;
   color: #fafafa;
   font-size: 1.1em;
-  background: url('https://s3-media2.fl.yelpcdn.com/assets/srv0/yelp_large_assets/af415bdd2cda/assets/img/home/hero_photos/uq7E1Tf9g8IxXLSO9cMDOw.jpg') repeat;
+  background: url('https://i.ytimg.com/vi/OC2HWrar2SU/maxresdefault.jpg') no-repeat;
+  background-size: 100% 100%;
   opacity:0.9;
   position:fixed;
   height:100%;
   top:0;
   left:0;
 }
-
-
 
 .error{
   color: red;
@@ -66,9 +65,14 @@ body{
   justify-content: center;
 }
 
-h1{
+h3{
   text-align: center;
   color: #5e5f6a;
+  font-family: sans-serif;
+}
+h1{
+  text-align: center;
+  color: #7c7c7c;
   font-family: sans-serif;
 }
 .loginButtons{
@@ -81,9 +85,11 @@ h1{
 
 .signup-btn{
   margin-left: 50px;
+  font-size: 16px;
 }
 .login-btn{
   margin-left: 50px;
+  font-size: 16px;
 }
 
 .signup-btn:hover{
@@ -194,11 +200,22 @@ p{
 
 
 .event{
-  border: 1px solid black;
   width: 80%;
   height: 200px;
   margin: 0 auto;
+  -webkit-box-shadow: 0 5px 10px #efefef;
+  -moz-box-shadow: 0 5px 10px #efefef;
+  box-shadow: 0 5px 10px #efefef;
 
+
+}
+.settings-div{
+  height:900px;
+  padding: 40px;
+  margin: 0 auto;
+}
+.settings-input{
+  margin-left: 42%;
 }
 
 .eventList{
@@ -216,13 +233,11 @@ p{
 }
 .settings-page{
   background-color: #ffffff;
-  height:900px;
+  height:100%;
 }
 
 
-.settings-div{
-  margin-left: 50%;
-}
+
 
 .go-back-btn{
   margin-left: 50px;
@@ -273,7 +288,7 @@ p{
 }
 
 .saved-bookmark{
-  color: #13B89F
+  color: #13B89F;
 }
 .dollar-select{
   color: #13B89F;
@@ -345,12 +360,11 @@ p{
 /*css grid*/
 .sidebar {
   grid-area: sidebar;
-  border: 1px solid black;
+  /*border: 1px solid black;*/
 }
 
 .content {
   grid-area: content;
-  border: 1px solid black;
 }
 
 .header {
@@ -365,12 +379,13 @@ p{
 .wrapper {
   display: grid;
   grid-gap: 10px;
-  grid-template-columns: 350px 500px 500px;
+  grid-template-columns: 350px 300px 500px;
   grid-template-areas:
     "....... header header"
     "sidebar content content"
     "footer  footer  footer";
   background-color: #fff;
+  margin-left: 30px;
   color: #444;
 }
 
@@ -390,6 +405,7 @@ p{
 
 .headerSidebar {
   grid-area: headerSidebar;
+  background-color: #f7f7f7;
 }
 
 
@@ -404,7 +420,7 @@ p{
 }
 .boxSidebar {
   color: #fff;
-  border-radius: 5px;
+  border-radius: 1px;
   padding: 20px;
   font-size: 100%;
 }

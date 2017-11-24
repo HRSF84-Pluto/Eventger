@@ -24,7 +24,7 @@ class Search extends Component {
         </div>
         <Link className="ui button" to="/EventsFeed">
         <button className="ui button"
-                onClick={()=> this.props.onLocationSearch(this.state.location, 'eventsfeed')} >
+                onClick={()=> this.props.onLocationSearch(this.state.location)} >
             Enter
         </button>
         </Link>

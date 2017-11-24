@@ -7,6 +7,7 @@ import Login from './components/Login';
 import Main from './components/Main';
 import EventFeed from './components/EventFeed';
 import Saved from './components/Saved';
+import SettingsPopup from './components/UserSettingsPopup';
 import Settings from './components/Settings';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
@@ -37,41 +38,43 @@ class App extends React.Component {
     //   }
     // });
   }
-  handleViewChange(username) {
-    console.log('inside view changeusername', username )
-    this.setState({ username });
-  }
-  handleLocationInput(location, newsFeedView) {
+
+  handleSearchInput(location) {
     console.log(location, 'location inside app.jsx');
-    this.setState({view: newsFeedView});
+    console.log(this.state.date, "date in calendar");
     this.setState({ location });
   }
   handleActivity(activity) {
     console.log(activity, 'Activity inside handleActivity');
     this.setState({ activity });
   }
-
+  handleLogin(username){
+    this.setState({username});
+ }
+ handleLogout(){
+   this.setState({username: 'Login'});
+ }
   renderView() {
     return (
       <MuiThemeProvider>
         <HashRouter>
           <div>
             <Route exact path="/EventsFeed"
-                   render={() => <EventFeed />}/>
+                   render={() => <EventFeed username={this.state.username}/>}/>
             <Route exact path="/SavedEvents"
                    render={() => <Saved/>}/>
             <Route exact path="/Settings"
                    render={() => <Settings/>}/>
             <Route exact path="/Login"
-                   render={() => <Login handleViewChange={(username) => this.handleViewChange(username)} />}/>
+                   render={() => <Login handleLogin={username=> this.handleLogin(username)}/>}/>
             <Route exact  path="/SignUp"
-                   render={() => <SignUp handleViewChange={(currentView, username) => this.handleViewChange(currentView, username)} />}/>
+                   render={() => <SignUp />}/>
             <Route exact path="/" render={() =>
               <Main currentUsername={this.state.username}
+                    handleLogout={this.handleLogout.bind(this)}
                     dateSelection={date => this.setState({ date: date._d.toString()})}
                     handleActivity={chosenActivity => this.handleActivity(chosenActivity)}
-                    handleLocationInput={(inputLocation, eventsFeedView) => this.handleLocationInput(inputLocation, eventsFeedView)}
-                    handleViewChange={currentView => this.handleViewChange(currentView)} />
+                    handleSearch={inputLocation => this.handleSearchInput(inputLocation)}/>
             }/>
           </div>
         </HashRouter>

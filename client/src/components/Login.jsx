@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { Form } from 'semantic-ui-react';
 import { withRouter, Link } from 'react-router-dom'
 
+
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -15,7 +16,7 @@ class Login extends Component {
     this.setState({password: e.target.value});
   }
   handleLoginInput() {
-    this.props.handleViewChange(this.state.username);
+    this.props.handleLogin(this.state.username);
     // checks for username in db: if username exists, accept login info, else, redirect to signup
     const data = this.state;
     console.log(data, 'data object to be sent to db');

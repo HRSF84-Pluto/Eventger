@@ -34,7 +34,6 @@ class SignUp extends Component {
       success: (response)=> {
         //If succesfully add user, return true so they are redirrected to main
         if (response) {
-          this.props.handleViewChange('main', this.state.username) ;
         } else if (!response){
           this.setState({error: 'Username already exists, please try again'});
         }
