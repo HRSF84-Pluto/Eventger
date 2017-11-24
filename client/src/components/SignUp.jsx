@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import { Button, Checkbox, Form } from 'semantic-ui-react';
+import { Checkbox, Form } from 'semantic-ui-react';
+import { withRouter, Link } from 'react-router-dom'
 import $ from 'jquery';
 
 class SignUp extends Component {
@@ -15,15 +16,17 @@ class SignUp extends Component {
   handleUsernameInput(e) {
     this.setState({username: e.target.value});
   }
-  handleZipInput(e) {
+  handleCityInput(e) {
     this.setState({location: e.target.value});
   }
   handlePasswordInput(e) {
     this.setState({password: e.target.value});
   }
   handleSignUpInput() {
+    console.log('inside handleSignUpInput');
     const data = {'username': this.state.username, 'password': this.state.password, 'location': this.state.location};
     //checks for username in db:
+    // return true;
   $.ajax({
       type: 'POST',
       url: '/signup',
@@ -31,44 +34,49 @@ class SignUp extends Component {
       success: (response)=> {
         //If succesfully add user, return true so they are redirrected to main
         if (response) {
-          this.props.handleViewChange('main', this.state.username) ;
         } else if (!response){
           this.setState({error: 'Username already exists, please try again'});
         }
       },
       failure: (err)=> {
         // if input is incorrent, show an error message
-        this.setState({error: 'There was an error in the Sign-up Process'});
         console.err(err)
       }
     });
   }
   render() {
+    const Button = withRouter(({ history}) => (
+      <button
+        type='button'
+        className='ui secondary button'
+        onClick={() => this.handleSignUpInput()? history.push('/Login') :this.setState({error: 'There was an error in the Sign-up Process'})}>
+        Submit
+      </button>
+    ));
     return (
-      <div className="signUpPage">
-        <div>
+      <div className='signUpPage'>
+        <div className='signup-div'>
           <h3>Sign Up</h3>
-          <div onClick={()=> this.props.handleViewChange('main')} className='close'>
-        </div>
-        <div className="signUpForm">
+            <Link className='close' to='/'/>
+        <div className='signUpForm'>
           <Form>
             <Form.Field>
               <label>Username</label>
               <input placeholder='username' onChange={e => this.handleUsernameInput(e)} />
             </Form.Field>
-            <h4 className='error' >{this.state.error}</h4>
+            <p className='error' style={{color: 'red'}} >{this.state.error}</p>
               <Form.Field>
-                <label>Zip Code</label>
-                <input placeholder='zipcode' onChange={e => this.handleZipInput(e)} />
+                <label>City</label>
+                <input placeholder='city' onChange={e => this.handleCityInput(e)} />
               </Form.Field>
             <Form.Field>
               <label>Password</label>
-              <input type="password" placeholder='password' onChange={e => this.handlePasswordInput(e)}  />
+              <input type='password' placeholder='password' onChange={e => this.handlePasswordInput(e)}  />
             </Form.Field>
             <Form.Field>
               <Checkbox label='I agree to the Terms and Conditions' />
             </Form.Field>
-            <Button type='submit' onClick={()=> this.handleSignUpInput() ? this.props.handleViewChange('login') : this.props.handleViewChange('signup') }>Submit</Button>
+            <Button/>
           </Form>
         </div>
         </div>
