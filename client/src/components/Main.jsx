@@ -16,7 +16,6 @@ class Main extends Component {
   handleLogout() {
     this.setState({username: 'Login'});
     this.props.handleLogout();
-
   }
 
   render() {

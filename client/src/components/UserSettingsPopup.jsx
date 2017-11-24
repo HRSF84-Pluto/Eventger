@@ -7,7 +7,7 @@ const UserSettingsPopup = (props) => (
     <Grid divided columns='equal'>
       <Grid.Column>
         <Popup
-          trigger={<Button color='black' content={<Link style={{color: 'white'}} className='saved-btn' to='/SavedEvents'>Saved</Link>} fluid />}
+          trigger={<Link style={{color: 'white'}}  to='/SavedEvents'><Button color='black' content='Saved' fluid /></Link>}
           content='Browse Saved Events'
           position='bottom left'
           size='tiny'
@@ -16,7 +16,7 @@ const UserSettingsPopup = (props) => (
       </Grid.Column>
       <Grid.Column>
         <Popup
-          trigger={<Button color='black' content={<Link style={{color: 'white', marginLeft: '-2px'}} className='settings-btn' to='/Settings'>Settings</Link>} fluid />}
+          trigger={<Link style={{color: 'white'}}  to='/Settings'><Button color='black' content='Settings' fluid/></Link>}
           content='Change Settings'
           position='bottom center'
           size='tiny'
