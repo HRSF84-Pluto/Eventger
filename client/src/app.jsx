@@ -8,6 +8,7 @@ import Main from './components/Main';
 import EventFeed from './components/EventFeed';
 import Saved from './components/Saved';
 import Settings from './components/Settings';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class App extends React.Component {
   constructor(props) {
@@ -52,27 +53,30 @@ class App extends React.Component {
 
   renderView() {
     return (
-      <HashRouter>
-      <div>
-        <Route exact path="/EventsFeed"
-        render={() => <EventFeed />}/>
-        <Route exact path="/SavedEvents"
-               render={() => <Saved/>}/>
-        <Route exact path="/Settings"
-               render={() => <Settings/>}/>
-        <Route exact path="/Login"
-               render={() => <Login handleViewChange={(username) => this.handleViewChange(username)} />}/>
-        <Route exact  path="/SignUp"
-               render={() => <SignUp handleViewChange={(currentView, username) => this.handleViewChange(currentView, username)} />}/>
-        <Route exact path="/" render={() =>
-            <Main currentUsername={this.state.username}
-                dateSelection={date => this.setState({ date: date._d.toString()})}
-                handleActivity={chosenActivity => this.handleActivity(chosenActivity)}
-                handleLocationInput={(inputLocation, eventsFeedView) => this.handleLocationInput(inputLocation, eventsFeedView)}
-                handleViewChange={currentView => this.handleViewChange(currentView)} />
-        }/>
-      </div>
-    </HashRouter>);
+      <MuiThemeProvider>
+        <HashRouter>
+          <div>
+            <Route exact path="/EventsFeed"
+                   render={() => <EventFeed />}/>
+            <Route exact path="/SavedEvents"
+                   render={() => <Saved/>}/>
+            <Route exact path="/Settings"
+                   render={() => <Settings/>}/>
+            <Route exact path="/Login"
+                   render={() => <Login handleViewChange={(username) => this.handleViewChange(username)} />}/>
+            <Route exact  path="/SignUp"
+                   render={() => <SignUp handleViewChange={(currentView, username) => this.handleViewChange(currentView, username)} />}/>
+            <Route exact path="/" render={() =>
+              <Main currentUsername={this.state.username}
+                    dateSelection={date => this.setState({ date: date._d.toString()})}
+                    handleActivity={chosenActivity => this.handleActivity(chosenActivity)}
+                    handleLocationInput={(inputLocation, eventsFeedView) => this.handleLocationInput(inputLocation, eventsFeedView)}
+                    handleViewChange={currentView => this.handleViewChange(currentView)} />
+            }/>
+          </div>
+        </HashRouter>
+      </MuiThemeProvider>
+    );
   }
 
 

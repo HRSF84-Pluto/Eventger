@@ -4,7 +4,23 @@ import {
   Route,
   Link
 } from 'react-router-dom';
+import PasswordField from 'material-ui-password-field'
+import TextField from 'material-ui/TextField';
 
+const styles = {
+  errorStyle: {
+    color: "#CC0000",
+  },
+  underlineStyle: {
+    borderColor: "#CC0000",
+  },
+  floatingLabelStyle: {
+    color: "#CC0000",
+  },
+  floatingLabelFocusStyle: {
+    color: "#CC0000",
+  },
+};
 
 class Settings extends Component{
  constructor(props){
@@ -21,9 +37,30 @@ class Settings extends Component{
        <div className="event">
          <h1>Update your info</h1>
 
-       </div>
+
+
+
+         <PasswordField
+           id="passfield"
+           floatingLabelText="Styled Floating Label Text"
+           floatingLabelStyle={styles.floatingLabelStyle}
+           floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+           underlineStyle={styles.underlineStyle}
+           type="password"
+         />
+
+         <TextField
+           id="textfield"
+           floatingLabelText="Styled Floating Label Text"
+           floatingLabelStyle={styles.floatingLabelStyle}
+           floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+           underlineStyle={styles.underlineStyle}
+         />
+
+
      </div>
-   )
+   </div>
+ )
  }
 
 };
