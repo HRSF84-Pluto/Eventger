@@ -23,7 +23,7 @@ class SignUp extends Component {
     this.setState({password: e.target.value});
   }
   handleSignUpInput() {
-    console.log("inside handleSignUpInput");
+    console.log('inside handleSignUpInput');
     const data = {'username': this.state.username, 'password': this.state.password, 'location': this.state.location};
     //checks for username in db:
     // return true;
@@ -48,17 +48,17 @@ class SignUp extends Component {
     const Button = withRouter(({ history}) => (
       <button
         type='button'
-        className="ui secondary button"
+        className='ui secondary button'
         onClick={() => this.handleSignUpInput()? history.push('/Login') :this.setState({error: 'There was an error in the Sign-up Process'})}>
         Submit
       </button>
     ));
     return (
-      <div className="signUpPage">
-        <div className="signup-div">
+      <div className='signUpPage'>
+        <div className='signup-div'>
           <h3>Sign Up</h3>
-            <Link className='close' to="/"/>
-        <div className="signUpForm">
+            <Link className='close' to='/'/>
+        <div className='signUpForm'>
           <Form>
             <Form.Field>
               <label>Username</label>
@@ -71,7 +71,7 @@ class SignUp extends Component {
               </Form.Field>
             <Form.Field>
               <label>Password</label>
-              <input type="password" placeholder='password' onChange={e => this.handlePasswordInput(e)}  />
+              <input type='password' placeholder='password' onChange={e => this.handlePasswordInput(e)}  />
             </Form.Field>
             <Form.Field>
               <Checkbox label='I agree to the Terms and Conditions' />

@@ -11,7 +11,7 @@ const Saved = () => {
   return(
   <div className='saved-events'>
     <h1>SAVED EVENTS</h1>
-    <div className="go-back-btn"><Link to="/EventsFeed">To Events Feed</Link></div>
+    <div className='go-back-btn'><Link to='/EventsFeed'>To Events Feed</Link></div>
     <div>{savedEventsList}</div>
   </div>
 )};

@@ -21,61 +21,73 @@ const styles = {
 class Settings extends Component{
   constructor(props){
     super(props);
-    this.state = {};
+    this.state = {
+      oldPass: '',
+      newPass: '',
+      city: ''
+    };
+  }
+  handleCurrentPass(e){
+    console.log(e.target.value, "currentPass");
+    this.setState({oldPass: e.target.value});
+  }
+  handleNewPass(e){
+    console.log(e.target.value, "newPass");
+    this.setState({newPass: e.target.value});
+  }
+  handleNewCity(e){
+    console.log(e.target.value, "new city");
+    this.setState({city: e.target.value});
+  }
+  handleUpdatedData(){
+  //sends POST request to server
+    console.log("inside handleUpdateData");
   }
   render() {
     return (
       <div className='settings-page'>
-        <h1></h1>
-        <div className="go-back-btn">
-          <Link to="/EventsFeed">To Events Feed</Link>
+        <h1> </h1>
+        <div className='go-back-btn'>
+          <Link to='/EventsFeed'>To Events Feed</Link>
         </div>
-        <div className="settings-div">
+        <div className='settings-div'>
           <h3>Update your info</h3>
-          <div className="settings-input">
+          <div className='settings-input'>
             <div>
               <div>
                 <PasswordField
-                  id="passfieldCurrent"
-                  floatingLabelText="Current Password"
+                  id='passfieldCurrent'
+                  floatingLabelText='Current Password'
                   floatingLabelStyle={styles.floatingLabelStyle}
                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                   underlineStyle={styles.underlineStyle}
-                  type="password"
+                  type='password'
+                  onChange={this.handleCurrentPass.bind(this)}
                 />
               </div>
               <div>
                 <PasswordField
-                  id="passfieldNew"
-                  floatingLabelText="Update Password"
+                  id='passfieldNew'
+                  floatingLabelText='Update Password'
                   floatingLabelStyle={styles.floatingLabelStyle}
                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                   underlineStyle={styles.underlineStyle}
-                  type="password"
-                />
-              </div>
-            </div>
-            <div>
-              <div>
-                <TextField
-                  id="textfieldNew"
-                  floatingLabelText="Update Username"
-                  floatingLabelStyle={styles.floatingLabelStyle}
-                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                  underlineStyle={styles.underlineStyle}
+                  type='password'
+                  onChange={this.handleNewPass.bind(this)}
                 />
               </div>
             </div>
             <div>
               <TextField
-                id="textfieldCity"
-                floatingLabelText="Update City"
+                id='textfieldCity'
+                floatingLabelText='Update City'
                 floatingLabelStyle={styles.floatingLabelStyle}
                 floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                 underlineStyle={styles.underlineStyle}
+                onChange={this.handleNewCity.bind(this)}
               />
               <br/>
-              <button className="ui secondary button">Update</button>
+              <button className='ui secondary button' onClick={this.handleUpdatedData.bind(this)}>Update</button>
             </div>
           </div>
         </div>
@@ -83,6 +95,6 @@ class Settings extends Component{
     )
   }
 
-};
+}
 
 export default Settings;

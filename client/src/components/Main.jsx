@@ -5,7 +5,6 @@ import Search from './Search';
 import UserSettingsPopup from './UserSettingsPopup';
 
 
-
 class Main extends Component {
   constructor(props) {
     super(props);
@@ -13,7 +12,8 @@ class Main extends Component {
       username: this.props.currentUsername || 'Login'
     };
   }
-  handleLogout(){
+
+  handleLogout() {
     this.setState({username: 'Login'});
     this.props.handleLogout();
 
@@ -21,20 +21,24 @@ class Main extends Component {
 
   render() {
     return (
-      <div className="main">
-        <div className="loginButtons">
+      <div className='main'>
+        <div className='loginButtons'>
           <div>
             {this.state.username !== 'Login' ?
               <UserSettingsPopup handleLogOut={this.handleLogout.bind(this)} username={this.state.username}/> :
-              <Link style={{color: 'white'}} to="/Login"><div
-              className="login-btn">{this.state.username}</div></Link>}
+              <Link style={{color: 'white'}} to='/Login'>
+                <div
+                  className='login-btn'>{this.state.username}</div>
+              </Link>}
           </div>
           <div>
-            <Link style={{color: 'white'}} to="/SignUp"><div className="signup-btn">Sign Up</div></Link>
+            <Link style={{color: 'white'}} to='/SignUp'>
+              <div className='signup-btn'>Sign Up</div>
+            </Link>
           </div>
         </div>
         <Choices handleActivity={this.props.handleActivity}/>
-        <div className="search-bar">
+        <div className='search-bar'>
           <Search dateSelection={this.props.dateSelection} onLocationSearch={this.props.handleSearch}/>
         </div>
       </div>

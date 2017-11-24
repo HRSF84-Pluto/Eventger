@@ -14,8 +14,8 @@ class Preferences extends Component{
     return (
        <div>
          <div>
-           <Link className="settings-btn" to="/Settings">Settings</Link>
-           <Link className="saved-btn" to="/SavedEvents">Saved</Link>
+           <Link className='settings-btn' to='/Settings'>Settings</Link>
+           <Link className='saved-btn' to='/SavedEvents'>Saved</Link>
          </div>
          <FilterOptions/>
        </div>

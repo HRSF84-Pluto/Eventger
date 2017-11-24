@@ -9,15 +9,15 @@ class EventFeed extends Component{
   }
   render(){
     return (
-      <div className="wrapper">
-        <div className="box header"/>
-        <div className="box sidebar">
+      <div className='wrapper'>
+        <div className='box header'/>
+        <div className='box sidebar'>
           <SideBar username={this.props.username}/>
         </div>
-        <div className="box content">
+        <div className='box content'>
           <EventList/>
         </div>
-        <div className="box footer"/>
+        <div className='box footer'/>
       </div>
     );
   }
