@@ -13,6 +13,13 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../client/')));
 app.use(bodyParser.urlencoded({ extended: false }));
 
+//react router's path
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/index.html'));
+});
+
+
+
 //Pulling new data when params change
 app.get('/eventData', function (req, res) {
   console.log('inside get handler')
@@ -21,7 +28,7 @@ app.get('/eventData', function (req, res) {
   let sampleReqBody = {
     queryTermForTM: ['sports', 'music'], // both query Terms are defined by homepage selection upon landing on site
     preferenceForMusicOrLeague: 'Rock', // additional keyword given by user in preferences table [max: 1 word] to narrow down sports or music
-    queryTermForYelp: 'food', // default Yelp fetch from homepage 
+    queryTermForYelp: 'food', // default Yelp fetch from homepage
     preferenceForFoodAndOrSetting: 'Mexican', // additional keyword given by user to narrow down type of food
     // activity: 'hiking', // if user doesn't want food but wants an activity - yelp category: https://www.yelp.com/developers/documentation/v2/all_category_list
     city: 'San Francisco',

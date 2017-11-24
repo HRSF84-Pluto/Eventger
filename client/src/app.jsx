@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Route, HashRouter} from 'react-router-dom';
+import {Route, BrowserRouter as Router} from 'react-router-dom';
 import $ from 'jquery';
 import SignUp from './components/SignUp';
 import Login from './components/Login';
@@ -60,7 +60,7 @@ class App extends React.Component {
   renderView() {
     return (
       <MuiThemeProvider>
-        <HashRouter>
+        <Router>
           <div>
             <Route exact path='/EventsFeed'
                    render={() => <EventFeed username={this.state.username}/>}/>
@@ -80,7 +80,7 @@ class App extends React.Component {
                     handleSearch={inputLocation => this.handleSearchInput(inputLocation)}/>
             }/>
           </div>
-        </HashRouter>
+        </Router>
       </MuiThemeProvider>
     );
   }
