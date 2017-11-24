@@ -1,30 +1,28 @@
 @import url('https://fonts.googleapis.com/css?family=Francois+One|PT+Serif:400,400i,700,700i');
+html, body { height: 100%; }
 body{
-  height:100%;
   margin:0;
   padding:0;
 }
 .main {
   font-family: 'PT Serif', sans-serif;
   margin: 0;
-  min-height: 730px;
   width: 100%;
   color: #fafafa;
   font-size: 1.1em;
-  background-size: 10000px;
-  background: url('https://s3-media2.fl.yelpcdn.com/assets/srv0/yelp_large_assets/af415bdd2cda/assets/img/home/hero_photos/uq7E1Tf9g8IxXLSO9cMDOw.jpg') repeat;
-}
-
-@media only screen and (max-width: 1000px) {
-  .main {
-    width: 1000px;
-    background: url('https://s3-media2.fl.yelpcdn.com/assets/srv0/yelp_large_assets/af415bdd2cda/assets/img/home/hero_photos/uq7E1Tf9g8IxXLSO9cMDOw.jpg') repeat;
-  }
+  background: url('https://i.ytimg.com/vi/OC2HWrar2SU/maxresdefault.jpg') no-repeat;
+  background-size: 100% 100%;
+  opacity:0.9;
+  position:fixed;
+  height:100%;
+  top:0;
+  left:0;
 }
 
 .error{
   color: red;
 }
+
 .ui.form{
   width: 30%;
   margin: 0 auto;
@@ -67,9 +65,14 @@ body{
   justify-content: center;
 }
 
-h1{
+h3{
   text-align: center;
   color: #5e5f6a;
+  font-family: sans-serif;
+}
+h1{
+  text-align: center;
+  color: #7c7c7c;
   font-family: sans-serif;
 }
 .loginButtons{
@@ -82,9 +85,11 @@ h1{
 
 .signup-btn{
   margin-left: 50px;
+  font-size: 16px;
 }
 .login-btn{
   margin-left: 50px;
+  font-size: 16px;
 }
 
 .signup-btn:hover{
@@ -114,8 +119,10 @@ h1{
   height: 21vw;
   width: 21vw;
   background-color: white;
+  background-size: 400px 400px;
   margin-left:100px;
   margin-top: 50px;
+  border: none;
   transition: all .5s ease-in-out;
 }
 
@@ -123,8 +130,10 @@ h1{
   height: 21vw;
   width: 21vw;
   background-color: white;
+  background-size: 400px 400px;
   margin-left:100px;
   margin-top: 50px;
+  border: none;
   transition: all .5s ease-in-out;
 }
 
@@ -146,15 +155,32 @@ h1{
 }
 
 .signUpPage{
-  margin-top: 20px;
-  background-color: #ffffff;
-  height:900px;
+  opacity:0.7;
+  background-color:#ccc;
+  position:fixed;
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
+  z-index:1000;
 }
 
 .loginPage{
+  opacity:0.7;
+  background-color:#ccc;
+  position:fixed;
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
+  z-index:1000;
+}
+.login-div{
   margin-top: 20px;
-  background-color: #ffffff;
-  height:900px;
+}
+
+.signup-div{
+  margin-top: 20px;
 }
 
 h3{
@@ -166,26 +192,30 @@ p{
   color: black;
 }
 
-.newsFeed{
-  background-color: #ffffff;
-  height:900px;
-}
 .input{
   margin: auto;
   margin-left: 30%;
 
 }
 
-.name{
-  margin-left: 0px;
-}
 
 .event{
-  border: 1px solid black;
-  width: 50%;
+  width: 80%;
   height: 200px;
   margin: 0 auto;
+  -webkit-box-shadow: 0 5px 10px #efefef;
+  -moz-box-shadow: 0 5px 10px #efefef;
+  box-shadow: 0 5px 10px #efefef;
 
+
+}
+.settings-div{
+  height:900px;
+  padding: 40px;
+  margin: 0 auto;
+}
+.settings-input{
+  margin-left: 42%;
 }
 
 .eventList{
@@ -194,26 +224,8 @@ p{
 
 }
 
-.sidebar{
-  float: left;
-  height: 1400px;
-  width: 28%;
-  padding: 30px;
-  border:1px solid darkblue;
-}
 
-.profile{
-  margin-top: 40px;
-  margin-left: 10px;
-}
 
-.profile-options{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-
-}
 
 .saved-events{
   background-color: #ffffff;
@@ -221,13 +233,11 @@ p{
 }
 .settings-page{
   background-color: #ffffff;
-  height:900px;
+  height:100%;
 }
 
 
-.settings-div{
-  margin-left: 50%;
-}
+
 
 .go-back-btn{
   margin-left: 50px;
@@ -236,32 +246,28 @@ p{
 .go-back-btn:hover{
   text-decoration: underline;
 }
-.preferences{
-  margin-top: 50px;
-  position: relative;
-}
+
 
 .settings-btn{
-  margin-left:-20px;
+  margin-left:25%;
 }
+
 .saved-btn{
-  margin-left:20px;
+  margin-left:5%;
 }
+
 .ui.buttons:not(.basic):not(.inverted){
   float: right;
   margin-right: 10px;
-  margin-top: 30px;
 }
 .radio-btn-section{
   margin-top: 20px;
 }
 
 .budget{
-  margin-left: 10%;
+  margin-left: 5%;
 }
-div.ui.small.basic.buttons{
-  margin-left: 7%;
-}
+
 .saved-btn:hover{
   text-decoration: underline;
 }
@@ -282,7 +288,7 @@ div.ui.small.basic.buttons{
 }
 
 .saved-bookmark{
-  color: #13B89F
+  color: #13B89F;
 }
 .dollar-select{
   color: #13B89F;
@@ -350,6 +356,73 @@ div.ui.small.basic.buttons{
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
+}
+/*css grid*/
+.sidebar {
+  grid-area: sidebar;
+  /*border: 1px solid black;*/
+}
+
+.content {
+  grid-area: content;
+}
+
+.header {
+  grid-area: header;
+}
+
+.footer {
+  grid-area: footer;
+}
+
+
+.wrapper {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: 350px 300px 500px;
+  grid-template-areas:
+    "....... header header"
+    "sidebar content content"
+    "footer  footer  footer";
+  background-color: #fff;
+  margin-left: 30px;
+  color: #444;
+}
+
+
+.box {
+  color: #fff;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 150%;
+}
+
+
+
+.contentSidebar {
+  grid-area: contentSidebar;
+}
+
+.headerSidebar {
+  grid-area: headerSidebar;
+  background-color: #f7f7f7;
+}
+
+
+.wrapperSidebar {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: 50%  50%x;
+  grid-template-areas:
+    "headerSidebar headerSidebar"
+    "contentSidebar contentSidebar";
+  background-color: #fff;
+}
+.boxSidebar {
+  color: #fff;
+  border-radius: 1px;
+  padding: 20px;
+  font-size: 100%;
 }
 
 

@@ -12,12 +12,11 @@ class Preferences extends Component{
 
   render(){
     return (
-       <div className='preferences'>
-         <div className='profile-options'>
-           <Link className="settings-btn" to="/Settings">Settings</Link>
-           <Link className="saved-btn" to="/SavedEvents">Saved</Link>
+       <div>
+         <div>
+           <Link className='settings-btn' to='/Settings'>Settings</Link>
+           <Link className='saved-btn' to='/SavedEvents'>Saved</Link>
          </div>
-         <h1>Preferences</h1>
          <FilterOptions/>
        </div>
     );
