@@ -43,7 +43,7 @@ var db = mysql.createConnection({
   host: process.env.DBSERVER ||'localhost',
   user: process.env.DBUSER  ||'root',
   database: 'Eventger',
-  password: process.env.DBPASSWORD || 'oderay13'
+  password: process.env.DBPASSWORD || ''
 });
 
 db.findUsername = (username, callback) => {
@@ -82,6 +82,7 @@ db.findById = (id, callback) => {
   })
 };
 
+//TODO: remove unhashed password
 db.saveUsername = (userObj, hash, callback) => {
   console.log(' hash inside saveUsername', hash);
   var insertQuery = "INSERT INTO users (username, password, location, hash) VALUES ?";

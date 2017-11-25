@@ -7,23 +7,18 @@ const db =  require('../db/db.js');
 
 //Add user to DB
 router.post('/', function(req, res) {
-  //Save user
-  console.log('inside signup route', req.body);
-  //generates salt
+  //bcrypt is a hashing library
+  //bcrypt generates salt
   bcrypt.genSalt(saltRounds, function(err, salt) {
-    //generates hash
+    //bcrypt generates hash
     bcrypt.hash(req.body.password, salt, function(err, hash) {
-      if (hash){
+      if(err){console.log('error in creating hash, inside routes/signup');}
         db.saveUsernameAsync(req.body, hash)
           .then((results) => res.status(201).send(true))
-          //will send message if already in DB
           .catch((err)=> {
             console.log(err);
             res.status(409).send(false)
           })
-      }else{
-        console.log('error in creating hash, inside routes/signup');
-      }
     });
   });
 

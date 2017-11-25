@@ -13,17 +13,37 @@ const db =  require('../db/db.js');
 
 const PORT = process.env.PORT || 3000;
 
-//stores sessions
+/*
+NOTE: the backend is using passportjs to create sessions and authenticate users.
+* It uses the express router to organize the different routes (the routes corresponding to a certain path are in the routes directory).
+* The morgan middleware logs request details to the terminal
+* flash middleware flashes messages
+* the database is currently storing the hashed password and the unhashed password for testing: unhashed password will need to be removed
+* To set the env.DBPASSWORD, set the env variable before the 'npm run start' script like this:
+           DBPASSWORD=YOURDBPASSWORD npm run start
+
+Helpful links:
+* Setting env: https://goo.gl/VJoaUC
+* Express router: https://goo.gl/xntCiX
+* Passportjs: https://goo.gl/7kA7Y4
+*             https://goo.gl/iMohYg
+*             https://goo.gl/18wQkG
+*             https://goo.gl/EaWPGG
+*
+*/
+
+
 const options = {
   host: process.env.DBSERVER || 'localhost',
   port: 3306,
   user: process.env.DBUSER || 'root',
-  password: process.env.DBPASSWORD || 'oderay13',
+  password: process.env.DBPASSWORD || '',
   database: 'eventger',
   checkExpirationInterval: 60000,
   expiration: 3600000,
 };
 
+//stores sessions created by passportjs, set your db password above
 const sessionStore = new MySQLStore(options);
 
 //express router declarations
@@ -69,6 +89,7 @@ app.use('/login', loginRoute);
 
 app.use(checkAuthentication);
 
+//TODO: modify the userDataRoute's content to access user data
 app.use('/userData', userDataRoute);
 app.use('/logout', logoutRoute);
 
@@ -89,7 +110,7 @@ function checkAuthentication(req, res, next) {
   }
 }
 
-
+//TODO: Will move these routes to the routes directory - briceida
 
 //Pulling new data when params change
 app.get('/eventData', function (req, res) {
