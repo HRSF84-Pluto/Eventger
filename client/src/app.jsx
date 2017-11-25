@@ -24,18 +24,6 @@ class App extends React.Component {
 
   componentDidMount() {
 
-    // var dataSign = {username: 'begona', password:'', location: 'nowhere'}
-    // $.ajax({
-    //   type: 'POST',
-    //   url: '/signup',
-    //   data: dataSign,
-    //   success: (response)=> {
-    //     console.log('returned from POST Request: ', response)
-    //   },
-    //   failure: (err)=> {
-    //     console.err(err)
-    //   }
-    // });
   }
 
   handleSearchInput(location) {

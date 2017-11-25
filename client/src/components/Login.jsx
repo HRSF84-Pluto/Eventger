@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Form} from 'semantic-ui-react';
-import {Link, withRouter} from 'react-router-dom'
+import {Link, withRouter} from 'react-router-dom';
+import $ from 'jquery';
 
 
 class Login extends Component {
@@ -27,7 +28,25 @@ class Login extends Component {
     console.log(data, 'data object to be sent to db');
     //this function returns true if login is successful, and returns false if it's not. This returned Boolean will allow
     //the conditional rendering of the views (done inside the  submit <Button/> below)
-    return true;
+    return new Promise((resolve,reject) => {
+      $.ajax({
+        type: 'POST',
+        url: '/login',
+        data: data,
+        success: response => {
+          console.log(`success`);
+          console.log(response);
+          resolve(response)
+        },
+        error: (err)=> {
+          console.log(`failure`);
+          console.log(err);
+          reject(err)
+        }
+      });
+
+    })
+
   }
 
   render() {
@@ -35,7 +54,15 @@ class Login extends Component {
       <button
         type='button'
         className='ui secondary button'
-        onClick={() => this.handleLoginInput() ? history.push('/') : history.push('/SignUp')}>
+        onClick={() =>{
+          this.handleLoginInput()
+            .then(() => history.push('/'))
+            .catch((err) => {
+              console.log("promise error hit");
+              // if (error.status === 401)
+              history.push('/SignUp')
+            })
+        }}>
         Submit
       </button>
     ));

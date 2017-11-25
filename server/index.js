@@ -1,17 +1,63 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const path = require('path');
+const morgan = require('morgan');
+const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
+const flash = require('connect-flash');
+const passport = require('passport');
 const fetchHelpers = require('../api/fetchHelpers.js');
 const db =  require('../db/db.js');
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, function () { console.log('Event-gers app listening on port 3000!') });
+const options = {
+  host: process.env.DBSERVER || 'localhost',
+  port: 3306,
+  user: process.env.DBUSER || 'root',
+  password: process.env.DBPASSWORD || 'oderay13',
+  database: 'eventger',
+  checkExpirationInterval: 60000,
+  expiration: 3600000,
+};
 
+const sessionStore = new MySQLStore(options);
+
+const loginRoute = require('../routes/login');
+const signupRoute = require('../routes/signup');
+
+
+
+app.use(morgan('dev'));
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../client/')));
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(session({
+  secret: 'secret',
+  store: sessionStore,
+  saveUninitialized: false,
+  resave: false,
+  cookie: { maxAge: 3600000}
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+
+app.use(function (req, res, next) {
+  console.log('req user:', req.user);
+  console.log('cookie', req.cookies);
+  console.log('body', req.body);
+  console.log('session', req.session);
+  console.log('is authenticated?', req.isAuthenticated());
+  next();
+});
+
+app.use('/login', loginRoute);
+app.use('/signup', signupRoute );
+
 
 //react router's path
 app.get('*', (req, res) => {
@@ -19,10 +65,9 @@ app.get('*', (req, res) => {
 });
 
 
-
 //Pulling new data when params change
 app.get('/eventData', function (req, res) {
-  console.log('inside get handler')
+  console.log('inside get handler');
 
   // to test a sample req.body from front-end's get request
   let sampleReqBody = {
@@ -71,17 +116,6 @@ app.get('/eventData', function (req, res) {
 });
 
 
-//Add user to DB
-app.post('/signup', function(req, res) {
-  //Save user
-  db.saveUsernameAsync(req.body)
-    .then((results) => res.send(true))
-    //will send message if already in DB
-    .catch((err)=> {
-      console.log(err)
-      res.send(false)
-    })
-});
 
 //Save Events for logged in User
 app.post('/events', function(req, res) {
@@ -113,12 +147,19 @@ app.post('/events', function(req, res) {
 });
 
 
-//Returns users saved results from db
-app.post('/login', function(req, res) {
-  db.findUserEventsAsync(req.body.username)
-  .then(results => res.send(results))
-  .catch(err => res.send(err))
-})
+app.use(checkAuthentication);
+
+function checkAuthentication(req, res, next) {
+  if (req.isAuthenticated()) { //check if it's an authenticated route
+    next();
+  }
+  else {
+    res.status(401).json({});
+  }
+}
+app.listen(PORT, function () { console.log('Event-gers app listening on port 3000!') });
+
+
 
 
 module.exports = app;

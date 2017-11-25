@@ -40,9 +40,10 @@ const database = 'Eventger';
 //  .catch(username already exists => {})
 
 var db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  database: 'Eventger'
+  host: process.env.DBSERVER ||'localhost',
+  user: process.env.DBUSER  ||'root',
+  database: 'Eventger',
+  password: process.env.DBPASSWORD || 'oderay13'
 })
 
 db.findUsername = (username, callback) => {
@@ -56,9 +57,34 @@ db.findUsername = (username, callback) => {
   })
 };
 
-db.saveUsername = (userObj, callback) => {
-  var insertQuery = "INSERT INTO users (username, password, location) VALUES ?";
-  var queryInput = [[ userObj.username, userObj.password, userObj.location ]]
+db.getHash = (username, callback) => {
+  var findQuery = "SELECT hash FROM users WHERE (username=?)";
+  var queryInput = username;
+  db.query(findQuery, [queryInput], function(err, result, fields) {
+    console.log("result inside get hash", result[0].hash);
+    if (err) {
+      callback(err, null);
+    };
+    callback(null, result[0].hash);
+  })
+};
+
+
+
+db.findById = (id, callback) => {
+  var findQuery = "SELECT * FROM users WHERE (id=?)";
+  var queryInput = id;
+  db.query(findQuery, [queryInput], function(err, result, fields) {
+    if (err) {
+      callback(err, null);
+    };
+    callback(null, result[0]);
+  })
+};
+
+db.saveUsername = (userObj, hash, callback) => {
+  var insertQuery = "INSERT INTO users (username, password, location, hash) VALUES ?";
+  var queryInput = [[ userObj.username, userObj.password, userObj.location, hash ]]
   db.query(insertQuery, [queryInput], function(err, result, fields) {
     if (err) {
       callback(err, null);

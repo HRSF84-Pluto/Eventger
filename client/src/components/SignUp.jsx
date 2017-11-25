@@ -27,29 +27,39 @@ class SignUp extends Component {
     const data = {'username': this.state.username, 'password': this.state.password, 'location': this.state.location};
     //checks for username in db:
     // return true;
-  $.ajax({
+  return new Promise((resolve,reject) => {
+    $.ajax({
       type: 'POST',
       url: '/signup',
       data: data,
-      success: (response)=> {
-        //If succesfully add user, return true so they are redirrected to main
-        if (response) {
-        } else if (!response){
-          this.setState({error: 'Username already exists, please try again'});
-        }
+      success: response => {
+        console.log(`success`);
+        console.log(response);
+        resolve(response)
       },
-      failure: (err)=> {
-        // if input is incorrent, show an error message
-        console.err(err)
+      error: (err)=> {
+        console.log(`failure`);
+        console.log(err);
+        reject(err)
       }
     });
+
+
+    })
   }
   render() {
     const Button = withRouter(({ history}) => (
       <button
         type='button'
         className='ui secondary button'
-        onClick={() => this.handleSignUpInput()? history.push('/Login') :this.setState({error: 'There was an error in the Sign-up Process'})}>
+        onClick={() =>{
+          this.handleSignUpInput()
+            .then(() => history.push('/Login'))
+            .catch(() => {
+              console.log("promise error hit");
+              this.setState({errorMessage: 'Username already exists, please try again'})
+            })
+        }}>
         Submit
       </button>
     ));
@@ -64,7 +74,7 @@ class SignUp extends Component {
               <label>Username</label>
               <input placeholder='username' onChange={e => this.handleUsernameInput(e)} />
             </Form.Field>
-            <p className='error' style={{color: 'red'}} >{this.state.error}</p>
+            <p className='error' style={{color: 'red'}} >{this.state.errorMessage}</p>
               <Form.Field>
                 <label>City</label>
                 <input placeholder='city' onChange={e => this.handleCityInput(e)} />
