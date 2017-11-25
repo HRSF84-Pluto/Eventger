@@ -13,6 +13,7 @@ const db =  require('../db/db.js');
 
 const PORT = process.env.PORT || 3000;
 
+//stores sessions
 const options = {
   host: process.env.DBSERVER || 'localhost',
   port: 3306,
@@ -25,16 +26,20 @@ const options = {
 
 const sessionStore = new MySQLStore(options);
 
+//express router declarations
 const loginRoute = require('../routes/login');
 const signupRoute = require('../routes/signup');
+const userDataRoute = require('../routes/userData');
+// const logoutRoute = require('../routes/logout');
 
 
-
+//middleware used by passportjs
 app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../client/')));
 app.use(bodyParser.urlencoded({ extended: false }));
+//creates session
 app.use(session({
   secret: 'secret',
   store: sessionStore,
@@ -46,23 +51,44 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-app.use(function (req, res, next) {
-  console.log('req user:', req.user);
-  console.log('cookie', req.cookies);
-  console.log('body', req.body);
-  console.log('session', req.session);
-  console.log('is authenticated?', req.isAuthenticated());
-  next();
-});
+//middleware checks the status of session
+// app.use(function (req, res, next) {
+//   console.log('req user:', req.user);
+//   console.log('cookie', req.cookies);
+//   console.log('body', req.body);
+//   console.log('session', req.session);
+//   console.log('is authenticated?', req.isAuthenticated());
+//   next();
+// });
 
+//express router middleware
+app.use('/signup', signupRoute);
 app.use('/login', loginRoute);
-app.use('/signup', signupRoute );
 
+
+
+app.use(checkAuthentication);
+
+app.use('/userData', userDataRoute);
+// app.use('/logout', logoutRoute);
 
 //react router's path
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
 });
+
+
+
+function checkAuthentication(req, res, next) {
+  if (req.isAuthenticated()) { //check if it's an authenticated route
+    console.log("user is authenticated", req.user);
+    next();
+  }
+  else {
+    res.status(401).json({});
+  }
+}
+
 
 
 //Pulling new data when params change
@@ -147,16 +173,6 @@ app.post('/events', function(req, res) {
 });
 
 
-app.use(checkAuthentication);
-
-function checkAuthentication(req, res, next) {
-  if (req.isAuthenticated()) { //check if it's an authenticated route
-    next();
-  }
-  else {
-    res.status(401).json({});
-  }
-}
 app.listen(PORT, function () { console.log('Event-gers app listening on port 3000!') });
 
 

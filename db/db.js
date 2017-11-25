@@ -44,7 +44,7 @@ var db = mysql.createConnection({
   user: process.env.DBUSER  ||'root',
   database: 'Eventger',
   password: process.env.DBPASSWORD || 'oderay13'
-})
+});
 
 db.findUsername = (username, callback) => {
   var findQuery = "SELECT * FROM users WHERE (username=?)";
@@ -52,7 +52,7 @@ db.findUsername = (username, callback) => {
   db.query(findQuery, [queryInput], function(err, result, fields) {
     if (err) {
       callback(err, null);
-    };
+    }
     callback(null, result[0]);
   })
 };
@@ -64,7 +64,7 @@ db.getHash = (username, callback) => {
     console.log("result inside get hash", result[0].hash);
     if (err) {
       callback(err, null);
-    };
+    }
     callback(null, result[0].hash);
   })
 };
@@ -77,12 +77,13 @@ db.findById = (id, callback) => {
   db.query(findQuery, [queryInput], function(err, result, fields) {
     if (err) {
       callback(err, null);
-    };
+    }
     callback(null, result[0]);
   })
 };
 
 db.saveUsername = (userObj, hash, callback) => {
+  console.log(' hash inside saveUsername', hash);
   var insertQuery = "INSERT INTO users (username, password, location, hash) VALUES ?";
   var queryInput = [[ userObj.username, userObj.password, userObj.location, hash ]]
   db.query(insertQuery, [queryInput], function(err, result, fields) {

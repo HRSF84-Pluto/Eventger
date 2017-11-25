@@ -22,10 +22,6 @@ class App extends React.Component {
   }
 
 
-  componentDidMount() {
-
-  }
-
   handleSearchInput(location) {
     console.log(location, 'location inside app.jsx');
     console.log(this.state.date, 'date in calendar');
@@ -36,47 +32,73 @@ class App extends React.Component {
     console.log(activity, 'Activity inside handleActivity');
     this.setState({activity});
   }
-
-  handleLogin(username) {
-    this.setState({username});
+ componentDidMount(){
+   this.getCurrentUser();
+ }
+  handleLogin() {
+    console.log("inside handle login");
+    //this.setState({username});
+    this.getCurrentUser();
+  }
+  getCurrentUser(){
+   console.log("inside getCurrentUser");
+    $.ajax({
+      url: '/userData',
+      method: 'GET',
+      contentType: 'application/json',
+      success: response => {
+        console.log('response inside getCurrentUser', response);
+        if (response.username) {
+          console.log(response.username);
+          this.setState({username: response.username});
+          console.log(this.state.username, "state.username");
+          //this.forceUpdate();
+        }else{
+          this.setState({username: 'Login'});
+        }
+      },
+      error: (xhr, status, error) => {
+        console.log('err', xhr, status, error);
+      }
+    })
   }
 
   handleLogout() {
     this.setState({username: 'Login'});
   }
-
-  renderView() {
-    return (
-      <MuiThemeProvider>
-        <Router>
-          <div>
-            <Route exact path='/EventsFeed'
-                   render={() => <EventFeed username={this.state.username}/>}/>
-            <Route exact path='/SavedEvents'
-                   render={() => <Saved/>}/>
-            <Route exact path='/Settings'
-                   render={() => <Settings/>}/>
-            <Route exact path='/Login'
-                   render={() => <Login handleLogin={username => this.handleLogin(username)}/>}/>
-            <Route exact path='/SignUp'
-                   render={() => <SignUp/>}/>
-            <Route exact path='/' render={() =>
-              <Main currentUsername={this.state.username}
-                    handleLogout={this.handleLogout.bind(this)}
-                    dateSelection={date => this.setState({date: date._d.toString()})}
-                    handleActivity={chosenActivity => this.handleActivity(chosenActivity)}
-                    handleSearch={inputLocation => this.handleSearchInput(inputLocation)}/>
-            }/>
-          </div>
-        </Router>
-      </MuiThemeProvider>
-    );
+  componentDidUpdate(){
+    console.log("did component update? inside app.jsx");
+    console.log("username inside componentDidUpdate app.jsx");
+    console.log(this.state.username);
   }
+
 
   render() {
     return (
       <div>
-        {this.renderView()}
+        <MuiThemeProvider>
+          <Router>
+            <div>
+              <Route exact path='/EventsFeed'
+                     render={() => <EventFeed username={this.state.username}/>}/>
+              <Route exact path='/SavedEvents'
+                     render={() => <Saved/>}/>
+              <Route exact path='/Settings'
+                     render={() => <Settings/>}/>
+              <Route exact path='/Login'
+                     render={() => <Login handleLogin={() => this.handleLogin()}/>}/>
+              <Route exact path='/SignUp'
+                     render={() => <SignUp/>}/>
+              <Route exact path='/' render={() =>
+                <Main username={this.state.username}
+                      handleLogout={this.handleLogout.bind(this)}
+                      dateSelection={date => this.setState({date: date._d.toString()})}
+                      handleActivity={chosenActivity => this.handleActivity(chosenActivity)}
+                      handleSearch={inputLocation => this.handleSearchInput(inputLocation)}/>
+              }/>
+            </div>
+          </Router>
+        </MuiThemeProvider>
       </div>
     );
   }

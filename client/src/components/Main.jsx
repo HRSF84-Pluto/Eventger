@@ -6,28 +6,28 @@ import UserSettingsPopup from './UserSettingsPopup';
 
 
 class Main extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      username: this.props.currentUsername || 'Login'
-    };
-  }
+
 
   handleLogout() {
-    this.setState({username: 'Login'});
     this.props.handleLogout();
   }
+
+ componentDidUpdate(){
+   console.log("did component update?");
+   console.log("username inside componentDidUpdate");
+   console.log("Username == " + this.props.username);
+ }
 
   render() {
     return (
       <div className='main'>
         <div className='loginButtons'>
           <div>
-            {this.state.username !== 'Login' ?
-              <UserSettingsPopup handleLogOut={this.handleLogout.bind(this)} username={this.state.username}/> :
+            {this.props.username !== 'Login' ?
+              <UserSettingsPopup handleLogOut={this.handleLogout.bind(this)} username={this.props.username}/> :
               <Link style={{color: 'white'}} to='/Login'>
                 <div
-                  className='login-btn'>{this.state.username}</div>
+                  className='login-btn'>{this.props.username}</div>
               </Link>}
           </div>
           <div>

@@ -4,10 +4,10 @@ USE Eventger;
 
 CREATE TABLE users (
   id INT AUTO_INCREMENT UNIQUE,
-  username VARCHAR(150) UNIQUE,
+  username VARCHAR(20) UNIQUE,
   location VARCHAR(20),
   password VARCHAR(20),
-  hash VARCHAR(500),
+  hash BINARY(60),
   PRIMARY KEY (id)
 );
 

@@ -21,8 +21,9 @@ class Login extends Component {
     this.setState({password: e.target.value});
   }
 
+
   handleLoginInput() {
-    this.props.handleLogin(this.state.username);
+
     // checks for username in db: if username exists, accept login info, else, redirect to signup
     const data = this.state;
     console.log(data, 'data object to be sent to db');
@@ -36,6 +37,7 @@ class Login extends Component {
         success: response => {
           console.log(`success`);
           console.log(response);
+          this.props.handleLogin(response.username);
           resolve(response)
         },
         error: (err)=> {
