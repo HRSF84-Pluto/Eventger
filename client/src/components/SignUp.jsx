@@ -33,17 +33,16 @@ class SignUp extends Component {
       url: '/signup',
       data: data,
       success: response => {
-        console.log(`success`);
+        console.log('success signUp');
         console.log(response);
         resolve(response)
       },
       error: (err)=> {
-        console.log(`failure`);
+        console.log('failure signUp');
         console.log(err);
         reject(err)
       }
     });
-
 
     })
   }

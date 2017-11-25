@@ -30,7 +30,7 @@ const sessionStore = new MySQLStore(options);
 const loginRoute = require('../routes/login');
 const signupRoute = require('../routes/signup');
 const userDataRoute = require('../routes/userData');
-// const logoutRoute = require('../routes/logout');
+const logoutRoute = require('../routes/logout');
 
 
 //middleware used by passportjs
@@ -70,7 +70,7 @@ app.use('/login', loginRoute);
 app.use(checkAuthentication);
 
 app.use('/userData', userDataRoute);
-// app.use('/logout', logoutRoute);
+app.use('/logout', logoutRoute);
 
 //react router's path
 app.get('*', (req, res) => {

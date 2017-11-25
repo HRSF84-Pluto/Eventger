@@ -65,6 +65,19 @@ class App extends React.Component {
 
   handleLogout() {
     this.setState({username: 'Login'});
+    $.ajax({
+      url: '/logout',
+      method: 'GET',
+      contentType: 'application/json',
+      success: response => {
+        console.log('success inside handleLogout: ');
+        console.log(response);
+      },
+      error: (err)=> {
+        console.log('failure inside handleLogout: ');
+        console.log(err);
+      }
+    });
   }
   componentDidUpdate(){
     console.log("did component update? inside app.jsx");
