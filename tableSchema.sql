@@ -1,19 +1,17 @@
 DROP DATABASE IF EXISTS Eventger;
-
 CREATE DATABASE Eventger;
-
 USE Eventger;
 
 CREATE TABLE users (
   id INT AUTO_INCREMENT UNIQUE,
-  username VARCHAR(150) UNIQUE,
+  username VARCHAR(20) UNIQUE,
   location VARCHAR(20),
   password VARCHAR(20),
+  hash BINARY(60),
   PRIMARY KEY (id)
 );
 
 CREATE TABLE events (
-
   id VARCHAR(20),
   eventName VARCHAR(150),
   date VARCHAR(300),
@@ -36,7 +34,7 @@ CREATE TABLE usersEvents (
     REFERENCES events(id)
 );
 
--- OBJECT Example 
+-- OBJECT Example
 -- User Object
 -- {
 --   username: string
@@ -54,7 +52,7 @@ CREATE TABLE usersEvents (
 --     line_2: string
 --     city: string
 --     state: string two letter
---     zip: string 
+--     zip: string
 --     }
 --   price: string
 --   url: string

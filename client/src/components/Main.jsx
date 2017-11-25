@@ -1,48 +1,39 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {Link} from 'react-router-dom';
 import Choices from './Choices';
 import Search from './Search';
 import UserSettingsPopup from './UserSettingsPopup';
 
 
-class Main extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      username: this.props.currentUsername || 'Login'
-    };
-  }
+const Main  = (props) => {
 
-  handleLogout() {
-    this.setState({username: 'Login'});
-    this.props.handleLogout();
-  }
+  const handleLogout =()=> {
+    props.handleLogout();
+  };
 
-  render() {
-    return (
-      <div className='main'>
-        <div className='loginButtons'>
-          <div>
-            {this.state.username !== 'Login' ?
-              <UserSettingsPopup handleLogOut={this.handleLogout.bind(this)} username={this.state.username}/> :
-              <Link style={{color: 'white'}} to='/Login'>
-                <div
-                  className='login-btn'>{this.state.username}</div>
-              </Link>}
-          </div>
-          <div>
-            <Link style={{color: 'white'}} to='/SignUp'>
-              <div className='signup-btn'>Sign Up</div>
-            </Link>
-          </div>
+  return (
+    <div className='main'>
+      <div className='loginButtons'>
+        <div>
+          {props.username !== 'Login' ?
+            <UserSettingsPopup handleLogOut={handleLogout.bind(this)} username={props.username}/> :
+            <Link style={{color: 'white'}} to='/Login'>
+              <div
+                className='login-btn'>{props.username}</div>
+            </Link>}
         </div>
-        <Choices handleActivity={this.props.handleActivity}/>
-        <div className='search-bar'>
-          <Search dateSelection={this.props.dateSelection} onLocationSearch={this.props.handleSearch}/>
+        <div>
+          <Link style={{color: 'white'}} to='/SignUp'>
+            <div className='signup-btn'>Sign Up</div>
+          </Link>
         </div>
       </div>
-    );
-  }
-}
+      <Choices handleActivity={props.handleActivity}/>
+      <div className='search-bar'>
+        <Search dateSelection={props.dateSelection} onLocationSearch={props.handleSearch}/>
+      </div>
+    </div>
+  );
+};
 
 export default Main;
