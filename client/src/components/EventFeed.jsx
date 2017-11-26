@@ -15,11 +15,57 @@ class EventFeed extends Component{
   }
   handleFilterOptions(options){
     console.log(options, ": options inside handleFilterOptions");
+    const {
+      nba,
+      nfl,
+      restaurants,
+      bar,
+      coffee,
+      danceClubs,
+      museums,
+      hike,
+      comedyClubs,
+      pop,
+      country,
+      rapHipHop} = options;
+
+    const dataObj = {'rap/hip-hop': rapHipHop,
+      'dance clubs': danceClubs, 'comedy clubs': comedyClubs,
+      nba,
+      nfl,
+      restaurants,
+      bar,
+      coffee,
+      museums,
+      hike,
+      pop,
+      country,
+    };
+    const ticketMaster = [];
+    console.log("is searchInput still accessible?: ", this.props.passDownSearchInput);
+    console.log("is it in localStorage after page refreshes?");
+    const myStorage = localStorage.getItem("main page options");
+    console.log(JSON.parse(myStorage));
+
+
+
+
+    // for (let key in dataObj){
+    //   if (dataObj[key]){
+    //     if (key)
+    //
+    //   }
+    // }
+
+    console.log(dataObj, "object inside handleFliterOptions");
     //this.handleDataFetch(options);
   }
 //TODO: turns queryTermForYelp property into array of strings, not strings for garrett;
   handleDataFetch(options){
-    let {location, activity, date} = this.props.passDownSearchInput;
+    let {location, activity, date, username} = this.props.passDownSearchInput;
+    if (location !== '' || date !== '' || activity !== '' && username!== 'Login'){
+      localStorage.setItem("main page options", JSON.stringify(this.props.passDownSearchInput));
+    }
     if (activity === ''){ activity = 'group events';}
     if (location === ''){location = 'seattle';}
     if (date === ''){date = new Date().toISOString();}

@@ -92,6 +92,7 @@ app.use('/login', loginRoute);
 
 
 
+
 app.use(checkAuthentication);
 
 //TODO: modify the userDataRoute's content to access user data
@@ -99,10 +100,9 @@ app.use('/userData', userDataRoute);
 app.use('/logout', logoutRoute);
 
 //react router's path
-app.get('*', (req, res) => {
+app.get('/**', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
 });
-
 
 function checkAuthentication(req, res, next) {
   if (req.isAuthenticated()) { //check if it's an authenticated route
@@ -110,7 +110,10 @@ function checkAuthentication(req, res, next) {
     next();
   }
   else {
-    res.status(401).json({});
+    next();
+    //res.status(401).json({});
+
+
   }
 }
 
