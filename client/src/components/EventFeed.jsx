@@ -4,17 +4,26 @@ import EventList from './EventList';
 import SideBar from './SideBar';
 
 
-//TODO: convert to functional component
+
 class EventFeed extends Component{
   constructor(props) {
     super(props);
     this.state= {eventsArray: []}
   }
   componentDidMount(){
+    this.handleDataFetch();
+  }
+  handleFilterOptions(options){
+    console.log(options, ": options inside handleFilterOptions");
+    //this.handleDataFetch(options);
+  }
+//TODO: turns queryTermForYelp property into array of strings, not strings for garrett;
+  handleDataFetch(options){
     let {location, activity, date} = this.props.passDownSearchInput;
     if (activity === ''){ activity = 'group events';}
     if (location === ''){location = 'seattle';}
     if (date === ''){date = new Date().toISOString();}
+    if (options){}
     const eventMapper = {
       "group events": {
         "queryTermForTM": ["music", "sports"],
@@ -64,7 +73,7 @@ class EventFeed extends Component{
       <div className='wrapper'>
         <div className='box header'/>
         <div className='box sidebar'>
-          <SideBar username={this.props.username}/>
+          <SideBar handleFilterOptions={(options)=> this.handleFilterOptions(options)} username={this.props.username}/>
         </div>
         <div className='box content'>
           <EventList eventsArray={this.state.eventsArray}/>

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Button, Icon, Image as ImageComponent, Item, Label } from 'semantic-ui-react';
+import { Item, Label } from 'semantic-ui-react';
 
 
 
@@ -7,16 +7,16 @@ class Event extends Component{
   constructor(props) {
     super(props);
     this.state={
-      className: 'big bookmark icon'
+      className: 'large bookmark icon'
     }
   }
   handleSavedEvent(id){
     console.log('item id', id);
     //key would hold the id or something that identifies the entry to be saved in the db
-    if (this.state.className === 'big bookmark icon saved-bookmark' ){
-      this.setState({className: 'big bookmark icon'});
+    if (this.state.className === 'large bookmark icon saved-bookmark' ){
+      this.setState({className: 'large bookmark icon'});
     }else{
-      this.setState({className: 'big bookmark icon saved-bookmark'});
+      this.setState({className: 'large bookmark icon saved-bookmark'});
     }
 
   }
@@ -59,20 +59,3 @@ class Event extends Component{
 }
 
 export default Event;
-{/*<div className='event' key={this.props.idx}>*/}
-  {/*<div className='ui small rounded image'>*/}
-    {/*<img src={this.props.event.photoUrl}/>*/}
-  {/*</div>*/}
-  {/*<div className='event-info'>*/}
-    {/*<p> Event: {this.props.event.eventName}</p>*/}
-    {/*/!*<p> Location: {this.props.event.location}</p>*!/*/}
-    {/*<p> Time: {this.props.event.time}</p>*/}
-    {/*<p> Price: {this.props.event.price}</p>*/}
-    {/*<p><a href={this.props.event.url} target='_blank'>Event Link</a></p>*/}
-    {/*<div className='ui small icon buttons'>*/}
-      {/*<button className='ui button'>*/}
-        {/*<i onClick={this.handleSavedEvent.bind(this, this.props.event.id)} className={this.state.className}/>*/}
-      {/*</button>*/}
-    {/*</div>*/}
-  {/*</div>*/}
-{/*</div>*/}

@@ -61,10 +61,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../client/')));
 app.use(bodyParser.urlencoded({ extended: false }));
-//react router's path
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/index.html'));
-});
+
 
 //creates session
 app.use(session({
@@ -101,7 +98,10 @@ app.use(checkAuthentication);
 app.use('/userData', userDataRoute);
 app.use('/logout', logoutRoute);
 
-
+//react router's path
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/index.html'));
+});
 
 
 function checkAuthentication(req, res, next) {
