@@ -18,7 +18,7 @@ const getTMData = (reqBody) => {
 
   // Modify fetch params if other preferences are selected by user // 
   Object.assign(params, 
-    reqBody.preferenceForMusicOrLeague ? { keyword: reqBody.preferenceForMusicOrLeague } : null);
+    reqBody.preferenceForMusicOrLeague ? { keyword: reqBody.preferenceForMusicOrLeague[0] } : null);
 
   // BEGIN: API fetch
   return ticketmaster.events.search(params)
@@ -54,14 +54,12 @@ const getYelpData = (reqBody) => {
     open_now: true,
     sort_by: 'rating',
     term: reqBody.queryTermForYelp, 
-    location: reqBody.postalCode,
+    location: reqBody.city,
   }
 
   // Modify fetch params if other preferences are selected by user // 
   Object.assign(params, 
-    reqBody.preferenceForFoodAndOrSetting ? { term: reqBody.preferenceForFoodAndOrSetting } : null,
-    reqBody.price ? { price: priceMapper(reqBody.price, 'yelp') } : null,
-    reqBody.activity ? { categories: reqBody.activity } : null);
+    reqBody.price ? { price: priceMapper(reqBody.price, 'yelp') } : null);
    
   const client = yelp.client(apiKeys.token);
    
@@ -130,10 +128,10 @@ const parseForCriticalData = (results, API) => {
 const priceMapper = (dollarSigns, API) => {
   if (API === 'ticketmaster') { // TM: max must be <= the $ given
     let map = {
-      $: 10,
-      $$: 50,
-      $$$: 100,
-      $$$$: 500
+      $: 100,
+      $$: 500,
+      $$$: 5000,
+      $$$$: 10000
     }
     return map[dollarSigns]
   } else if (API === 'yelp') {
@@ -155,10 +153,10 @@ module.exports.getYelpData = getYelpData;
 //                      Ticketmaster        Yelp           //
 //  Music/Sports             Yes              -            // 
 //  Food Type                 -              Yes           // 
-//  Activity                  -          In Progress       // 
 //  Budget                   Yes             Yes           // 
 // ******************************************************* //
 
 // do we want to filter out events without a provided price? 
+// when we use SF city as TM param, it doesn't include Oakland games (NBA)..
 
 

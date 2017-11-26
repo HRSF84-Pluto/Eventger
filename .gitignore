@@ -30,6 +30,4 @@ bower_components/
 
 .idea/*
 
-
-
-
+api/apiKeys.js
