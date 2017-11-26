@@ -113,7 +113,6 @@ function checkAuthentication(req, res, next) {
     next();
     //res.status(401).json({});
 
-
   }
 }
 

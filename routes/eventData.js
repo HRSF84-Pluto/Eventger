@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const fetchHelpers = require('../api/fetchHelpers.js');
+const db =  require('../db/db.js');
 
 
 
@@ -24,13 +25,13 @@ router.post('/', function (req, res) {
   //TODO: Delete sampleReqBody above;
 
    //reassigning to actual object
-  sampleReqBody  = req.body;
+  //sampleReqBody  = req.body;
 
   db.reduceSearchAsync(sampleReqBody, 1)
     .then(sampleReqBody => {
 
       console.log('Reduced Sample Body', sampleReqBody);
-      let returnedYelpTMDataObj = {};
+
 
       // fetch ticketmaster data
       return fetchHelpers.getTMData(sampleReqBody)
@@ -38,7 +39,7 @@ router.post('/', function (req, res) {
     console.log('ERROR in reduceSearchAsync', err)
   }).then(ticketMasterEventsArr => {
 
-
+    let returnedYelpTMDataObj = {};
     // include TM event data in the object sent back to front-end //
     returnedYelpTMDataObj.ticketmaster = ticketMasterEventsArr;
     return;

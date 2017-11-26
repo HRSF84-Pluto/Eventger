@@ -48,6 +48,8 @@ class EventFeed extends Component{
     console.log(JSON.parse(myStorage));
 
 
+    //preferenceForMusicOrLeague: []
+
 
 
     // for (let key in dataObj){
@@ -74,15 +76,15 @@ class EventFeed extends Component{
     const eventMapper = {
       "group events": {
         "queryTermForTM": ["music", "sports"],
-        "queryTermForYelp": "dance clubs"
+        "queryTermForYelp": ["dance clubs"]
       },
       "family": {
         "queryTermForTM": ["music", "sports"],
-        "queryTermForYelp": "museums"
+        "queryTermForYelp": ["museums", "hike"]
       },
       "date night": {
         "queryTermForTM": ["music"],
-        "queryTermForYelp": "restaurant"
+        "queryTermForYelp": ["restaurant", "bar"]
       }
     };
 

@@ -58,12 +58,17 @@ db.findUsername = (username, id, callback) => {
     findQuery = "SELECT * FROM users WHERE (id=?)";
     queryInput = id;
   }
+
   db.query(findQuery, [queryInput], function(err, result, fields) {
     if (err) {
       callback(err, null);
     }
-    result[0].preferences = JSON.parse(result[0].preferences)
-    callback(null, result[0]);
+    if (result[0].preferences){
+      result[0].preferences = JSON.parse(result[0].preferences);
+      callback(null, result[0]);
+    }else{
+      callback(null, result[0]);
+    }
   })
 };
 
@@ -100,7 +105,7 @@ db.saveUsername = (userObj, hash, callback) => {
   db.query(insertQuery, [queryInput], function(err, result, fields) {
     if (err) {
       callback(err, null);
-    };
+    }
     callback(null, result);
   })
 }
@@ -173,19 +178,19 @@ db.updatePreferences = (userId, category, callback) => {
 
 db.saveUserEvent = (userId, eventId, callback) => {
   db = Promise.promisifyAll(db);
-  
+
   db.findEventAsync(eventId)
   .then((eventData) => {
     return db.updatePreferencesAsync(userId, eventData.category)
   }).then(() => {
     var insertQuery = "INSERT INTO usersEvents (user_id, event_id) VALUES ?"
     var queryInput = [[userId, eventId]]
-    
+
     db.query(insertQuery, [queryInput], function(err, result, fields) {
       if (err) {
         callback(err, null);
       };
-      callback(null, result);  
+      callback(null, result);
     });
   })
 }
@@ -194,7 +199,7 @@ db.saveUserEvent = (userId, eventId, callback) => {
 // let sampleReqBody = {
 //   queryTermForTM: ['sports', 'music'], // both query Terms are defined by homepage selection upon landing on site
 //   preferenceForMusicOrLeague: 'Rock', // additional keyword given by user in preferences table [max: 1 word] to narrow down sports or music
-//   queryTermForYelp: 'food', // default Yelp fetch from homepage 
+//   queryTermForYelp: 'food', // default Yelp fetch from homepage
 //   // preferenceForFoodAndOrSetting: 'Mexican', // additional keyword given by user to narrow down type of food
 //   // activity: 'hiking', // if user doesn't want food but wants an activity - yelp category: https://www.yelp.com/developers/documentation/v2/all_category_list
 //   city: 'San Francisco',
@@ -294,7 +299,7 @@ db.connectAsync()
 //       return db.saveUserEventAsync(1,'abcdef')
 //     }).catch(() => {
 //       console.log('Event Already Saved')
-//       return db.saveUserEventAsync(1,'abcdef') 
+//       return db.saveUserEventAsync(1,'abcdef')
 //     })
 //     .then( (userEventSaveSuccess) => {
 //       console.log('Successfully Saved User Event Relationship', userEventSaveSuccess)

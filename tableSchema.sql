@@ -8,6 +8,7 @@ CREATE TABLE users (
   location VARCHAR(20),
   password VARCHAR(20),
   hash BINARY(60),
+  preferences VARCHAR(500),
   PRIMARY KEY (id)
 );
 

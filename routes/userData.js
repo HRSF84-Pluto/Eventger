@@ -9,12 +9,10 @@ router.get('/', function(req, res) {
     console.log(id, "id in userData get");
     console.log('USER ID ', id);
     console.log("get user posting here///");
-    db.findByIdAsync(id)
-      .then(result => {
-        db.findUsernameAsync(result.username)
+        db.findUsernameAsync(null, id)
           .then(result => res.status(200).json(result))
           .catch(err => res.status(404).end())
-      }).catch(err => res.status(404).end())
+
 });
 
 module.exports = router;

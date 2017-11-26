@@ -18,7 +18,8 @@ const db =  require('../db/db.js');
 passport.use(new LocalStrategy({passReqToCallback: true},
   function(req, username, password, done) {
     console.log('username and password:', username, password);
-    db.findUsernameAsync(username)
+
+    db.findUsernameAsync(username,null)
       .then(results =>{
         if (results){
           //load hash from db
