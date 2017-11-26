@@ -63,9 +63,10 @@ class EventFeed extends Component{
 //TODO: turns queryTermForYelp property into array of strings, not strings for garrett;
   handleDataFetch(options){
     let {location, activity, date, username} = this.props.passDownSearchInput;
-    if (location !== '' || date !== '' || activity !== '' && username!== 'Login'){
+    if (location !== '' || date !== '' || activity !== ''){
       localStorage.setItem("main page options", JSON.stringify(this.props.passDownSearchInput));
     }
+
     if (activity === ''){ activity = 'group events';}
     if (location === ''){location = 'seattle';}
     if (date === ''){date = new Date().toISOString();}
