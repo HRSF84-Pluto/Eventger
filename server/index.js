@@ -10,6 +10,7 @@ const flash = require('connect-flash');
 const passport = require('passport');
 const fetchHelpers = require('../api/fetchHelpers.js');
 const db =  require('../db/db.js');
+const Promise = require('bluebird');
 
 const PORT = process.env.PORT || 3000;
 
@@ -38,7 +39,7 @@ Helpful links:
 let sampleReqBody = {
   queryTermForTM: ['sports', 'music'], // both query Terms are defined by homepage selection upon landing on site
   preferenceForMusicOrLeague: ['NBA'], // additional keyword given by user in preferences table [max: 1 word] to narrow down sports or music
-  queryTermForYelp: ['Dance Clubs'], // default Yelp fetch from homepage 
+  queryTermForYelp: ['Thai Food', 'Mexican Food'], // default Yelp fetch from homepage 
   // queryTermForYelp: ['Chinese Food', 'Brewery', 'Dance Clubs', 'Museums', 'Hike'], // default Yelp fetch from homepage 
   city: 'San Francisco',
   startDateTime: '2017-01-12T18:00:00Z',
@@ -46,11 +47,12 @@ let sampleReqBody = {
 }
 
 app.get('/eventData', function (req, res) {
-  console.log('inside get handler');
+  console.log('=========================== inside get handler ===========================');
 
   // solo api testing purposes
   fetchHelpers.getYelpData(sampleReqBody)
   .then(response => {
+    console.log('BACK IN SERVER!!! RESPONSE IS: ', response[0])
     res.status(201).send(response);
   })
 
