@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Item} from 'semantic-ui-react';
 import Event from './Event';
 
 class EventList extends Component{
@@ -7,11 +8,11 @@ class EventList extends Component{
   }
 
   render(){
-    const list = [1, 2, 3, 4, 5, 6].map((event, i) => <Event event={event} key={i} idx={i} />);
+    const list = this.props.eventsArray.map((event, i) => <Event event={event} key={i} idx={i} />);
     return (
-      <div>
+      <Item.Group divided style={{marginLeft: '100px'}}>
         {list}
-      </div>
+      </Item.Group>
     );
   }
 }

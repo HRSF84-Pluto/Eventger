@@ -17,16 +17,14 @@ class App extends React.Component {
       location: '',
       activity: '',
       date: '',
-      username: 'Login',
+      username: 'Login'
     };
   }
 
-
-  handleSearchInput(location) {
-    console.log(location, 'location inside app.jsx');
-    console.log(this.state.date, 'date in calendar');
+  handleLocation(location){
     this.setState({location});
   }
+
 
   handleActivity(activity) {
     console.log(activity, 'Activity inside handleActivity');
@@ -34,6 +32,18 @@ class App extends React.Component {
   }
  componentDidMount(){
    this.getCurrentUser();
+   //TODO: This function will fetch events for the user on login according to previously used search terms
+   //get events bound to the current user
+   // $.ajax({
+   //   url: '/eventData',
+   //   method: 'GET',
+   //   success: response => {
+   //     console.log('response inside eventData fetch', response);
+   //   },
+   //   error: (xhr, status, error) => {
+   //     console.log('err inside eventData fetch', xhr, status, error);
+   //   }
+   // })
  }
   handleLogin() {
     console.log("inside handle login");
@@ -41,7 +51,7 @@ class App extends React.Component {
     this.getCurrentUser();
   }
   getCurrentUser(){
-   console.log("inside getCurrentUser");
+
     $.ajax({
       url: '/userData',
       method: 'GET',
@@ -52,13 +62,13 @@ class App extends React.Component {
           console.log(response.username);
           this.setState({username: response.username});
           console.log(this.state.username, "state.username");
-          //this.forceUpdate();
+
         }else{
           this.setState({username: 'Login'});
         }
       },
-      error: (xhr, status, error) => {
-        console.log('err', xhr, status, error);
+      error: () => {
+        console.log('there\'s no active session, please log in');
       }
     })
   }
@@ -80,9 +90,6 @@ class App extends React.Component {
     });
   }
   componentDidUpdate(){
-    console.log("did component update? inside app.jsx");
-    console.log("username inside componentDidUpdate app.jsx");
-    console.log(this.state.username);
   }
 
 
@@ -93,7 +100,7 @@ class App extends React.Component {
           <Router>
             <div>
               <Route exact path='/EventsFeed'
-                     render={() => <EventFeed username={this.state.username}/>}/>
+                     render={() => <EventFeed passDownSearchInput={this.state} username={this.state.username}/>}/>
               <Route exact path='/SavedEvents'
                      render={() => <Saved/>}/>
               <Route exact path='/Settings'
@@ -105,9 +112,12 @@ class App extends React.Component {
               <Route exact path='/' render={() =>
                 <Main username={this.state.username}
                       handleLogout={this.handleLogout.bind(this)}
-                      dateSelection={date => this.setState({date: date._d.toString()})}
+                      dateSelection={date => {
+                        date = date._d.toISOString();
+                        this.setState({date})
+                      }}
                       handleActivity={chosenActivity => this.handleActivity(chosenActivity)}
-                      handleSearch={inputLocation => this.handleSearchInput(inputLocation)}/>
+                      handleSearch={inputLocation => this.handleLocation(inputLocation)}/>
               }/>
             </div>
           </Router>

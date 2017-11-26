@@ -75,6 +75,11 @@ h1{
   color: #7c7c7c;
   font-family: sans-serif;
 }
+
+p{
+  font-size: 15px;
+  color: black;
+}
 .loginButtons{
   display: flex;
   flex-direction: row;
@@ -188,9 +193,6 @@ h3{
   text-align: center;
 }
 
-p{
-  color: black;
-}
 
 .input{
   margin: auto;
@@ -200,8 +202,6 @@ p{
 
 
 .event{
-  width: 80%;
-  height: 200px;
   margin: 0 auto;
   -webkit-box-shadow: 0 5px 10px #efefef;
   -moz-box-shadow: 0 5px 10px #efefef;
@@ -258,7 +258,6 @@ p{
 
 .ui.buttons:not(.basic):not(.inverted){
   float: right;
-  margin-right: 10px;
 }
 .radio-btn-section{
   margin-top: 20px;

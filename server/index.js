@@ -11,82 +11,6 @@ const passport = require('passport');
 const fetchHelpers = require('../api/fetchHelpers.js');
 const db =  require('../db/db.js');
 
-// Sample output from Garrett's helper: //
-let sampleReqBody = {
-  city: 'Oakland',
-  preferenceForMusicOrLeague: ['NBA', 'NFL', 'pop'], // should be populated with Music Genres or Sporting Leagues
-  queryTermForTM: ['music', 'sports'], // can only have 'music' or 'sports' (couldn't find other options)
-  queryTermForYelp: ['bar', 'coffee', 'breakfast'], // originally populated with the keyterms discussed in Begona's google sheet, but will change thereafter with user preferences
-  startDateTime: '2017-11-27T18:00:00Z', 
-  price: '$$'
-}
-
-app.get('/eventData', function (req, res) {
-  console.log('=========================== inside get handler ===========================');
-
-  // // solo api testing purposes //
-  // fetchHelpers.getTMData(sampleReqBody)
-  // .then(response => {
-  //   console.log('BACK IN SERVER BABY!: ', response);
-  //   res.status(201).send(response);
-  // })
-
-  let returnedYelpTMDataObj = {};
-  
-  fetchHelpers.getTMData(sampleReqBody)
-  .then(ticketMasterEventsArr => {
-
-    // include TM event data in the object sent back to front-end //
-    returnedYelpTMDataObj.ticketmaster = ticketMasterEventsArr;
-    return;
-  })
-  .then(() => {
-
-    // fetch Yelp data
-    fetchHelpers.getYelpData(sampleReqBody)
-    .then(yelpEventsArr => {
-
-      // include Yelp event data in the object sent back to front-end //
-      returnedYelpTMDataObj.yelp = yelpEventsArr;
-      return;
-    })
-    .then(() => {
-      res.status(201).send(returnedYelpTMDataObj);
-    })
-  })
-
-  // Sally: bug in helper, couldn't use! help Garrett!
-  // db.reduceSearchAsync(sampleReqBody, 1)
-  // .then(sampleReqBody => {
-  //   console.log('Reduced Sample Body', sampleReqBody);
-
-  //   let returnedYelpTMDataObj = {};
-  // // fetch ticketmaster data
-  //   return fetchHelpers.getTMData(sampleReqBody)
-  // }).catch(err => {
-  //   console.log('ERROR in reduceSearchAsync', err)
-  // }).then(ticketMasterEventsArr => {
-
-  //   // include TM event data in the object sent back to front-end //
-  //   returnedYelpTMDataObj.ticketmaster = ticketMasterEventsArr;
-  //   return;
-  // })
-  // .then(placeholder => {
-
-  //   // fetch Yelp data
-  //   fetchHelpers.getYelpData(sampleReqBody)
-  //   .then(yelpEventsArr => {
-
-  //     // include Yelp event data in the object sent back to front-end //
-  //     returnedYelpTMDataObj.yelp = yelpEventsArr;
-  //     return;
-  //   })
-  //   .then(placeholder => {
-  //     res.status(201).send(returnedYelpTMDataObj);
-  //   })
-  // })
-
-});
 const PORT = process.env.PORT || 3000;
 
 /*
@@ -108,7 +32,6 @@ Helpful links:
 *
 */
 
-//TODO: Will move these routes to the routes directory - briceida
 
 
 const options = {
@@ -129,6 +52,7 @@ const loginRoute = require('../routes/login');
 const signupRoute = require('../routes/signup');
 const userDataRoute = require('../routes/userData');
 const logoutRoute = require('../routes/logout');
+const eventDataRoute = require('../routes/eventData');
 
 
 //middleware used by passportjs
@@ -137,6 +61,11 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../client/')));
 app.use(bodyParser.urlencoded({ extended: false }));
+//react router's path
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/index.html'));
+});
+
 //creates session
 app.use(session({
   secret: 'secret',
@@ -160,6 +89,7 @@ app.use(flash());
 // });
 
 //express router middleware
+app.use('/eventData', eventDataRoute);
 app.use('/signup', signupRoute);
 app.use('/login', loginRoute);
 
@@ -171,10 +101,6 @@ app.use(checkAuthentication);
 app.use('/userData', userDataRoute);
 app.use('/logout', logoutRoute);
 
-//react router's path
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/index.html'));
-});
 
 
 
@@ -187,6 +113,8 @@ function checkAuthentication(req, res, next) {
     res.status(401).json({});
   }
 }
+
+
 
 
 //Save Events for logged in User
