@@ -63,12 +63,9 @@ db.findUsername = (username, id, callback) => {
     if (err) {
       callback(err, null);
     }
-    if (result[0].preferences){
-      result[0].preferences = JSON.parse(result[0].preferences);
-      callback(null, result[0]);
-    }else{
-      callback(null, result[0]);
-    }
+    result[0].preferences = JSON.parse(result[0].preferences);
+    callback(null, result[0]);
+
   })
 };
 
@@ -85,7 +82,7 @@ db.getHash = (username, callback) => {
 };
 
 
-
+//TODO: DELETE THIS FUNCTION, functionality now covered by findUsername;
 db.findById = (id, callback) => {
   var findQuery = "SELECT * FROM users WHERE (id=?)";
   var queryInput = id;

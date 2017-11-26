@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {Item} from 'semantic-ui-react';
 import Event from './Event';
 
+
+//TODO: change class component to functional;
 class EventList extends Component{
   constructor(props) {
     super(props);
