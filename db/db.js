@@ -45,6 +45,7 @@ const createTables = require('./config');
 //DATABASE_URL: mysql://ba3f260f7ba4c4:0e12068a@us-cdbr-iron-east-05.cleardb.net/heroku_e67b3a46e336139?reconnect=true
 const database = 'heroku_e67b3a46e336139';
 var db = mysql.createConnection({
+  // connectionLimit: 100,
   host: 'us-cdbr-iron-east-05.cleardb.net',
   user: 'ba3f260f7ba4c4',
   database: 'heroku_e67b3a46e336139',
