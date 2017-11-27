@@ -2,7 +2,7 @@ import React,{Component} from 'react';
 import { Button } from 'semantic-ui-react';
 
 class FilterOptions extends Component {
-  //huge state! watch out!
+  //state controls the selection and css styling of selected preferences and dollar signs
   constructor(props){
     super(props);
     this.state = {
@@ -43,7 +43,7 @@ class FilterOptions extends Component {
     } = this.state;
 
 
-    const dataObj = {
+    const preferences = {
       nba,
       nfl,
       restaurants,
@@ -58,12 +58,11 @@ class FilterOptions extends Component {
       rap
     };
 
-    console.log(dataObj, 'object with activity preferences');
-    //submit to state object to db;
-    this.props.handleFilterOptions(dataObj, this.state.budget);
+    //sends activity preferences and budget to parent
+    this.props.handleFilterOptions(preferences, this.state.budget);
   }
   handleClick(dollars){
-    console.log(dollars, 'dollar signs in your eyes');
+    console.log(dollars, 'dollar signs selected');
     if (this.state.budget === dollars){
       this.setState({budget:'$$'});
     }else{

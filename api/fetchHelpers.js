@@ -3,11 +3,11 @@ const yelp = require('yelp-fusion');
 const zipcodes = require('zipcodes');
 const Geohash = require('latlon-geohash');
 const Promise = require('bluebird');
-  
+
 const apiKeys = require('./apiKeys.js');
 
 const getTMData = (reqBody) => {
-  let tmCummulativeEvents = []; 
+  let tmCummulativeEvents = [];
   let userPreferences = reqBody.preferenceForMusicOrLeague;
 
   const fetchTMData = (preference) => {
@@ -20,13 +20,13 @@ const getTMData = (reqBody) => {
       classificationName: JSON.stringify(reqBody.queryTermForTM),
       startDateTime: reqBody.startDateTime,
       radius: '50',
-      latlong: getLatLongFromPostalCode(reqBody.postalCode)
+      latlong: getLatLongFromPostalCode(reqBody.location)
       // city: reqBody.city
     }
-    console.log(`LOOOK HERE!!! postalCode is ${reqBody.postalCode} and the zipcode module returns ${zipcodes.lookup(reqBody.postalCode)}`)
+    console.log(`LOOOK HERE!!! postalCode is ${reqBody.location} and the zipcode module returns ${zipcodes.lookup(reqBody.location)}`)
 
-    // Modify fetch params if other preferences are selected by user // 
-    Object.assign(params, 
+    // Modify fetch params if other preferences are selected by user //
+    Object.assign(params,
       reqBody.preferenceForMusicOrLeague ? { keyword: preference } : null);
 
     // BEGIN: API fetch
@@ -63,18 +63,18 @@ const getTMData = (reqBody) => {
       })
       .catch(err => {
         console.log('LOOK HERE!! TM FETCH ERROR: ', err)
-      })  
+      })
   }
 
   // if fetch is from homepage, return an uncustomized array of events
   if (!reqBody.preferenceForMusicOrLeague) {
     return fetchTMData()
   // if user has specified preferences, loop through preferences and return a cummulative array of events
-  } else { 
+  } else {
     return Promise.each(userPreferences, fetchTMData)
     // after Fetch Loop is finished, return the final cummulative array of events
       .then(() => {
-        return tmCummulativeEvents;    
+        return tmCummulativeEvents;
       })
       .catch(err => {
         console.log('LOOK HERE!! TM - OUTSIDE FETCHLOOP ERROR: ', err)
@@ -83,21 +83,21 @@ const getTMData = (reqBody) => {
 }
 
 const getYelpData = (reqBody) => {
-  let yelpCummulativeEvents = []; 
+  let yelpCummulativeEvents = [];
   let userPreferences = reqBody.queryTermForYelp;
 
   const getYelpData = (preference) => {
     // prep the fetch
-    let params = { 
+    let params = {
       sort_by: 'rating',
-      term: preference, 
-      location: reqBody.postalCode,
+      term: preference,
+      location: reqBody.location,
     }
- 
-    // Modify fetch params if other preferences are selected by user // 
-    Object.assign(params, 
+
+    // Modify fetch params if other preferences are selected by user //
+    Object.assign(params,
       reqBody.price ? { price: priceMapper(reqBody.price, 'yelp') } : null);
-     
+
     const client = yelp.client(apiKeys.token);
 
     // BEGIN: API fetch
@@ -123,7 +123,7 @@ const getYelpData = (reqBody) => {
   return Promise.each(userPreferences, getYelpData)
   // after Fetch Loop is finished, return the final cummulative array of events
     .then(() => {
-      return yelpCummulativeEvents;    
+      return yelpCummulativeEvents;
     })
     .catch(err => {
       console.log('LOOK HERE!! Yelp - OUTSIDE FETCHLOOP ERROR: ', err.body)
@@ -144,7 +144,7 @@ const parseForCriticalData = (results, API) => {
           line_2: event._embedded.venues[0].address.line1,
           city: event._embedded.venues[0].city.name,
           state: event._embedded.venues[0].state.stateCode,
-          zip: event._embedded.venues[0].city.postalCode
+          zip: event._embedded.venues[0].city.location
         },
         price: event.priceRanges ? `${event.priceRanges[0].min} ${event.priceRanges[0].currency} - ${event.priceRanges[0].max} ${event.priceRanges[0].currency}` : 'No Price Provided',
         url: event.url,
@@ -168,11 +168,10 @@ const parseForCriticalData = (results, API) => {
         price: business.price,
         url: business.url,
         photoUrl: business.image_url,
-        category: business.categories[0].title,
-        phone: business.phone
+        category: business.categories[0].title
       }
     })
-  } 
+  }
 }
 
 const priceMapper = (dollarSigns, API) => {
@@ -195,9 +194,9 @@ const priceMapper = (dollarSigns, API) => {
   }
 }
 
-const getLatLongFromPostalCode = (postalCode) => {
-  let latitude = zipcodes.lookup(postalCode).latitude
-  let longitude = zipcodes.lookup(postalCode).longitude
+const getLatLongFromPostalCode = (location) => {
+  let latitude = zipcodes.lookup(location).latitude
+  let longitude = zipcodes.lookup(location).longitude
   return `${latitude},${longitude}`
 }
 
@@ -205,7 +204,7 @@ module.exports.getTMData = getTMData;
 module.exports.getYelpData = getYelpData;
 
 // Left To Do: //
-// Do we want to filter out events without a provided price? 
+// Do we want to filter out events without a provided price?
 
 // When we use SF city as TM param, it doesn't include Oakland games (NBA)..
   // solution: zipcode node module > get latlong > use radius parameter
