@@ -10,6 +10,9 @@ module.exports = {
   node: {
     fs: 'empty'
   },
+  externals: {
+    'fs-extra': '{}'
+  },
   module: {
     loaders: [
       {
