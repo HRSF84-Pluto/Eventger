@@ -128,7 +128,7 @@ db.findUserEvents = (username, callback) => {
   db.query(findQuery, [queryInput], function(err, results, fields) {
     if (err) {
       callback(err, null);
-    };
+    }
     if(results !== undefined) {
       results.map((result) => {
         result.location = JSON.parse(result.location);

@@ -88,8 +88,8 @@ class App extends React.Component {
       }
     });
   }
-  componentDidUpdate(){
-  }
+
+
 
 
   render() {
@@ -101,7 +101,7 @@ class App extends React.Component {
               <Route exact path='/EventsFeed'
                      render={() => <EventFeed passDownSearchInput={this.state} username={this.state.username}/>}/>
               <Route exact path='/SavedEvents'
-                     render={() => <Saved/>}/>
+                     render={() => <Saved  username={this.state.username} />}/>
               <Route exact path='/Settings'
                      render={() => <Settings/>}/>
               <Route exact path='/Login'

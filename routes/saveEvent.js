@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const db =  require('../db/db.js');
+const $ = require('jquery');
 
 router.post('/', (req, res) => {
-  console.log("inside saveEvent");
+  console.log("inside POST saveEvent");
     const events = JSON.parse(req.body.events);
 
     //Get user ID
@@ -29,6 +30,18 @@ router.post('/', (req, res) => {
         });
       })
       .catch(err => console.error(err))
+});
+
+router.get('/', (req, res) => {
+  console.log("inside GET SAVE EVENT");
+  //find current user
+  let username = req.url.split('/?');
+  console.log(username, "IS THIS USERNAME???");
+  username = username[username.length-1];
+ db.findUserEventsAsync(username)
+   .then(events=> res.status(200).json(events))
+   .catch(err=> res.status(404).end());
+
 });
 
 module.exports = router;

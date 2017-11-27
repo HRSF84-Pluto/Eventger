@@ -27,7 +27,7 @@ class EventFeed extends Component{
 
         },
         error: () => {
-          console.log('there\'s no active session, please log in');
+          console.log('there\'s no active session, please login');
         }
       })
     }
