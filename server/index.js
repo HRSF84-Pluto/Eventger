@@ -37,20 +37,21 @@ Helpful links:
 
 // Sample output from Garrett's helper: //
 let sampleReqBody = {
-  queryTermForTM: ['sports', 'music'], // both query Terms are defined by homepage selection upon landing on site
-  preferenceForMusicOrLeague: ['NBA'], // additional keyword given by user in preferences table [max: 1 word] to narrow down sports or music
-  queryTermForYelp: ['Museum', 'Coffee', 'Brewery'], // default Yelp fetch from homepage 
-  city: 'Oakland',
-  startDateTime: '2017-01-12T18:00:00Z',
+  city: 'seattle',
+  preferenceForMusicOrLeague: ['rap'], // additional keyword given by user in preferences table [max: 1 word] to narrow down sports or music
+  queryTermForTM: ['music', 'sports'], // both query Terms are defined by homepage selection upon landing on site
+  queryTermForYelp: ['bar', 'coffee', 'dance clubs'], // default Yelp fetch from homepage 
+  startDateTime: '2017-11-27T18:00:00Z',
   price: '$$$'
 }
 
 app.get('/eventData', function (req, res) {
   console.log('=========================== inside get handler ===========================');
 
-  // // solo api testing purposes
+  // // solo api testing purposes //
   // fetchHelpers.getTMData(sampleReqBody)
   // .then(response => {
+  //   console.log('BACK IN SERVER BABY!: ', response);
   //   res.status(201).send(response);
   // })
 
@@ -61,7 +62,6 @@ app.get('/eventData', function (req, res) {
 
     // include TM event data in the object sent back to front-end //
     returnedYelpTMDataObj.ticketmaster = ticketMasterEventsArr;
-    console.log('aye')
     return;
   })
   .then(placeholder => {
@@ -72,14 +72,12 @@ app.get('/eventData', function (req, res) {
 
       // include Yelp event data in the object sent back to front-end //
       returnedYelpTMDataObj.yelp = yelpEventsArr;
-      console.log('aye2');
       return;
     })
     .then(placeholder => {
       res.status(201).send(returnedYelpTMDataObj);
     })
   })
-
 
   // db.reduceSearchAsync(sampleReqBody, 1)
   // .then(sampleReqBody => {
@@ -110,7 +108,6 @@ app.get('/eventData', function (req, res) {
   //     res.status(201).send(returnedYelpTMDataObj);
   //   })
   // })
-
 
 });
 

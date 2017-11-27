@@ -5,48 +5,63 @@ const Promise = require('bluebird');
 const apiKeys = require('./apiKeys.js');
 
 const getTMData = (reqBody) => {
-  console.log('inside TM api fetch');
+  let tmCummulativeEvents = []; 
+  let userPreferences = reqBody.preferenceForMusicOrLeague;
 
-  // Default set of parameters for each search (before additional preferences) //
-  let params = {
-    apikey: apiKeys.tm_api_key,
-    size: '40',
-    sort: 'date,asc',
-    classificationName: JSON.stringify(reqBody.queryTermForTM),
-    startDateTime: reqBody.startDateTime,
-    city: reqBody.city,
-  }
-
-  // Modify fetch params if other preferences are selected by user // 
-  Object.assign(params, 
-    reqBody.preferenceForMusicOrLeague ? { keyword: reqBody.preferenceForMusicOrLeague[0] } : null);
-
-  // BEGIN: API fetch
-  return ticketmaster.events.search(params)
-  .then(results => {
-    console.log('TM API fetch returns - at index 0 - ', results.data._embedded.events[0])
-    if (err => { throw err; })
-    return results.data._embedded.events;
-  })
-  .then(events => {
-    if (reqBody.price) { // filter for price preference if exists
-      return events.filter(event => {
-        let eventPrice = event.priceRanges // array w/each element containing a min and max cost
-        if (eventPrice) { // event price is available, compare; otherwise, let it filter through
-          return Number(eventPrice[0].max) <= priceMapper(reqBody.price, 'ticketmaster');
-        }
-        return event;
-      })
+  return Promise.each(userPreferences, (preference) => {
+    // Default set of parameters for each search (before additional preferences) //
+    let params = {
+      apikey: apiKeys.tm_api_key,
+      size: '40',
+      sort: 'date,asc',
+      classificationName: JSON.stringify(reqBody.queryTermForTM),
+      startDateTime: reqBody.startDateTime,
+      city: reqBody.city,
     }
-    return events;
+
+    // Modify fetch params if other preferences are selected by user // 
+    Object.assign(params, 
+      reqBody.preferenceForMusicOrLeague ? { keyword: preference } : null);
+
+    // BEGIN: API fetch
+    return ticketmaster.events.search(params)
+    .then(results => {
+      // console.log('TM API fetch returns - at index 0 - ', results.data._embedded.events[0])
+      if (err => { throw err; })
+      return results.data._embedded.events;
+    })
+    .then(events => {
+      if (reqBody.price) { // filter for price preference if exists
+        return events.filter(event => {
+          let eventPrice = event.priceRanges // array w/each element containing a min and max cost
+          if (eventPrice) { // event price is available, compare; otherwise, let it filter through
+            return Number(eventPrice[0].max) <= priceMapper(reqBody.price, 'ticketmaster');
+          }
+          return event;
+        })
+      }
+      return events;
+    })
+    // only return data we want
+    .then(events => {
+      return parseForCriticalData(events, 'ticketmaster');
+    })
+    .then(parsedEvents => {
+      let top2EventsForThisPreference = parsedEvents.slice(0, 2)
+      tmCummulativeEvents = tmCummulativeEvents.concat(top2EventsForThisPreference);
+    })
+    .catch(err => {
+      console.log('LOOK HERE!! TM FETCH ERROR: ', err)
+    })
   })
-  // only return data we want
-  .then(events => {
-    return parseForCriticalData(events, 'ticketmaster');
+  // after Fetch Loop is finished, return the final cummulative array of events
+  .then(() => {
+    return tmCummulativeEvents;    
   })
   .catch(err => {
-    console.log('LOOK HERE!! TM FETCH ERROR: ', err)
-  })
+    console.log('LOOK HERE!! TM - OUTSIDE FETCHLOOP ERROR: ', err)
+  });
+
 }
 
 const getYelpData = (reqBody) => {
@@ -80,8 +95,8 @@ const getYelpData = (reqBody) => {
     .then(businesses => {
       return parseForCriticalData(businesses, 'yelp')
     })
-    .then(parsedBus => {
-      let top2EventsForThisPreference = parsedBus.slice(0, 2)
+    .then(parsedBusinesses => {
+      let top2EventsForThisPreference = parsedBusinesses.slice(0, 2)
       yelpCummulativeEvents = yelpCummulativeEvents.concat(top2EventsForThisPreference);
     })
     .catch(err => {
