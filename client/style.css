@@ -1,22 +1,27 @@
-@import url('https://fonts.googleapis.com/css?family=Francois+One|Times:200,200i,350,350i');
+/*@import url('https://fonts.googleapis.com/css?family=Francois+One|Times:200,200i,350,350i');*/
 html, body { height: 100%; }
 body{
   margin:0;
   padding:0;
 }
 .main {
-  font-family: 'Times';
+  font-family: 'Helvetica';
   margin: 0;
   width: 100%;
   color: #fafafa;
   font-size: 1.1em;
   background: url('https://images.pexels.com/photos/60015/cinque-terre-italy-rocks-sea-60015.jpeg?w=1260&h=750&dpr=2&auto=compress&cs=tinysrgb') no-repeat;
+  /*background: url('https://images.unsplash.com/photo-1504670482337-6863551c6f55?auto=format&fit=crop&w=2850&q=60&ixid=dW5zcGxhc2guY29tOzs7Ozs%3D') no-repeat;*/
   background-size: 100% 100%;
   opacity:0.9;
   position:fixed;
   height:100%;
   top:0;
   left:0;
+}
+
+button{
+  border-radius: 0px;
 }
 
 .error{
@@ -54,7 +59,7 @@ body{
 }
 
 .selectionBox{
-  width: 50%;
+  width: 30%;
   height: 450px;
 }
 
@@ -80,6 +85,7 @@ p{
   font-size: 15px;
   color: black;
 }
+
 .loginButtons{
   display: flex;
   flex-direction: row;
@@ -88,51 +94,50 @@ p{
   margin-left: 80%;
 }
 
-.signup-btn{
-  margin-left: 50px;
-  font-size: 16px;
-}
-.login-btn{
+.signup-btn, .login-btn{
+  opacity: .80;
   margin-left: 50px;
   font-size: 16px;
 }
 
-.signup-btn:hover{
-  border-bottom: 2px solid currentColor;
+.signup-btn:hover, .login-btn:hover{
+  opacity: 1;
+  border-bottom: 1px solid currentColor;
   display: inline-block;
-  line-height: 0.85;
+  line-height: 1.75;
 }
-
+/*
 .login-btn:hover{
-  border-bottom: 2px solid currentColor;
+  opacity: 1;
+  border-bottom: 1px solid currentColor;
   display: inline-block;
-  line-height: 0.85;
-}
+  line-height: 1.75;
+}*/
 
 .dateNight-btn, .groupEvents-btn, .family-btn{
+  margin-top: 170px;
   border-style: solid;
   border-width: 1px;
   border-color: white;
-  height: 20vw;
-  width: 20vw;
+  height: 18vw;
+  width: 18vw;
   background-color: transparent;
   background-size: 400px 400px;
   margin-left:100px;
-  margin-top: 50px;
   transition: all .5s ease-in-out;
-  opacity: 0.75;
+  opacity: 0.80;
 }
 
 .dateNight-btn:hover, .groupEvents-btn:hover, .family-btn:hover{
   opacity: 1;
   transition: width 0.5s ease;
-  transform: scale(1.05);
+  transform: scale(1.08);
 }
 
 .dateNight-btn:focus, .groupEvents-btn:focus, .family-btn:focus{
   outline: none;
   opacity: 1;
-  transform: scale(1.05);
+  transform: scale(1.11);
 }
 
 /*.groupEvents-btn{
@@ -208,11 +213,14 @@ h3{
   text-align: center;
 }
 
+.search-bar{
+  margin-top: 95px;
+}
+
 
 .input{
   margin: auto;
   margin-left: 30%;
-
 }
 
 
