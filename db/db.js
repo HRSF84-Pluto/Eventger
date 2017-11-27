@@ -44,10 +44,10 @@ const database = 'heroku_e67b3a46e336139';
 
 var db = mysql.createConnection({
   connectionLimit: 100,
-  host: 'us-cdbr-iron-east-05.cleardb.net',
-  user: 'ba3f260f7ba4c4',
-  database: 'heroku_e67b3a46e336139',
-  password: '0e12068a' 
+  host: process.env.DBSERVER ||'us-cdbr-iron-east-05.cleardb.net',
+  user: process.env.DBUSER  ||'ba3f260f7ba4c4',
+  database: 'eventger' ||'heroku_e67b3a46e336139',
+  password: process.env.DBPASSWORD || '0e12068a'
 });
 
 
@@ -308,7 +308,7 @@ db.connectAsync()
 //       return db.saveUserEventAsync(1,'abcdef')
 //     }).catch(() => {
 //       console.log('Event Already Saved')
-//       return db.saveUserEventAsync(1,'abcdef') 
+//       return db.saveUserEventAsync(1,'abcdef')
 //     })
 //     .then( (userEventSaveSuccess) => {
 //       console.log('Successfully Saved User Event Relationship', userEventSaveSuccess)
