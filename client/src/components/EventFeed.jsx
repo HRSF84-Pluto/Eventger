@@ -76,12 +76,6 @@ class EventFeed extends Component{
   }
 
   handleDataFetch(options, price='$$'){
-    if (typeof localStorage === "undefined" || localStorage === null) {
-      var LocalStorage = require('node-localstorage').LocalStorage;
-      localStorage = new LocalStorage('./scratch');
-    }
-
-
      let objWithDefaults;
      //uses local storage to remember the user's most recent search parameters
      const currentStorage = JSON.parse(localStorage.getItem("main page options"));

@@ -30,10 +30,6 @@ class EventList extends Component{
     //fetches saved events. The plan is to filter the current events array with this condition: if the id of the current event
     //matches one in the saved list, set the css class 'saved-event' to that item
     console.log(this.props.username, "props.username inside componentDidMount");
-    if (typeof localStorage === "undefined" || localStorage === null) {
-      var LocalStorage = require('node-localstorage').LocalStorage;
-      localStorage = new LocalStorage('./scratch');
-    }
     const username = JSON.parse(localStorage.getItem("main page options"))?
       JSON.parse(localStorage.getItem("main page options")).username: this.props.username;
     if (username !== 'Login'){
