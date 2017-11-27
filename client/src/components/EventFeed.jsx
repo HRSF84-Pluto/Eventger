@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import $ from 'jquery';
-import myLocalStorage from 'node-localstorage';
 import EventList from './EventList';
 import SideBar from './SideBar';
 
@@ -78,9 +77,10 @@ class EventFeed extends Component{
 
   handleDataFetch(options, price='$$'){
     if (typeof localStorage === "undefined" || localStorage === null) {
-    LocalStorage = myLocalStorage.LocalStorage;
+      var LocalStorage = require('node-localstorage').LocalStorage;
       localStorage = new LocalStorage('./scratch');
     }
+
 
      let objWithDefaults;
      //uses local storage to remember the user's most recent search parameters
