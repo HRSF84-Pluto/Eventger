@@ -53,6 +53,7 @@ const signupRoute = require('../routes/signup');
 const userDataRoute = require('../routes/userData');
 const logoutRoute = require('../routes/logout');
 const eventDataRoute = require('../routes/eventData');
+const saveEventRoute = require('../routes/saveEvent');
 
 
 //middleware used by passportjs
@@ -91,13 +92,14 @@ app.use('/signup', signupRoute);
 app.use('/login', loginRoute);
 
 
-
-
 app.use(checkAuthentication);
 
 //TODO: modify the userDataRoute's content to access user data
+
 app.use('/userData', userDataRoute);
+app.use('/saveEvent', saveEventRoute);
 app.use('/logout', logoutRoute);
+
 
 //react router's path
 app.get('/**', (req, res) => {
@@ -115,39 +117,6 @@ function checkAuthentication(req, res, next) {
 
   }
 }
-
-
-
-
-//Save Events for logged in User
-app.post('/events', function(req, res) {
-  var events = JSON.parse(req.body.events)
-
-  //Get user ID
-  db.findUsernameAsync(req.body.username)
-    .then(results => {
-      var userId = results.id;
-      //For Each event in array list, save to DB
-      events.forEach(event => {
-        //First check if event is saved to Events table
-        db.findEventAsync(event.id)
-          .then(results => {
-            //If event is not in Events table, save it to Events table
-            if (!results) {
-              db.saveEventAsync(event)
-                .then(results => console.log('Save event into Event DB: ', results))
-                .catch(err => console.err(err))
-            } //Save eventId and userId to UserEvent table
-            db.saveUserEventAsync(userId, event.id)
-              .then(results => res.send('Your Data has been saved!'))
-              .catch(err => res.send(err))
-          })
-        .catch(err => console.err(err))
-      });
-    })
-    .catch(err => console.err(err))
-});
-
 
 app.listen(PORT, function () { console.log('Event-gers app listening on port 3000!') });
 

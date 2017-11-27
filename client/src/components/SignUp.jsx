@@ -54,9 +54,13 @@ class SignUp extends Component {
         onClick={() =>{
           this.handleSignUpInput()
             .then(() => history.push('/Login'))
-            .catch(() => {
+            .catch((error) => {
               console.log("promise error hit");
-              this.setState({errorMessage: 'Username already exists, please try again'})
+              if (error.status === 403 ){
+                this.setState({errorMessage: 'Username unavailable, please try again'})
+              }else {
+                this.setState({errorMessage: 'Username already exists, please try again'})
+              }
             })
         }}>
         Submit

@@ -178,7 +178,12 @@ db.saveUserEvent = (userId, eventId, callback) => {
 
   db.findEventAsync(eventId)
   .then((eventData) => {
-    return db.updatePreferencesAsync(userId, eventData.category)
+    if (eventData){
+      return db.updatePreferencesAsync(userId, eventData.category);
+    }else{
+      throw new Error('no eventData');
+    }
+
   }).then(() => {
     var insertQuery = "INSERT INTO usersEvents (user_id, event_id) VALUES ?"
     var queryInput = [[userId, eventId]]
@@ -189,7 +194,7 @@ db.saveUserEvent = (userId, eventId, callback) => {
       };
       callback(null, result);
     });
-  })
+  }).catch(err=> callback(err, null));
 }
 
 

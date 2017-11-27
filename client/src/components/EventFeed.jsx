@@ -13,8 +13,27 @@ class EventFeed extends Component{
   componentDidMount(){
     this.handleDataFetch();
   }
-  handleFilterOptions(options){
-    console.log(options, ": options inside handleFilterOptions");
+  handleSavedEvents(savedEventsArr){
+    const username =this.props.username;
+    savedEventsArr = JSON.stringify(savedEventsArr);
+    if (username !== 'Login'){
+      const data = {username, events: savedEventsArr};
+      $.ajax({
+        url: '/saveEvent',
+        method: 'POST',
+        data: data,
+        success: response => {
+          console.log('SAVE MY EVENT RESPONSE', response);
+
+        },
+        error: () => {
+          console.log('there\'s no active session, please log in');
+        }
+      })
+    }
+  }
+  handleFilterOptions(options,price){
+    console.log(options, price, ": options AND PRICE inside handleFilterOptions");
     const {
       nba,
       nfl,
@@ -27,9 +46,10 @@ class EventFeed extends Component{
       comedyClubs,
       pop,
       country,
-      rapHipHop} = options;
+      rap} = options;
 
-    const dataObj = {'rap/hip-hop': rapHipHop,
+    const dataObj = {
+      rap,
       'dance clubs': danceClubs, 'comedy clubs': comedyClubs,
       nba,
       nfl,
@@ -50,7 +70,7 @@ class EventFeed extends Component{
     console.log(optionsObj , "the new Object");
 
     console.log(dataObj, "object inside handleFliterOptions");
-    this.handleDataFetch(optionsObj);
+    this.handleDataFetch(optionsObj, price);
   }
 
   setDefaults(activity, location, date, username){
@@ -60,23 +80,32 @@ class EventFeed extends Component{
     return {date, location, activity, username};
   }
 //TODO: turns queryTermForYelp property into array of strings, not strings for garrett;
-  handleDataFetch(options){
+  handleDataFetch(options, price='$$'){
      let objWithDefaults;
+     //uses local storage to remember the user's most recent search parameters
      const currentStorage = JSON.parse(localStorage.getItem("main page options"));
-    if (this.props.passDownSearchInput.username === currentStorage.username && (this.props.passDownSearchInput.location === '' ||
+    if (this.props.passDownSearchInput.username === currentStorage.username &&
+      (this.props.passDownSearchInput.location === '' ||
         this.props.passDownSearchInput.activity === '' || this.props.passDownSearchInput.date === '')){
       const myStorage = localStorage.getItem("main page options");
       let storedMainPagePreferences = JSON.parse(myStorage);
       let {location, activity, date, username} = storedMainPagePreferences;
+      if (this.props.passDownSearchInput.location !== ''){
+        location = this.props.passDownSearchInput.location;
+      }
+      if (this.props.passDownSearchInput.date !== ''){
+        date = this.props.passDownSearchInput.date;
+      }
+      if (this.props.passDownSearchInput.activity !== ''){
+        activity = this.props.passDownSearchInput.activity;
+      }
        objWithDefaults= this.setDefaults(activity, location, date, username);
     }else{
       let {location, activity, date, username} = this.props.passDownSearchInput;
       objWithDefaults = this.setDefaults(activity, location, date, username);
     }
     localStorage.setItem("main page options", JSON.stringify(objWithDefaults));
-
     let {activity, location, date, username} = objWithDefaults;
-
 
     const eventMapper = {
       "group events": {
@@ -104,9 +133,9 @@ class EventFeed extends Component{
           const indexOfItem = optionsArr.indexOf("nba");
           optionsArr.splice(indexOfItem,1);
         }
-        if (optionsArr.includes("rap/hip-hop")){
-          preferenceForMusicOrLeague.push("rap/hip-hop");
-          const indexOfItem = optionsArr.indexOf("rap/hip-hop");
+        if (optionsArr.includes("rap")){
+          preferenceForMusicOrLeague.push("rap");
+          const indexOfItem = optionsArr.indexOf("rap");
           optionsArr.splice(indexOfItem,1);
         }
         if (optionsArr.includes("nfl")){
@@ -131,20 +160,19 @@ class EventFeed extends Component{
           return optionsArr.indexOf(item) < 0;
         }))
 
-        console.log(queryTermForYelp, "new queryTermForYelp HERE!!!");
-        console.log(preferenceForMusicOrLeague, "new preferenceForMusicOrLeague HERE!!!!!!");
 
     }
-
-    const apiQueryObj = {
+    let apiQueryObj =  {
       'city': location,
       queryTermForTM,
       queryTermForYelp,
-      preferenceForMusicOrLeague,
-        'startDateTime': date
+      'startDateTime': date,
+      price
     };
 
-
+    if (preferenceForMusicOrLeague.length > 0){
+      apiQueryObj['preferenceForMusicOrLeague'] = preferenceForMusicOrLeague;
+    }
 
     console.log("THE APIQUERYOBJ",apiQueryObj );
 
@@ -176,10 +204,10 @@ class EventFeed extends Component{
       <div className='wrapper'>
         <div className='box header'/>
         <div className='box sidebar'>
-          <SideBar handleFilterOptions={(options)=> this.handleFilterOptions(options)} username={this.props.username}/>
+          <SideBar handleFilterOptions={(options, price)=> this.handleFilterOptions(options, price)} username={this.props.username}/>
         </div>
         <div className='box content'>
-          <EventList eventsArray={this.state.eventsArray}/>
+          <EventList postSavedEvents={(savedEventsArr)=> this.handleSavedEvents(savedEventsArr)} eventsArray={this.state.eventsArray}/>
         </div>
         <div className='box footer'/>
       </div>

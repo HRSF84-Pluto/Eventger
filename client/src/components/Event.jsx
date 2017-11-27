@@ -10,16 +10,21 @@ class Event extends Component{
       className: 'large bookmark icon'
     }
   }
-  handleSavedEvent(id){
+  handleSavedBtnClick(id){
     console.log('item id', id);
     //key would hold the id or something that identifies the entry to be saved in the db
+
+    //unsave the event
     if (this.state.className === 'large bookmark icon saved-bookmark' ){
       this.setState({className: 'large bookmark icon'});
+      this.props.handleUnsavedEvent(id);
     }else{
+      //save the event
       this.setState({className: 'large bookmark icon saved-bookmark'});
+      this.props.handleSavedEvent(id);
     }
-
   }
+
 
   render() {
     return (
@@ -49,7 +54,7 @@ class Event extends Component{
           <Item.Extra>
             <Label>{this.props.event.category}</Label>
 
-            <i onClick={this.handleSavedEvent.bind(this, this.props.event.id)} className={this.state.className}/>
+            <i onClick={this.handleSavedBtnClick.bind(this, this.props.event.id)} className={this.state.className}/>
 
           </Item.Extra>
         </Item.Content>

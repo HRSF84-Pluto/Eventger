@@ -32,9 +32,9 @@ passport.use(new LocalStrategy({passReqToCallback: true},
               bcrypt.compare(password, hash, function(err, res) {
                 if (err){ throw new Error('error')}
                 if (res === true){
-                  return done(null, results, {message: 'user found, password matched'});
+                   return done(null, results, {message: 'user found, password matched'});
                 }else{
-                  return done(null, false, {message: 'invalid password'});
+                   return done(null, false, {message: 'invalid password'});
                 }
               });
             })
@@ -69,9 +69,9 @@ router.post('/',
     res.json(req.user);
   });
 
-router.get('/', (req, res) => {
-  res.end();
-});
+// router.get('/', (req, res) => {
+//   res.end();
+// });
 
 module.exports = router;
 

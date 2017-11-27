@@ -51,7 +51,6 @@ class App extends React.Component {
     this.getCurrentUser();
   }
   getCurrentUser(){
-
     $.ajax({
       url: '/userData',
       method: 'GET',

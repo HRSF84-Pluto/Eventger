@@ -2,9 +2,11 @@ import React,{Component} from 'react';
 import { Button } from 'semantic-ui-react';
 
 class FilterOptions extends Component {
+  //huge state! watch out!
   constructor(props){
     super(props);
-    this.state = { nba: false,
+    this.state = {
+      nba: false,
       nfl: false,
       restaurants: false,
       bar: false,
@@ -15,7 +17,7 @@ class FilterOptions extends Component {
       comedyClubs: false,
       pop: false,
       country: false,
-      rapHipHop: false,
+      rap: false,
       budget: '',
       classNameOneDollar: '',
       classNameTwoDollars: '',
@@ -37,7 +39,7 @@ class FilterOptions extends Component {
       comedyClubs,
       pop,
       country,
-      rapHipHop
+      rap
     } = this.state;
 
 
@@ -53,16 +55,21 @@ class FilterOptions extends Component {
       comedyClubs,
       pop,
       country,
-      rapHipHop
+      rap
     };
 
     console.log(dataObj, 'object with activity preferences');
     //submit to state object to db;
-    this.props.handleFilterOptions(dataObj);
+    this.props.handleFilterOptions(dataObj, this.state.budget);
   }
   handleClick(dollars){
     console.log(dollars, 'dollar signs in your eyes');
-    this.setState({budget: dollars});
+    if (this.state.budget === dollars){
+      this.setState({budget:'$$'});
+    }else{
+      this.setState({budget: dollars});
+    }
+
     if (dollars === '$'){
     this.state.classNameOneDollar === '' ?
       this.setState({classNameOneDollar: 'dollar-select'}) :
@@ -154,7 +161,7 @@ class FilterOptions extends Component {
           <span className='checkmark'/>
         </label>
         <label className='container'><p>Rap/Hip-Hop</p>
-          <input type='checkbox' onClick={()=> this.setState({rapHipHop: !this.state.rapHipHop})} />
+          <input type='checkbox' onClick={()=> this.setState({rap: !this.state.rapHipHop})} />
           <span className='checkmark'/>
         </label>
       </div>

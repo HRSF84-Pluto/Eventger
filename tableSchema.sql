@@ -14,13 +14,13 @@ CREATE TABLE users (
 
 CREATE TABLE events (
   id VARCHAR(20),
-  eventName VARCHAR(150),
+  eventName VARCHAR(2083),
   date VARCHAR(300),
   time VARCHAR(200),
   location VARCHAR(300),
   price VARCHAR(20),
-  url VARCHAR(100),
-  photoUrl VARCHAR(100),
+  url VARCHAR(2083),
+  photoUrl VARCHAR(2083),
   category VARCHAR(30),
   PRIMARY KEY (id)
 );
