@@ -95,9 +95,8 @@ app.use('/login', loginRoute);
 app.use(checkAuthentication);
 
 //TODO: modify the userDataRoute's content to access user data
-
-app.use('/userData', userDataRoute);
 app.use('/saveEvent', saveEventRoute);
+app.use('/userData', userDataRoute);
 app.use('/logout', logoutRoute);
 
 
