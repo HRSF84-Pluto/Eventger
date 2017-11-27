@@ -25,7 +25,7 @@ router.get('/', function (req, res) {
   //sampleReqBody  = req.body;
   let returnedYelpTMDataObj = {};
 
-  db.reduceSearchAsync(sampleReqBody, 1)
+  db.reduceSearchAsync(sampleReqBody, null)
     .then(sampleReqBody => {
 
       console.log('Reduced Sample Body', sampleReqBody);
