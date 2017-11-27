@@ -71,24 +71,43 @@ class FilterOptions extends Component {
     }
 
     if (dollars === '$'){
-    this.state.classNameOneDollar === '' ?
-      this.setState({classNameOneDollar: 'dollar-select'}) :
-        this.setState({classNameOneDollar: ''})
+      if (this.state.classNameOneDollar === ''){
+        this.setState({classNameOneDollar: 'dollar-select'});
+        this.setState({classNameTwoDollars: ''});
+        this.setState({classNameThreeDollars: ''});
+        this.setState({classNameFourDollars: ''});
+      } else {
+        this.setState({classNameOneDollar: ''});
+      }
 
     }else if (dollars === '$$'){
-      this.state.classNameTwoDollars === '' ?
-        this.setState({classNameTwoDollars: 'dollar-select'}) :
-        this.setState({classNameTwoDollars: ''})
+      if (this.state.classNameTwoDollars === ''){
+        this.setState({classNameTwoDollars: 'dollar-select'});
+        this.setState({classNameOneDollar: ''});
+        this.setState({classNameThreeDollars: ''});
+        this.setState({classNameFourDollars: ''});
+      }else{
+        this.setState({classNameTwoDollars: ''});
+      }
 
     }else if (dollars === '$$$'){
-      this.state.classNameThreeDollars === '' ?
-        this.setState({classNameThreeDollars: 'dollar-select'}) :
-        this.setState({classNameThreeDollars: ''})
-
+      if (this.state.classNameThreeDollars === ''){
+        this.setState({classNameThreeDollars: 'dollar-select'});
+        this.setState({classNameOneDollar: ''});
+        this.setState({classNameTwoDollars: ''});
+        this.setState({classNameFourDollars: ''});
+      }else{
+        this.setState({classNameThreeDollars: ''});
+      }
     }else if (dollars === '$$$$'){
-      this.state.classNameFourDollars === '' ?
-        this.setState({classNameFourDollars: 'dollar-select'}) :
-        this.setState({classNameFourDollars: ''})
+      if (this.state.classNameFourDollars === ''){
+        this.setState({classNameFourDollars: 'dollar-select'});
+        this.setState({classNameThreeDollars: ''});
+        this.setState({classNameOneDollar: ''});
+        this.setState({classNameTwoDollars: ''});
+      }else{
+        this.setState({classNameFourDollars: ''});
+      }
 
     }
 

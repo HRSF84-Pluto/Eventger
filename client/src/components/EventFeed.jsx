@@ -200,6 +200,7 @@ class EventFeed extends Component{
     });
   }
   render(){
+
     return (
       <div className='wrapper'>
         <div className='box header'/>
@@ -207,7 +208,9 @@ class EventFeed extends Component{
           <SideBar handleFilterOptions={(options, price)=> this.handleFilterOptions(options, price)} username={this.props.username}/>
         </div>
         <div className='box content'>
-          <EventList postSavedEvents={(savedEventsArr)=> this.handleSavedEvents(savedEventsArr)} eventsArray={this.state.eventsArray}/>
+          <EventList  postSavedEvents={(savedEventsArr)=> this.handleSavedEvents(savedEventsArr)}
+                      username={this.props.username}
+                      eventsArray={this.state.eventsArray}/>
         </div>
         <div className='box footer'/>
       </div>

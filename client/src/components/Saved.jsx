@@ -41,14 +41,14 @@ class Saved extends Component{
   render(){
     const savedEventsList = this.state.savedEvents.map((event, i) => {
       return (
-        <Event event={event} key={i} idx={i}/>)
+        <Event savedView={true} event={event} key={i} idx={i}/>)
     });
     return (
       <div className='saved-events'>
         <h1>SAVED EVENTS</h1>
         <h3 style={{color: 'red'}}>{this.state.error}</h3>
         <div className='go-back-btn'><Link to='/EventsFeed'>To Events Feed</Link></div>
-        <Item.Group divided style={{marginLeft: '300px'}}>
+        <Item.Group divided style={{margin: '0 auto', width: '50%'}}>
           {savedEventsList}
         </Item.Group>
       </div>

@@ -7,7 +7,8 @@ class Event extends Component{
   constructor(props) {
     super(props);
     this.state={
-      className: 'large bookmark icon'
+      className: 'large bookmark icon',
+      savedView: this.props.savedView
     }
   }
   handleSavedBtnClick(id){
@@ -53,8 +54,9 @@ class Event extends Component{
           </Item.Description>
           <Item.Extra>
             <Label>{this.props.event.category}</Label>
+            {this.props.savedView ?  <i className="bookmark icon saved-bookmark"/> :
+              <i onClick={this.handleSavedBtnClick.bind(this, this.props.event.id)} className={this.state.className}/>}
 
-            <i onClick={this.handleSavedBtnClick.bind(this, this.props.event.id)} className={this.state.className}/>
 
           </Item.Extra>
         </Item.Content>
