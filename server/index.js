@@ -24,7 +24,7 @@ NOTE: the backend is using passportjs to create sessions and authenticate users.
 
 Helpful links:
 * Setting env: https://goo.gl/VJoaUC
-* Express router: https://goo.gl/xntCiX
+* Express router: https://goo.gl/8sZehm
 * Passportjs: https://goo.gl/7kA7Y4
 *             https://goo.gl/iMohYg
 *             https://goo.gl/18wQkG
