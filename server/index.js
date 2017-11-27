@@ -39,9 +39,8 @@ Helpful links:
 let sampleReqBody = {
   queryTermForTM: ['sports', 'music'], // both query Terms are defined by homepage selection upon landing on site
   preferenceForMusicOrLeague: ['NBA'], // additional keyword given by user in preferences table [max: 1 word] to narrow down sports or music
-  queryTermForYelp: ['Thai Food', 'Mexican Food'], // default Yelp fetch from homepage 
-  // queryTermForYelp: ['Chinese Food', 'Brewery', 'Dance Clubs', 'Museums', 'Hike'], // default Yelp fetch from homepage 
-  city: 'San Francisco',
+  queryTermForYelp: ['Museum', 'Coffee', 'Brewery'], // default Yelp fetch from homepage 
+  city: 'Oakland',
   startDateTime: '2017-01-12T18:00:00Z',
   price: '$$$'
 }
@@ -49,34 +48,37 @@ let sampleReqBody = {
 app.get('/eventData', function (req, res) {
   console.log('=========================== inside get handler ===========================');
 
-  // solo api testing purposes
-  fetchHelpers.getYelpData(sampleReqBody)
-  .then(response => {
-    console.log('BACK IN SERVER!!! RESPONSE IS: ', response[0])
-    res.status(201).send(response);
-  })
-
+  // // solo api testing purposes
   // fetchHelpers.getTMData(sampleReqBody)
-  // .then(ticketMasterEventsArr => {
-
-  //   // include TM event data in the object sent back to front-end //
-  //   returnedYelpTMDataObj.ticketmaster = ticketMasterEventsArr;
-  //   return;
+  // .then(response => {
+  //   res.status(201).send(response);
   // })
-  // .then(placeholder => {
 
-  //   // fetch Yelp data
-  //   fetchHelpers.getYelpData(sampleReqBody)
-  //   .then(yelpEventsArr => {
+  let returnedYelpTMDataObj = {};
+  
+  fetchHelpers.getTMData(sampleReqBody)
+  .then(ticketMasterEventsArr => {
 
-  //     // include Yelp event data in the object sent back to front-end //
-  //     returnedYelpTMDataObj.yelp = yelpEventsArr;
-  //     return;
-  //   })
-  //   .then(placeholder => {
-  //     res.status(201).send(returnedYelpTMDataObj);
-  //   })
-  // })
+    // include TM event data in the object sent back to front-end //
+    returnedYelpTMDataObj.ticketmaster = ticketMasterEventsArr;
+    console.log('aye')
+    return;
+  })
+  .then(placeholder => {
+
+    // fetch Yelp data
+    fetchHelpers.getYelpData(sampleReqBody)
+    .then(yelpEventsArr => {
+
+      // include Yelp event data in the object sent back to front-end //
+      returnedYelpTMDataObj.yelp = yelpEventsArr;
+      console.log('aye2');
+      return;
+    })
+    .then(placeholder => {
+      res.status(201).send(returnedYelpTMDataObj);
+    })
+  })
 
 
   // db.reduceSearchAsync(sampleReqBody, 1)
