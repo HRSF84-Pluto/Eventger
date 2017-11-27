@@ -2,7 +2,8 @@ var Sequelize = require('sequelize');
 var mysql = require('mysql');
 var Promise = require('bluebird');
 const createTables = require('./config');
-const database = 'Eventger';
+const database = 'heroku_e67b3a46e336139';
+// const database = 'Eventger';
 
 // -- OBJECT Example
 // -- User Object
@@ -32,19 +33,21 @@ const database = 'Eventger';
 // -- }
 
 
-//FUNCTIONS HAVE BEEN PROMISIFIED
-//USE
-//findUsernameAsync
-//  .then((userObj) => {})  //obj will be undefined if it doesn't exist
-//saveUsernameAsync
-//  .then(() => {})
-//  .catch(username already exists => {})
+//DATABASE_URL: mysql://ba3f260f7ba4c4:0e12068a@us-cdbr-iron-east-05.cleardb.net/heroku_e67b3a46e336139?reconnect=true
+
+// var db = mysql.createConnection({
+//   host: 'us-cdbr-iron-east-05.cleardb.net' || process.env.DBSERVER ||'localhost',
+//   user: 'ba3f260f7ba4c4' || process.env.DBUSER  ||'root',
+//   database: 'heroku_e67b3a46e336139' || 'Eventger',
+//   password: '0e12068a' || process.env.DBPASSWORD || ''
+// });
 
 var db = mysql.createConnection({
-  host: process.env.DBSERVER ||'localhost',
-  user: process.env.DBUSER  ||'root',
-  database: 'Eventger',
-  password: process.env.DBPASSWORD || ''
+  connectionLimit: 100,
+  host: 'us-cdbr-iron-east-05.cleardb.net',
+  user: 'ba3f260f7ba4c4',
+  database: 'heroku_e67b3a46e336139',
+  password: '0e12068a' 
 });
 
 
@@ -63,9 +66,11 @@ db.findUsername = (username, id, callback) => {
     if (err) {
       callback(err, null);
     }
-    result[0].preferences = JSON.parse(result[0].preferences);
+    console.log(result)
+    if (result[0] && result[0].preferences) {
+      result[0].preferences = JSON.parse(result[0].preferences)
+    }
     callback(null, result[0]);
-
   })
 };
 
@@ -151,17 +156,21 @@ db.saveEvent = (eventObj, callback) => {
 
 
 db.updatePreferences = (userId, category, callback) => {
-  db = Promise.promisifyAll(db);
+  if (!db.findUsernameAsync) {
+    db = Promise.promisifyAll(db);
+  }
   db.findUsernameAsync(null, userId)
   .then((userData) => {
     var userPrefArr = userData.preferences
     if (userPrefArr === null) {
         userPrefArr = [];
     } else if (userPrefArr.includes(category)) {
-      callback(null, 'Category already exists in array')
-      return
+      callback(null, 'Category already exists in array');
+      return;
+    } else if (userPrefArr.length > 20) {
+      userPrefArr.shift();
     }
-    userPrefArr.push(category)
+    userPrefArr.push(category);
     var updateQuery = "UPDATE users SET preferences= ? WHERE id= ?"
     var queryInput = [JSON.stringify(userPrefArr), userId]
     db.query(updateQuery, queryInput, function(err, result, fields) {
@@ -174,8 +183,9 @@ db.updatePreferences = (userId, category, callback) => {
 }
 
 db.saveUserEvent = (userId, eventId, callback) => {
-  db = Promise.promisifyAll(db);
-
+  if (!db.findEventAsync) {
+    db = Promise.promisifyAll(db);
+  }
   db.findEventAsync(eventId)
   .then((eventData) => {
     if (eventData){
@@ -198,12 +208,10 @@ db.saveUserEvent = (userId, eventId, callback) => {
 }
 
 
-// let sampleReqBody = {
+// sampleReqBody = {
 //   queryTermForTM: ['sports', 'music'], // both query Terms are defined by homepage selection upon landing on site
-//   preferenceForMusicOrLeague: 'Rock', // additional keyword given by user in preferences table [max: 1 word] to narrow down sports or music
-//   queryTermForYelp: 'food', // default Yelp fetch from homepage
-//   // preferenceForFoodAndOrSetting: 'Mexican', // additional keyword given by user to narrow down type of food
-//   // activity: 'hiking', // if user doesn't want food but wants an activity - yelp category: https://www.yelp.com/developers/documentation/v2/all_category_list
+//   preferenceForMusicOrLeague: ['Rock', 'Pop, 'Country'] // additional keyword given by user in preferences table [max: 1 word] to narrow down sports or music
+//   queryTermForYelp: ['food', 'restaurants', 'club'] // default Yelp fetch from homepage
 //   city: 'San Francisco',
 //   postalCode: '94104',
 //   startDateTime: '2017-01-12T18:00:00Z',
@@ -215,19 +223,22 @@ const getRandomInt = (max) => {
 }
 
 db.reduceSearch = (searchObj, userId, callback) => {
-  db = Promise.promisifyAll(db);
+  if (!db.findUsernameAsync) {
+    db = Promise.promisifyAll(db);
+  }
+
   var narrowSearch = (queryTerms) => {
     var narrowedSearch = [];
     if (queryTerms.length > 2) {
-         for (var i = 0; i < 2; i++) {
-            var randomInt = getRandomInt(queryTerms.length)
-            narrowedSearch.push(queryTerms[randomInt])
-            queryTerms.splice(randomInt, 1);
-         }
+      for (var i = 0; i < 2; i++) {
+         var randomInt = getRandomInt(queryTerms.length)
+         narrowedSearch.push(queryTerms[randomInt])
+         queryTerms.splice(randomInt, 1);
+      }
+      return narrowedSearch;
     } else {
-        narrowedSearch = queryTerms;
+      return queryTerms;
     }
-    return narrowedSearch;
   }
 
   if (userId) {
@@ -254,8 +265,6 @@ db.reduceSearch = (searchObj, userId, callback) => {
 
 module.exports = Promise.promisifyAll(db);
 
-
-
 db.connectAsync()
 .then(() => console.log(`Connected to ${database} database`))
 .then(() => db.queryAsync(`CREATE DATABASE IF NOT EXISTS ${database}`))
@@ -266,9 +275,7 @@ db.connectAsync()
 })////////End of the then after establishing connection - move around for testing
 
 
-
-
-//------------------------------Testing Updating Preferences---------------------------
+// //------------------------------Testing Updating Preferences---------------------------
 // var fakeEvent = {
 //     id: 'abcdef',
 //     eventName: 'Blink 182 Concert',
@@ -292,7 +299,7 @@ db.connectAsync()
 //     location: 'the Bay'
 // }
 
-// db.saveUsernameAsync(fakeUser)
+// db.saveUsernameAsync(fakeUser, 'gasdfasdf')
 //     .then((userSaveSuccess) => {
 //       console.log('User Saved Successfully ', userSaveSuccess)
 //       return db.saveEventAsync(fakeEvent)
@@ -301,7 +308,7 @@ db.connectAsync()
 //       return db.saveUserEventAsync(1,'abcdef')
 //     }).catch(() => {
 //       console.log('Event Already Saved')
-//       return db.saveUserEventAsync(1,'abcdef')
+//       return db.saveUserEventAsync(1,'abcdef') 
 //     })
 //     .then( (userEventSaveSuccess) => {
 //       console.log('Successfully Saved User Event Relationship', userEventSaveSuccess)
@@ -362,183 +369,3 @@ db.connectAsync()
 
 
 
-// db.findUserEvents
-
-//--------------------------------------------------------------------------
-// db.connect((error) => {
-//   if (error) {console.log('ERROR', error)}
-
-//   var userInsert = "INSERT INTO users (username, zip, password) VALUES ?";
-//   var userInput = [['Johnny', '94125', 'purpleNurple']]
-//   // db.query(userInsert, [userInput], function (err, result) {
-//   //   if (err) throw err;
-//   //   console.log(result);
-//   // });
-
-//   var userInput2 = [['George', '94125', 'purpleNurple']]
-
-//   var eventInsert = "INSERT INTO events (eventName, date, time, location, price, url, photoUrl, category) VALUES ?";
-//   var eventInput = [['End of the World', '3/25/2012', '3:15', 'Earth', 'Free', 'blah', 'blah', 'doom']]
-//   // db.query(eventInsert, [eventInput], function (err, result) {
-//   //   if (err) throw err;
-//   //   console.log(result);
-//   // });
-
-//   var eventInput2 = [['Hello World', '3/25/2012', '3:15', 'Earth', 'Free', 'blah', 'blah', 'doom']]
-
-//   var manyInsert = "INSERT INTO usersEvents (user_id, event_id) VALUES ((SELECT id FROM users WHERE username= ?), (SELECT id FROM events WHERE eventName= ?))"
-//   var manyInput = ['Johnny','End of the World']
-//   // db.query(manyInsert, manyInput, function(err, result) {
-//   //   if (err) throw err;
-//   //   console.log(result);
-//   // })
-
-//   var manyInput2 = ['George','End of the World']
-
-//   db.query(userInsert, [userInput], function (err, result) {
-//     if (err) throw err;
-//     console.log(result);
-//     db.query(eventInsert, [eventInput], function (err, result) {
-//         if (err) throw err;
-//         console.log(result);
-//         db.query(manyInsert, manyInput, function(err, result) {
-//             if (err) throw err;
-//             console.log(result);
-//             db.query(userInsert, [userInput2], function(err, result) {
-//                 if (err) throw err;
-//                 console.log(result);
-//                 db.query(eventInsert, [eventInput2], function(err, result) {
-//                     if (err) throw err;
-//                     console.log(result);
-//                     db.query(manyInsert, manyInput2, function(err, result) {
-//                         if (err) throw err;
-//                         console.log(result);
-//                         db.saveUsername({username: 'Gman', password: '', zip: 'the BAY'}, (data) => {
-//                             console.log('DATA AFTER SAVE', data)
-//                         })
-//                         db.findUsername('Johnny', (data) => {
-//                             console.log('DATA AFTER FIND', data)
-//                         });
-//                     })
-//                 })
-//               })
-//           })
-//       });
-//   });
-
-// });
-
-
-
-//------------------------------------Sequelize Format-------------------------------------------
-
-// var sequelize = new Sequelize({
-//   database: 'Eventger',
-//   username: 'root',
-//   host: 'localhost',
-//   dialect: 'mysql',
-
-//   pool: {
-//     max: 5,
-//     min: 0,
-//     acquire: 30000,
-//     idle: 10000
-//   },
-// });
-
-// const User = sequelize.define('user', {
-//   // id: {
-//   //   type: Sequelize.INTEGER,
-//   //   autoIncrement: true,
-//   //   unique: true,
-//   //   primaryKey: true
-//   // },
-//   displayName: {
-//     type: Sequelize.STRING
-//   },
-//   username: {
-//     type: Sequelize.STRING,
-//     // unique: true
-//   },
-//   password: {
-//     type: Sequelize.STRING
-//   },
-//   location: {
-//     type: Sequelize.STRING
-//   }
-// });
-
-
-// const Event = sequelize.define( 'event', {
-//   id: {
-//     type: Sequelize.INTEGER,
-//     autoIncrement: true,
-//     unique: true,
-//     primaryKey: true
-//   },
-//   name: {
-//     type: Sequelize.STRING
-//   },
-//   description: {
-//     type: Sequelize.STRING
-//   },
-//   when: {
-//     type: Sequelize.STRING
-//   },
-//   location: {
-//     type: Sequelize.STRING
-//   },
-//   price: {
-//     type: Sequelize.STRING
-//   },
-//   url: {
-//     type: Sequelize.STRING,
-//     isUrl: true
-//   },
-//   photoUrl: {
-//     type: Sequelize.STRING
-//   },
-//   category: {
-//     type: Sequelize.STRING
-//   }
-// })
-
-// const UserToEvent = () => {
-//     console.log('Create the many to many table')
-//     return User.belongsToMany(Event, {through: 'Users_Events', foreignKey: 'user_id', otherKey: 'event_id'})
-// }
-
-
-// sequelize.authenticate().then(() => {
-//     console.log('Connection to MySQL Database Successful');
-
-//     // force: true will drop the table if it already exists
-//     return User.sync({force: true});
-//     }).then(() => {
-//       // Table created
-//       return User.create({
-//         displayName: 'John',
-//         username: 'Hancock'
-//       });
-//     }).then(() => {
-//       return Event.sync({force: true})
-//     }).then(() => {
-//       // Table created
-//       return Event.create({
-//         name: 'Golden State Warriors vs Los Angeles Lakers',
-//         description: 'The most epic game of the season.'
-//       });
-//     }).then(() => {
-//         return UserToEvent();
-//     }).then(() => {
-//       return Event.create({
-//         name: 'HR Meetup'
-//         description: 'Meet with HR friends!'
-//         user_id
-//       })
-//     }).catch(error => {
-//       console.log('Error with connection to database ', error)
-//     })
-
-// const Eventger = sequelize.define( 'Eventger Profile')
-// module.exports = sequelize

@@ -13,8 +13,6 @@ const getTMData = (reqBody) => {
   const fetchTMData = (preference) => {
     // Default set of parameters for each search (before additional preferences) //
 
-    console.log('GEOHASH BETTER WORK: ', getGeoHashFromPostalCode(reqBody.postalCode))
-
     let params = {
       apikey: apiKeys.tm_api_key,
       size: '40',
@@ -23,15 +21,9 @@ const getTMData = (reqBody) => {
       startDateTime: reqBody.startDateTime,
       radius: '50',
       latlong: getLatLongFromPostalCode(reqBody.postalCode)
-      // geoPoint: getGeoHashFromPostalCode(reqBody.postalCode),
       // city: reqBody.city
     }
-  
-    // let testLatLong = zipcodes.lookup(reqBody.postalCode);
-    // console.log('ZIPCODE MODULE RETURNS: ',testLatLong)
-
-    // let testGeoHash = Geohash.encode(testLatLong.latitude, testLatLong.longitude)
-    // console.log('GEOHASH MODULE RETURNS: ', typeof testGeoHash)
+    console.log(`LOOOK HERE!!! postalCode is ${reqBody.postalCode} and the zipcode module returns ${zipcodes.lookup(reqBody.postalCode)}`)
 
     // Modify fetch params if other preferences are selected by user // 
     Object.assign(params, 
@@ -201,12 +193,6 @@ const priceMapper = (dollarSigns, API) => {
     }
     return map[dollarSigns]
   }
-}
-
-const getGeoHashFromPostalCode = (postalCode) => {
-  let latitude = zipcodes.lookup(postalCode).latitude
-  let longitude = zipcodes.lookup(postalCode).longitude
-  return Geohash.encode(latitude, longitude)
 }
 
 const getLatLongFromPostalCode = (postalCode) => {

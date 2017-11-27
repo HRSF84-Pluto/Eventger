@@ -258,6 +258,37 @@ describe('Helper Functions for Table users:', function() {
         })
       })
     });
+
+  // it('saveEventAsync saves an event into the database', function(done) {
+  // }
+
+  // it('saveEventAsync saves events with unique ids', function(done) {
+  // }
+
+  // it('updatePreferencesAsync stores a new preference for the user ', function(done) {
+  // }
+
+  // it('updatePreferencesAsync stores only unique preference for the user ', function(done) {
+  // }
+
+  // it('findEventAsync finds a saved event', function(done) {
+  // }
+ 
+  // it('findEventAsync returns an error if saved event does not exist', function(done) {
+  // }
+
+  // it('findUserEventsAsync finds saved events of specified user', function(done) {
+  // }
+
+  // it('reduceSearchAsync selects up to two options for queryTermsForYelp ', function(done) {
+  // }
+
+  // it('reduceSearchAsync selects one option for preferenceForMusicOrLeague ', function(done) {
+  // }
+
+  // it('reduceSearchAsync includes preferences from the user in the queryTermsForYelp ', function(done) {
+  // }
+
   });
 });
 
