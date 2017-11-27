@@ -8,7 +8,7 @@ const getTMData = (reqBody) => {
   let tmCummulativeEvents = []; 
   let userPreferences = reqBody.preferenceForMusicOrLeague;
 
-  return Promise.each(userPreferences, (preference) => {
+  const fetchTMData = (preference) => {
     // Default set of parameters for each search (before additional preferences) //
     let params = {
       apikey: apiKeys.tm_api_key,
@@ -26,15 +26,15 @@ const getTMData = (reqBody) => {
     // BEGIN: API fetch
     return ticketmaster.events.search(params)
     .then(results => {
-      // console.log('TM API fetch returns - at index 0 - ', results.data._embedded.events[0])
+      console.log('TM API fetch returns - at index 0 - ', results.data._embedded.events[1])
       if (err => { throw err; })
       return results.data._embedded.events;
     })
     .then(events => {
       if (reqBody.price) { // filter for price preference if exists
         return events.filter(event => {
-          let eventPrice = event.priceRanges // array w/each element containing a min and max cost
-          if (eventPrice) { // event price is available, compare; otherwise, let it filter through
+          let eventPrice = event.priceRanges
+          if (eventPrice) { // if event price is available, compare; otherwise, let it filter through
             return Number(eventPrice[0].max) <= priceMapper(reqBody.price, 'ticketmaster');
           }
           return event;
@@ -46,31 +46,41 @@ const getTMData = (reqBody) => {
     .then(events => {
       return parseForCriticalData(events, 'ticketmaster');
     })
+    // take only top 2 of results and concat to cummulative event array
     .then(parsedEvents => {
-      let top2EventsForThisPreference = parsedEvents.slice(0, 2)
-      tmCummulativeEvents = tmCummulativeEvents.concat(top2EventsForThisPreference);
+      if (reqBody.preferenceForMusicOrLeague) {
+        let top2EventsForThisPreference = parsedEvents.slice(0, 2)
+        tmCummulativeEvents = tmCummulativeEvents.concat(top2EventsForThisPreference);
+      } else {
+        return parsedEvents
+      }
     })
     .catch(err => {
       console.log('LOOK HERE!! TM FETCH ERROR: ', err)
-    })
-  })
-  // after Fetch Loop is finished, return the final cummulative array of events
-  .then(() => {
-    return tmCummulativeEvents;    
-  })
-  .catch(err => {
-    console.log('LOOK HERE!! TM - OUTSIDE FETCHLOOP ERROR: ', err)
-  });
+    })  
+  }
 
+  // if fetch from homepage, return an uncustomized array of events
+  if (!reqBody.preferenceForMusicOrLeague) {
+    return fetchTMData()
+  // if user has specified preferences, loop through preferences and return a cummulative array of events
+  } else { 
+    return Promise.each(userPreferences, fetchTMData)
+    // after Fetch Loop is finished, return the final cummulative array of events
+    .then(() => {
+      return tmCummulativeEvents;    
+    })
+    .catch(err => {
+      console.log('LOOK HERE!! TM - OUTSIDE FETCHLOOP ERROR: ', err)
+    });
+  }
 }
 
 const getYelpData = (reqBody) => {
-
   let yelpCummulativeEvents = []; 
   let userPreferences = reqBody.queryTermForYelp;
 
-  return Promise.each(userPreferences, (preference) => {
-
+  const getYelpData = (preference) => {
     // prep the fetch
     let params = { 
       sort_by: 'rating',
@@ -102,7 +112,9 @@ const getYelpData = (reqBody) => {
     .catch(err => {
       console.log('LOOK HERE!! Yelp - INSIDE FETCHLOOP ERROR: ', err)
     });
-  })
+  }
+
+  return Promise.each(userPreferences, getYelpData)
   // after Fetch Loop is finished, return the final cummulative array of events
   .then(() => {
     return yelpCummulativeEvents;    
@@ -110,7 +122,6 @@ const getYelpData = (reqBody) => {
   .catch(err => {
     console.log('LOOK HERE!! Yelp - OUTSIDE FETCHLOOP ERROR: ', err)
   });
-
 }
 
 const parseForCriticalData = (results, API) => {
