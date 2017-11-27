@@ -33,11 +33,12 @@ router.post('/', (req, res) => {
 });
 
 router.get('/', (req, res) => {
-  console.log("inside GET SAVE EVENT");
+  console.log("inside GET SAVE EVENT", req.url);
   //find current user
-  let username = req.url.split('/?');
+  let username = req.url.split('?');
+
+  username = username.pop();
   console.log(username, "IS THIS USERNAME???");
-  username = username[username.length-1];
  db.findUserEventsAsync(username)
    .then(events=> res.status(200).json(events))
    .catch(err=> res.status(404).end());
