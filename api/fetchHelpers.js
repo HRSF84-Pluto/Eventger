@@ -23,8 +23,8 @@ const getTMData = (reqBody) => {
       latlong: getLatLongFromPostalCode(reqBody.postalCode)
       // city: reqBody.city
     }
-    console.log(`LOOOK HERE!!! postalCode is ${reqBody.postalCode} and the zipcode module returns ${zipcodes.lookup(postalCode)}`)
-    
+    console.log(`LOOOK HERE!!! postalCode is ${reqBody.postalCode} and the zipcode module returns ${zipcodes.lookup(reqBody.postalCode)}`)
+
     // Modify fetch params if other preferences are selected by user // 
     Object.assign(params, 
       reqBody.preferenceForMusicOrLeague ? { keyword: preference } : null);
