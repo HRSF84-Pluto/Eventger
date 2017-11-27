@@ -1,5 +1,7 @@
 const ticketmaster = require('tm-api');
 const yelp = require('yelp-fusion');
+const zipcodes = require('zipcodes');
+const Geohash = require('latlon-geohash');
 const Promise = require('bluebird');
   
 const apiKeys = require('./apiKeys.js');
@@ -10,14 +12,26 @@ const getTMData = (reqBody) => {
 
   const fetchTMData = (preference) => {
     // Default set of parameters for each search (before additional preferences) //
+
+    console.log('GEOHASH BETTER WORK: ', getGeoHashFromPostalCode(reqBody.postalCode))
+
     let params = {
       apikey: apiKeys.tm_api_key,
       size: '40',
       sort: 'date,asc',
       classificationName: JSON.stringify(reqBody.queryTermForTM),
       startDateTime: reqBody.startDateTime,
-      city: reqBody.city,
+      radius: '50',
+      latlong: getLatLongFromPostalCode(reqBody.postalCode)
+      // geoPoint: getGeoHashFromPostalCode(reqBody.postalCode),
+      // city: reqBody.city
     }
+  
+    // let testLatLong = zipcodes.lookup(reqBody.postalCode);
+    // console.log('ZIPCODE MODULE RETURNS: ',testLatLong)
+
+    // let testGeoHash = Geohash.encode(testLatLong.latitude, testLatLong.longitude)
+    // console.log('GEOHASH MODULE RETURNS: ', typeof testGeoHash)
 
     // Modify fetch params if other preferences are selected by user // 
     Object.assign(params, 
@@ -25,39 +39,39 @@ const getTMData = (reqBody) => {
 
     // BEGIN: API fetch
     return ticketmaster.events.search(params)
-    .then(results => {
-      console.log('TM API fetch returns - at index 0 - ', results.data._embedded.events[1])
-      if (err => { throw err; })
-      return results.data._embedded.events;
-    })
-    .then(events => {
-      if (reqBody.price) { // filter for price preference if exists
-        return events.filter(event => {
-          let eventPrice = event.priceRanges
-          if (eventPrice) { // if event price is available, compare; otherwise, let it filter through
-            return (Number(eventPrice[0].min)+Number(eventPrice[0].max))/2 <= priceMapper(reqBody.price, 'ticketmaster');
-          }
-          return event;
-        })
-      }
-      return events;
-    })
-    // only return data we want
-    .then(events => {
-      return parseForCriticalData(events, 'ticketmaster');
-    })
-    // take only top 2 of results and concat to cummulative event array
-    .then(parsedEvents => {
-      if (reqBody.preferenceForMusicOrLeague) {
-        let top2EventsForThisPreference = parsedEvents.slice(0, 2)
-        tmCummulativeEvents = tmCummulativeEvents.concat(top2EventsForThisPreference);
-      } else {
-        return parsedEvents
-      }
-    })
-    .catch(err => {
-      console.log('LOOK HERE!! TM FETCH ERROR: ', err)
-    })  
+      .then(results => {
+        // console.log('TM API fetch returns - at index 0 - ', results.data._embedded.events[1])
+        if (err => { throw err; })
+        return results.data._embedded.events;
+      })
+      .then(events => {
+        if (reqBody.price) { // filter for price preference if exists
+          return events.filter(event => {
+            let eventPrice = event.priceRanges
+            if (eventPrice) { // if event price is available, compare; otherwise, let it filter through
+              return (Number(eventPrice[0].min)+Number(eventPrice[0].max))/2 <= priceMapper(reqBody.price, 'ticketmaster');
+            }
+            return event;
+          })
+        }
+        return events;
+      })
+      // only return data we want
+      .then(events => {
+        return parseForCriticalData(events, 'ticketmaster');
+      })
+      // take only top 2 of results and concat to cummulative event array
+      .then(parsedEvents => {
+        if (reqBody.preferenceForMusicOrLeague) {
+          let top2EventsForThisPreference = parsedEvents.slice(0, 2)
+          tmCummulativeEvents = tmCummulativeEvents.concat(top2EventsForThisPreference);
+        } else {
+          return parsedEvents
+        }
+      })
+      .catch(err => {
+        console.log('LOOK HERE!! TM FETCH ERROR: ', err)
+      })  
   }
 
   // if fetch is from homepage, return an uncustomized array of events
@@ -67,12 +81,12 @@ const getTMData = (reqBody) => {
   } else { 
     return Promise.each(userPreferences, fetchTMData)
     // after Fetch Loop is finished, return the final cummulative array of events
-    .then(() => {
-      return tmCummulativeEvents;    
-    })
-    .catch(err => {
-      console.log('LOOK HERE!! TM - OUTSIDE FETCHLOOP ERROR: ', err)
-    });
+      .then(() => {
+        return tmCummulativeEvents;    
+      })
+      .catch(err => {
+        console.log('LOOK HERE!! TM - OUTSIDE FETCHLOOP ERROR: ', err)
+      });
   }
 }
 
@@ -85,7 +99,7 @@ const getYelpData = (reqBody) => {
     let params = { 
       sort_by: 'rating',
       term: preference, 
-      location: reqBody.city,
+      location: reqBody.postalCode,
     }
  
     // Modify fetch params if other preferences are selected by user // 
@@ -96,32 +110,32 @@ const getYelpData = (reqBody) => {
 
     // BEGIN: API fetch
     return client.search(params)
-    .then(res => {
-      // console.log('YELP API fetch returns - at index 0 - ', res.jsonBody.businesses[0])
-      if (err => { throw err; })
-      return res.jsonBody.businesses;
-    })
-    // parse for only data we need and add to the returned cummulative events array
-    .then(businesses => {
-      return parseForCriticalData(businesses, 'yelp')
-    })
-    .then(parsedBusinesses => {
-      let top2EventsForThisPreference = parsedBusinesses.slice(0, 2)
-      yelpCummulativeEvents = yelpCummulativeEvents.concat(top2EventsForThisPreference);
-    })
-    .catch(err => {
-      console.log('LOOK HERE!! Yelp - INSIDE FETCHLOOP ERROR: ', err)
-    });
+      .then(res => {
+        // console.log('YELP API fetch returns - at index 0 - ', res.jsonBody.businesses[0])
+        if (err => { throw err; })
+        return res.jsonBody.businesses;
+      })
+      // parse for only data we need and add to the returned cummulative events array
+      .then(businesses => {
+        return parseForCriticalData(businesses, 'yelp')
+      })
+      .then(parsedBusinesses => {
+        let top2EventsForThisPreference = parsedBusinesses.slice(0, 2)
+        yelpCummulativeEvents = yelpCummulativeEvents.concat(top2EventsForThisPreference);
+      })
+      .catch(err => {
+        console.log('LOOK HERE!! Yelp - INSIDE FETCHLOOP ERROR: ', err)
+      });
   }
 
   return Promise.each(userPreferences, getYelpData)
   // after Fetch Loop is finished, return the final cummulative array of events
-  .then(() => {
-    return yelpCummulativeEvents;    
-  })
-  .catch(err => {
-    console.log('LOOK HERE!! Yelp - OUTSIDE FETCHLOOP ERROR: ', err)
-  });
+    .then(() => {
+      return yelpCummulativeEvents;    
+    })
+    .catch(err => {
+      console.log('LOOK HERE!! Yelp - OUTSIDE FETCHLOOP ERROR: ', err.body)
+    });
 }
 
 const parseForCriticalData = (results, API) => {
@@ -187,6 +201,18 @@ const priceMapper = (dollarSigns, API) => {
     }
     return map[dollarSigns]
   }
+}
+
+const getGeoHashFromPostalCode = (postalCode) => {
+  let latitude = zipcodes.lookup(postalCode).latitude
+  let longitude = zipcodes.lookup(postalCode).longitude
+  return Geohash.encode(latitude, longitude)
+}
+
+const getLatLongFromPostalCode = (postalCode) => {
+  let latitude = zipcodes.lookup(postalCode).latitude
+  let longitude = zipcodes.lookup(postalCode).longitude
+  return `${latitude},${longitude}`
 }
 
 module.exports.getTMData = getTMData;
