@@ -7,6 +7,9 @@ module.exports = {
     path: path.resolve(__dirname, './client/dist'),
     publicPath: './client/dist',
   },
+  node: {
+    fs: 'empty'
+  },
   module: {
     loaders: [
       {
