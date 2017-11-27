@@ -194,6 +194,7 @@ module.exports.getYelpData = getYelpData;
 
 // Left To Do: //
 // Do we want to filter out events without a provided price? 
+
 // When we use SF city as TM param, it doesn't include Oakland games (NBA)..
   // solution: zipcode node module > get latlong > use radius parameter
 
