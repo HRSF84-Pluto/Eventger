@@ -33,14 +33,6 @@ const database = 'heroku_e67b3a46e336139';
 // -- }
 
 
-//FUNCTIONS HAVE BEEN PROMISIFIED
-//USE
-//findUsernameAsync
-//  .then((userObj) => {})  //obj will be undefined if it doesn't exist
-//saveUsernameAsync
-//  .then(() => {})
-//  .catch(username already exists => {})
-
 //DATABASE_URL: mysql://ba3f260f7ba4c4:0e12068a@us-cdbr-iron-east-05.cleardb.net/heroku_e67b3a46e336139?reconnect=true
 
 // var db = mysql.createConnection({
@@ -173,10 +165,12 @@ db.updatePreferences = (userId, category, callback) => {
     if (userPrefArr === null) {
         userPrefArr = [];
     } else if (userPrefArr.includes(category)) {
-      callback(null, 'Category already exists in array')
-      return
+      callback(null, 'Category already exists in array');
+      return;
+    } else if (userPrefArr.length > 20) {
+      userPrefArr.shift();
     }
-    userPrefArr.push(category)
+    userPrefArr.push(category);
     var updateQuery = "UPDATE users SET preferences= ? WHERE id= ?"
     var queryInput = [JSON.stringify(userPrefArr), userId]
     db.query(updateQuery, queryInput, function(err, result, fields) {
@@ -214,12 +208,10 @@ db.saveUserEvent = (userId, eventId, callback) => {
 }
 
 
-// let sampleReqBody = {
+// sampleReqBody = {
 //   queryTermForTM: ['sports', 'music'], // both query Terms are defined by homepage selection upon landing on site
-//   preferenceForMusicOrLeague: 'Rock', // additional keyword given by user in preferences table [max: 1 word] to narrow down sports or music
-//   queryTermForYelp: 'food', // default Yelp fetch from homepage
-//   // preferenceForFoodAndOrSetting: 'Mexican', // additional keyword given by user to narrow down type of food
-//   // activity: 'hiking', // if user doesn't want food but wants an activity - yelp category: https://www.yelp.com/developers/documentation/v2/all_category_list
+//   preferenceForMusicOrLeague: ['Rock', 'Pop, 'Country'] // additional keyword given by user in preferences table [max: 1 word] to narrow down sports or music
+//   queryTermForYelp: ['food', 'restaurants', 'club'] // default Yelp fetch from homepage
 //   city: 'San Francisco',
 //   postalCode: '94104',
 //   startDateTime: '2017-01-12T18:00:00Z',
@@ -231,19 +223,22 @@ const getRandomInt = (max) => {
 }
 
 db.reduceSearch = (searchObj, userId, callback) => {
-  db = Promise.promisifyAll(db);
+  if (!db.findUsernameAsync) {
+    db = Promise.promisifyAll(db);
+  }
+
   var narrowSearch = (queryTerms) => {
     var narrowedSearch = [];
     if (queryTerms.length > 2) {
-         for (var i = 0; i < 2; i++) {
-            var randomInt = getRandomInt(queryTerms.length)
-            narrowedSearch.push(queryTerms[randomInt])
-            queryTerms.splice(randomInt, 1);
-         }
+      for (var i = 0; i < 2; i++) {
+         var randomInt = getRandomInt(queryTerms.length)
+         narrowedSearch.push(queryTerms[randomInt])
+         queryTerms.splice(randomInt, 1);
+      }
+      return narrowedSearch;
     } else {
-        narrowedSearch = queryTerms;
+      return queryTerms;
     }
-    return narrowedSearch;
   }
 
   if (userId) {
@@ -269,8 +264,6 @@ db.reduceSearch = (searchObj, userId, callback) => {
 }
 
 module.exports = Promise.promisifyAll(db);
-
-
 
 db.connectAsync()
 .then(() => console.log(`Connected to ${database} database`))
