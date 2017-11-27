@@ -169,10 +169,11 @@ class EventFeed extends Component{
 
     console.log(location, "LOCATION INSIDE QUERY");
     let apiQueryObj =  {
-      'city': location,
+      location,
       queryTermForTM,
       queryTermForYelp,
       'startDateTime': date,
+      preferenceForMusicOrLeague: [],
       price
     };
 

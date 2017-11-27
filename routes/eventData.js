@@ -4,25 +4,28 @@ const fetchHelpers = require('../api/fetchHelpers.js');
 const db =  require('../db/db.js');
 
 
-router.get('/', function (req, res) {
+router.post('/', function (req, res) {
 
-  console.log('inside get handler');
+  console.log('inside get handler HERE!!', req.body);
 
+
+  console.log("MY NEW REQ.BODY", req.body);
   // to test a sample req.body from front-end's get request
-  let sampleReqBody = {
-    queryTermForTM: ['sports', 'music'], // can only have 'music' or 'sports' (couldn't find other options)
-    preferenceForMusicOrLeague: ['NBA'], // remind Garrett that you made TM fetch loop dyanmic too so this can have as many words as yelp's query terms (rec max: 3)
-    queryTermForYelp: ['museum', 'brewery', 'thai food'],  // originally populated with the keyterms discussed in Begona's google sheet, but will change thereafter with user preferences
-    postalCode: 94104,
-    startDateTime: '2017-01-12T18:00:00Z',
-    price: '$$',
-    // city: 'San Francisco', // taken out for postalCode b/c latlongitude is more robust for search
-  };
+  // let sampleReqBody = {
+  //   queryTermForTM: ['sports', 'music'], // can only have 'music' or 'sports' (couldn't find other options)
+  //   preferenceForMusicOrLeague: ['NBA'], // remind Garrett that you made TM fetch loop dyanmic too so this can have as many words as yelp's query terms (rec max: 3)
+  //   queryTermForYelp: ['museum', 'brewery', 'thai food'],  // originally populated with the keyterms discussed in Begona's google sheet, but will change thereafter with user preferences
+  //   postalCode: 94104,
+  //   startDateTime: '2017-01-12T18:00:00Z',
+  //   price: '$$',
+  //   // city: 'San Francisco', // taken out for postalCode b/c latlongitude is more robust for search
+  // };
 
   //TODO: Delete sampleReqBody above;
 
   //reassigning to actual object
-  //sampleReqBody  = req.body;
+  sampleReqBody  = req.body;
+
   let returnedYelpTMDataObj = {};
 
   db.reduceSearchAsync(sampleReqBody, null)
@@ -68,7 +71,7 @@ router.get('/', function (req, res) {
 module.exports = router;
 
 
-// BRI's original body from above moved down and commented out // 
+// BRI's original body from above moved down and commented out //
 // router.post('/', function (req, res) {
 // // TODO: Uncomment this and remove the one above to make this route work with garrett's/sally's code;
 
