@@ -20,7 +20,6 @@ class EventList extends Component{
     let currentArr = this.state.savedEvents.slice();
     const findEvent = this.props.eventsArray.filter((event)=> event.id === id);
     currentArr = currentArr.concat(findEvent);
-    console.log(currentArr, "currentArr inside handleSavedEvent!!!!");
     this.setState({savedEvents: currentArr});
   }
 
@@ -28,7 +27,15 @@ class EventList extends Component{
     this.props.postSavedEvents(this.state.savedEvents);
   }
   componentDidMount(){
-    const username = JSON.parse(localStorage.getItem("main page options")).username;
+    //fetches saved events. The plan is to filter the current events array with this condition: if the id of the current event
+    //matches one in the saved list, set the css class 'saved-event' to that item
+    console.log(this.props.username, "props.username inside componentDidMount");
+    if (typeof localStorage === "undefined" || localStorage === null) {
+      var LocalStorage = require('node-localstorage').LocalStorage;
+      localStorage = new LocalStorage('./scratch');
+    }
+    const username = JSON.parse(localStorage.getItem("main page options"))?
+      JSON.parse(localStorage.getItem("main page options")).username: this.props.username;
     if (username !== 'Login'){
       $.ajax({
         url: '/saveEvent',
@@ -50,10 +57,9 @@ class EventList extends Component{
 
 
   render(){
-
       let targetArr = this.props.eventsArray;
     const list = targetArr.map((event, i) =>
-      <Event savedView={false} event={event} key={i} idx={i} handleSavedEvent={id=> this.handleSavedEvent(id)}
+      <Event username={this.props.username} savedView={false} event={event} key={i} idx={i} handleSavedEvent={id=> this.handleSavedEvent(id)}
              handleUnsavedEvent={id=> this.handleUnsavedEvent(id)}
 
       />);
