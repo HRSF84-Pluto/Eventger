@@ -29,7 +29,7 @@ class EventList extends Component{
   componentDidMount(){
     //fetches saved events. The plan is to filter the current events array with this condition: if the id of the current event
     //matches one in the saved list, set the css class 'saved-event' to that item
-    const username = JSON.parse(localStorage.getItem("main page options")).username;
+    const username = JSON.parse(localStorage.getItem("main page options")).username || this.props.username;
     if (username !== 'Login'){
       $.ajax({
         url: '/saveEvent',
@@ -53,7 +53,7 @@ class EventList extends Component{
   render(){
       let targetArr = this.props.eventsArray;
     const list = targetArr.map((event, i) =>
-      <Event savedView={false} event={event} key={i} idx={i} handleSavedEvent={id=> this.handleSavedEvent(id)}
+      <Event username={this.props.username} savedView={false} event={event} key={i} idx={i} handleSavedEvent={id=> this.handleSavedEvent(id)}
              handleUnsavedEvent={id=> this.handleUnsavedEvent(id)}
 
       />);
