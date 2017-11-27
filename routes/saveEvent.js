@@ -36,7 +36,6 @@ router.get('/', (req, res) => {
   console.log("inside GET SAVE EVENT", req.url);
   //find current user
   let username = req.url.split('?');
-
   username = username.pop();
   console.log(username, "IS THIS USERNAME???");
  db.findUserEventsAsync(username)

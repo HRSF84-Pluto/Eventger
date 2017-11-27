@@ -24,7 +24,7 @@ class Saved extends Component{
         method: 'GET',
         data: username,
         success: response => {
-          console.log('success inside fetchSavedEvents: ', response);
+          //console.log('success inside fetchSavedEvents: ', response);
           this.setState({savedEvents: response});
         },
         error: (err)=> {

@@ -3,6 +3,7 @@ import { Button, Grid, Popup } from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 
 const UserSettingsPopup = (props) => (
+  //popups when you click on username after login
   <Popup wide trigger={<div className='signup-btn'>{props.username}</div>} on='click'>
     <Grid divided columns='equal'>
       <Grid.Column>

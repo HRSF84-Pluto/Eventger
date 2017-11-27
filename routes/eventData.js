@@ -24,7 +24,7 @@ router.post('/', function (req, res) {
   //TODO: Delete sampleReqBody above;
 
   //reassigning to actual object
-  sampleReqBody  = req.body;
+  let sampleReqBody  = req.body;
 
   let returnedYelpTMDataObj = {};
 
