@@ -1,16 +1,16 @@
-@import url('https://fonts.googleapis.com/css?family=Francois+One|PT+Serif:400,400i,700,700i');
+@import url('https://fonts.googleapis.com/css?family=Francois+One|Times:200,200i,350,350i');
 html, body { height: 100%; }
 body{
   margin:0;
   padding:0;
 }
 .main {
-  font-family: 'PT Serif', sans-serif;
+  font-family: 'Times';
   margin: 0;
   width: 100%;
   color: #fafafa;
   font-size: 1.1em;
-  background: url('https://i.ytimg.com/vi/OC2HWrar2SU/maxresdefault.jpg') no-repeat;
+  background: url('https://images.pexels.com/photos/60015/cinque-terre-italy-rocks-sea-60015.jpeg?w=1260&h=750&dpr=2&auto=compress&cs=tinysrgb') no-repeat;
   background-size: 100% 100%;
   opacity:0.9;
   position:fixed;
@@ -55,7 +55,7 @@ body{
 
 .selectionBox{
   width: 50%;
-  height: 500px;
+  height: 450px;
 }
 
 .allBoxes{
@@ -68,12 +68,12 @@ body{
 h3{
   text-align: center;
   color: #5e5f6a;
-  font-family: sans-serif;
 }
+
 h1{
+  font-weight: 100;
   text-align: center;
-  color: #7c7c7c;
-  font-family: sans-serif;
+  color: white;
 }
 
 p{
@@ -109,55 +109,70 @@ p{
   line-height: 0.85;
 }
 
-.dateNight-btn{
-  height: 21vw;
-  width: 21vw;
-  background-color: white;
+.dateNight-btn, .groupEvents-btn, .family-btn{
+  border-style: solid;
+  border-width: 1px;
+  border-color: white;
+  height: 20vw;
+  width: 20vw;
+  background-color: transparent;
   background-size: 400px 400px;
   margin-left:100px;
   margin-top: 50px;
-  border: none;
   transition: all .5s ease-in-out;
+  opacity: 0.75;
 }
 
-.groupEvents-btn{
-  height: 21vw;
-  width: 21vw;
-  background-color: white;
+.dateNight-btn:hover, .groupEvents-btn:hover, .family-btn:hover{
+  opacity: 1;
+  transition: width 0.5s ease;
+  transform: scale(1.05);
+}
+
+.dateNight-btn:focus, .groupEvents-btn:focus, .family-btn:focus{
+  outline: none;
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+/*.groupEvents-btn{
+  border-style: solid;
+  border-width: 1px;
+  border-color: white;
+  height: 20vw;
+  width: 20vw;
+  background-color: transparent;
   background-size: 400px 400px;
   margin-left:100px;
   margin-top: 50px;
-  border: none;
   transition: all .5s ease-in-out;
 }
 
 .family-btn{
-  height: 21vw;
-  width: 21vw;
-  background-color: white;
+  border-style: solid;
+  border-width: 1px;
+  border-color: white;
+  height: 20vw;
+  width: 20vw;
+  background-color: transparent;
   background-size: 400px 400px;
   margin-left:100px;
   margin-top: 50px;
-  border: none;
   transition: all .5s ease-in-out;
+}*/
+
+
+/*.groupEvents-btn:hover{
+  opacity: 0.8;
+  transition: width 0.5s ease;
+  transform: scale(1.1);
 }
 
 .family-btn:hover{
   opacity: 0.8;
   transition: width 0.5s ease;
   transform: scale(1.1);
-}
-
-.groupEvents-btn:hover{
-  opacity: 0.8;
-  transition: width 0.5s ease;
-  transform: scale(1.1);
-}
-.dateNight-btn:hover{
-  opacity: 0.8;
-  transition: width 0.5s ease;
-  transform: scale(1.1);
-}
+}*/
 
 .signUpPage{
   opacity:0.7;
@@ -223,9 +238,6 @@ h3{
   margin-left: 100px;
 
 }
-
-
-
 
 .saved-events{
   background-color: #ffffff;

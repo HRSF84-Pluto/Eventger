@@ -1,7 +1,6 @@
 const ticketmaster = require('tm-api');
 const yelp = require('yelp-fusion');
 const zipcodes = require('zipcodes');
-const Geohash = require('latlon-geohash');
 const Promise = require('bluebird');
   
 const apiKeys = require('./apiKeys.js');
@@ -12,7 +11,6 @@ const getTMData = (reqBody) => {
 
   const fetchTMData = (preference) => {
     // Default set of parameters for each search (before additional preferences) //
-
     let params = {
       apikey: apiKeys.tm_api_key,
       size: '40',
@@ -20,10 +18,9 @@ const getTMData = (reqBody) => {
       classificationName: JSON.stringify(reqBody.queryTermForTM),
       startDateTime: reqBody.startDateTime,
       radius: '50',
-      latlong: getLatLongFromPostalCode(reqBody.postalCode)
+      latlong: getLatLongFromPostalCode(reqBody.location)
       // city: reqBody.city
     }
-    console.log(`LOOOK HERE!!! postalCode is ${reqBody.postalCode} and the zipcode module returns ${zipcodes.lookup(reqBody.postalCode)}`)
 
     // Modify fetch params if other preferences are selected by user // 
     Object.assign(params, 
@@ -91,7 +88,7 @@ const getYelpData = (reqBody) => {
     let params = { 
       sort_by: 'rating',
       term: preference, 
-      location: reqBody.postalCode,
+      location: reqBody.location,
     }
  
     // Modify fetch params if other preferences are selected by user // 
@@ -144,7 +141,7 @@ const parseForCriticalData = (results, API) => {
           line_2: event._embedded.venues[0].address.line1,
           city: event._embedded.venues[0].city.name,
           state: event._embedded.venues[0].state.stateCode,
-          zip: event._embedded.venues[0].city.postalCode
+          zip: event._embedded.venues[0].city.location
         },
         price: event.priceRanges ? `${event.priceRanges[0].min} ${event.priceRanges[0].currency} - ${event.priceRanges[0].max} ${event.priceRanges[0].currency}` : 'No Price Provided',
         url: event.url,
@@ -196,8 +193,8 @@ const priceMapper = (dollarSigns, API) => {
 }
 
 const getLatLongFromPostalCode = (postalCode) => {
-  let latitude = zipcodes.lookup(postalCode).latitude
-  let longitude = zipcodes.lookup(postalCode).longitude
+  let latitude = zipcodes.lookup(Number(postalCode)).latitude
+  let longitude = zipcodes.lookup(Number(postalCode)).longitude
   return `${latitude},${longitude}`
 }
 
@@ -205,15 +202,10 @@ module.exports.getTMData = getTMData;
 module.exports.getYelpData = getYelpData;
 
 // Left To Do: //
-// Do we want to filter out events without a provided price? 
-
-// When we use SF city as TM param, it doesn't include Oakland games (NBA)..
-  // solution: zipcode node module > get latlong > use radius parameter
 
 // Front-End: must handle fetches that return no results by checking to see result count
   // if count = 0, keep current event feed
   // if not, replace with new results
 
-//************************** RETIRED CODE **************************//
 
 
