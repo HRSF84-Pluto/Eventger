@@ -195,39 +195,4 @@ module.exports.getYelpData = getYelpData;
 
 //************************** RETIRED CODE **************************//
 
-  // return Promise.all(userPreferences.map(preference => {
 
-  //   // prep the fetch
-  //   let params = { 
-  //     sort_by: 'rwating',
-  //     term: preference, 
-  //     location: reqBody.city,
-  //   }
- 
-  //   // Modify fetch params if other preferences are selected by user // 
-  //   Object.assign(params, 
-  //     reqBody.price ? { price: priceMapper(reqBody.price, 'yelp') } : null);
-     
-  //   const client = yelp.client(apiKeys.token);
-
-  //   // BEGIN: API fetch
-  //   return client.search(params)
-  //   .then(res => {
-  //     // console.log('YELP API fetch returns - at index 0 - ', res.jsonBody.businesses[0])
-  //     if (err => { throw err; })
-  //     return res.jsonBody.businesses;
-  //   })
-  //   // parse for only data we need and add to the returned cummulative events array
-  //   .then(businesses => {
-  //     console.log('BUSINESSES RETURN: ', businesses[0])
-  //     return parseForCriticalData(businesses, 'yelp')
-  //   })
-  //   .then(parsedBus => {
-  //     let top2EventsForThisPreference = parsedBus.slice(0, 2)
-  //     console.log(`top2EventsForThisPreference contains: ${top2EventsForThisPreference[0].eventName} AND ${top2EventsForThisPreference[1].eventName}`)
-  //     return top2EventsForThisPreference; 
-  //   })
-  //   .catch(err => {
-  //     console.log('LOOK HERE!! Yelp INSIDE FETCHLOOP ERROR: ', err)
-  //   });
-  // }))
