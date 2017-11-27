@@ -79,8 +79,8 @@ class SignUp extends Component {
             </Form.Field>
             <p className='error' style={{color: 'red'}} >{this.state.errorMessage}</p>
               <Form.Field>
-                <label>City</label>
-                <input placeholder='city' onChange={e => this.handleCityInput(e)} />
+                <label>Zip Code</label>
+                <input placeholder='zip code' onChange={e => this.handleCityInput(e)} />
               </Form.Field>
             <Form.Field>
               <label>Password</label>

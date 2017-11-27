@@ -75,15 +75,20 @@ class EventFeed extends Component{
 
   setDefaults(activity, location, date, username){
     if (activity === ''){ activity = 'group events';}
-    if (location === ''){location = 'san francisco';}
+    if (location === ''){location =  94102;}
     if (date === ''){date = new Date().toISOString();}
     return {date, location, activity, username};
   }
-//TODO: turns queryTermForYelp property into array of strings, not strings for garrett;
+
   handleDataFetch(options, price='$$'){
      let objWithDefaults;
      //uses local storage to remember the user's most recent search parameters
      const currentStorage = JSON.parse(localStorage.getItem("main page options"));
+    let storageLocation;
+    if (currentStorage.location){
+      storageLocation = currentStorage.location;
+     }
+
     if (this.props.passDownSearchInput.username === currentStorage.username &&
       (this.props.passDownSearchInput.location === '' ||
         this.props.passDownSearchInput.activity === '' || this.props.passDownSearchInput.date === '')){
@@ -104,6 +109,7 @@ class EventFeed extends Component{
       let {location, activity, date, username} = this.props.passDownSearchInput;
       objWithDefaults = this.setDefaults(activity, location, date, username);
     }
+
     localStorage.setItem("main page options", JSON.stringify(objWithDefaults));
     let {activity, location, date, username} = objWithDefaults;
 
@@ -159,9 +165,9 @@ class EventFeed extends Component{
       queryTermForYelp = optionsArr.concat(queryTermForYelp.filter(function (item) {
           return optionsArr.indexOf(item) < 0;
         }))
-
-
     }
+
+    console.log(location, "LOCATION INSIDE QUERY");
     let apiQueryObj =  {
       'city': location,
       queryTermForTM,
@@ -175,6 +181,10 @@ class EventFeed extends Component{
     }
 
     console.log("THE APIQUERYOBJ",apiQueryObj );
+    //resetting location in storage object to the one at signup
+    let storageObj = JSON.parse(localStorage.getItem("main page options"));
+    storageObj['location'] = storageLocation;
+    localStorage.setItem("main page options", JSON.stringify(storageObj));
 
     $.ajax({
       url: '/eventData',
@@ -190,6 +200,7 @@ class EventFeed extends Component{
           eventsArray = eventsArray.concat(yelp).concat(ticketmaster).sort();
           this.setState({eventsArray});
           console.log(this.state.eventsArray, "result array inside ajax call");
+
         }else{
           ticketmaster ? this.setState({eventsArray: ticketmaster}) : this.setState({eventsArray: yelp}) ;
         }
