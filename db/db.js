@@ -51,6 +51,7 @@ const database = 'heroku_e67b3a46e336139';
 // });
 
 var db = mysql.createConnection({
+  connectionLimit: 100,
   host: 'us-cdbr-iron-east-05.cleardb.net',
   user: 'ba3f260f7ba4c4',
   database: 'heroku_e67b3a46e336139',
@@ -278,54 +279,52 @@ db.connectAsync()
 .then(() => createTables(db))
 .catch((err) => {if (err) console.log('ERROR with Connection', err)})
 .then(() => {
-
-
-
-
-
-//------------------------------Testing Updating Preferences---------------------------
-var fakeEvent = {
-    id: 'abcdef',
-    eventName: 'Blink 182 Concert',
-    date: 'January 18, 2018',
-    time: '4:00pm',
-    location: {
-        line_1: '1080 Folsom St',
-        city: 'San Francisco',
-        state: 'CA',
-        zip: '94102'
-    },
-    price: '$50.00',
-    url: 'https://www.ticketmaster.com/Blink-182-tickets/artist/790708',
-    photoUrl: 'https://s1.ticketm.net/tm/en-us/dam/a/9ec/f80aa88d-71fb-4b5f-955c-a3a3e87109ec_118051_CUSTOM.jpg',
-    category: 'music'
-}
-
-var fakeUser = {
-    username: 'George',
-    password: '',
-    location: 'the Bay'
-}
-
-db.saveUsernameAsync(fakeUser)
-    .then((userSaveSuccess) => {
-      console.log('User Saved Successfully ', userSaveSuccess)
-      return db.saveEventAsync(fakeEvent)
-    }).then( (eventSaveSuccess) => {
-      console.log('Successfully Saved Event', eventSaveSuccess)
-      return db.saveUserEventAsync(1,'abcdef')
-    }).catch(() => {
-      console.log('Event Already Saved')
-      return db.saveUserEventAsync(1,'abcdef') 
-    })
-    .then( (userEventSaveSuccess) => {
-      console.log('Successfully Saved User Event Relationship', userEventSaveSuccess)
-      return db.findUsernameAsync(fakeUser.username, null);
-    }).then((userData) => {
-        console.log('Found the user preferences', userData.preferences)
-    })
-
 })////////End of the then after establishing connection - move around for testing
+
+
+// //------------------------------Testing Updating Preferences---------------------------
+// var fakeEvent = {
+//     id: 'abcdef',
+//     eventName: 'Blink 182 Concert',
+//     date: 'January 18, 2018',
+//     time: '4:00pm',
+//     location: {
+//         line_1: '1080 Folsom St',
+//         city: 'San Francisco',
+//         state: 'CA',
+//         zip: '94102'
+//     },
+//     price: '$50.00',
+//     url: 'https://www.ticketmaster.com/Blink-182-tickets/artist/790708',
+//     photoUrl: 'https://s1.ticketm.net/tm/en-us/dam/a/9ec/f80aa88d-71fb-4b5f-955c-a3a3e87109ec_118051_CUSTOM.jpg',
+//     category: 'music'
+// }
+
+// var fakeUser = {
+//     username: 'George',
+//     password: '',
+//     location: 'the Bay'
+// }
+
+// db.saveUsernameAsync(fakeUser, 'gasdfasdf')
+//     .then((userSaveSuccess) => {
+//       console.log('User Saved Successfully ', userSaveSuccess)
+//       return db.saveEventAsync(fakeEvent)
+//     }).then( (eventSaveSuccess) => {
+//       console.log('Successfully Saved Event', eventSaveSuccess)
+//       return db.saveUserEventAsync(1,'abcdef')
+//     }).catch(() => {
+//       console.log('Event Already Saved')
+//       return db.saveUserEventAsync(1,'abcdef') 
+//     })
+//     .then( (userEventSaveSuccess) => {
+//       console.log('Successfully Saved User Event Relationship', userEventSaveSuccess)
+//       return db.findUsernameAsync(fakeUser.username, null);
+//     }).then((userData) => {
+//         console.log('Found the user preferences', userData.preferences)
+//     })
+
+
 
 
 
