@@ -10,39 +10,15 @@ const flash = require('connect-flash');
 const passport = require('passport');
 const fetchHelpers = require('../api/fetchHelpers.js');
 const db =  require('../db/db.js');
-const Promise = require('bluebird');
-
-const PORT = process.env.PORT || 3000;
-
-/*
-NOTE: the backend is using passportjs to create sessions and authenticate users.
-* It uses the express router to organize the different routes (the routes corresponding to a certain path are in the routes directory).
-* The morgan middleware logs request details to the terminal
-* flash middleware flashes messages
-* the database is currently storing the hashed password and the unhashed password for testing: unhashed password will need to be removed
-* To set the env.DBPASSWORD, set the env variable before the 'npm run start' script like this:
-           DBPASSWORD=YOURDBPASSWORD npm run start
-
-Helpful links:
-* Setting env: https://goo.gl/VJoaUC
-* Express router: https://goo.gl/xntCiX
-* Passportjs: https://goo.gl/7kA7Y4
-*             https://goo.gl/iMohYg
-*             https://goo.gl/18wQkG
-*             https://goo.gl/EaWPGG
-*
-*/
-
-//TODO: Will move these routes to the routes directory - briceida
 
 // Sample output from Garrett's helper: //
 let sampleReqBody = {
-  city: 'seattle',
-  preferenceForMusicOrLeague: ['rap'], // additional keyword given by user in preferences table [max: 1 word] to narrow down sports or music
-  queryTermForTM: ['music', 'sports'], // both query Terms are defined by homepage selection upon landing on site
-  queryTermForYelp: ['bar', 'coffee', 'dance clubs'], // default Yelp fetch from homepage 
-  startDateTime: '2017-11-27T18:00:00Z',
-  price: '$$$'
+  city: 'Oakland',
+  preferenceForMusicOrLeague: ['NBA', 'NFL', 'pop'], // should be populated with Music Genres or Sporting Leagues
+  queryTermForTM: ['music', 'sports'], // can only have 'music' or 'sports' (couldn't find other options)
+  queryTermForYelp: ['bar', 'coffee', 'breakfast'], // originally populated with the keyterms discussed in Begona's google sheet, but will change thereafter with user preferences
+  startDateTime: '2017-11-27T18:00:00Z', 
+  price: '$$'
 }
 
 app.get('/eventData', function (req, res) {
@@ -64,7 +40,7 @@ app.get('/eventData', function (req, res) {
     returnedYelpTMDataObj.ticketmaster = ticketMasterEventsArr;
     return;
   })
-  .then(placeholder => {
+  .then(() => {
 
     // fetch Yelp data
     fetchHelpers.getYelpData(sampleReqBody)
@@ -74,11 +50,12 @@ app.get('/eventData', function (req, res) {
       returnedYelpTMDataObj.yelp = yelpEventsArr;
       return;
     })
-    .then(placeholder => {
+    .then(() => {
       res.status(201).send(returnedYelpTMDataObj);
     })
   })
 
+  // Sally: bug in helper, couldn't use! help Garrett!
   // db.reduceSearchAsync(sampleReqBody, 1)
   // .then(sampleReqBody => {
   //   console.log('Reduced Sample Body', sampleReqBody);
@@ -110,6 +87,29 @@ app.get('/eventData', function (req, res) {
   // })
 
 });
+const PORT = process.env.PORT || 3000;
+
+/*
+NOTE: the backend is using passportjs to create sessions and authenticate users.
+* It uses the express router to organize the different routes (the routes corresponding to a certain path are in the routes directory).
+* The morgan middleware logs request details to the terminal
+* flash middleware flashes messages
+* the database is currently storing the hashed password and the unhashed password for testing: unhashed password will need to be removed
+* To set the env.DBPASSWORD, set the env variable before the 'npm run start' script like this:
+           DBPASSWORD=YOURDBPASSWORD npm run start
+
+Helpful links:
+* Setting env: https://goo.gl/VJoaUC
+* Express router: https://goo.gl/xntCiX
+* Passportjs: https://goo.gl/7kA7Y4
+*             https://goo.gl/iMohYg
+*             https://goo.gl/18wQkG
+*             https://goo.gl/EaWPGG
+*
+*/
+
+//TODO: Will move these routes to the routes directory - briceida
+
 
 const options = {
   host: process.env.DBSERVER || 'localhost',
@@ -187,10 +187,6 @@ function checkAuthentication(req, res, next) {
     res.status(401).json({});
   }
 }
-
-
-
-
 
 
 //Save Events for logged in User
