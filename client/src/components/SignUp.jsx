@@ -23,10 +23,9 @@ class SignUp extends Component {
     this.setState({password: e.target.value});
   }
   handleSignUpInput() {
-    console.log('inside handleSignUpInput');
+    // console.log('inside handleSignUpInput');
     const data = {'username': this.state.username, 'password': this.state.password, 'location': this.state.location};
-    //checks for username in db:
-    // return true;
+
   return new Promise((resolve,reject) => {
     $.ajax({
       type: 'POST',

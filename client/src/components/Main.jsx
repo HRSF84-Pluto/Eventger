@@ -6,7 +6,6 @@ import UserSettingsPopup from './UserSettingsPopup';
 
 
 const Main  = (props) => {
-
   const handleLogout =()=> {
     props.handleLogout();
   };

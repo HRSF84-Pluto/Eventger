@@ -24,8 +24,7 @@ class Login extends Component {
 
 
   handleLoginInput() {
-
-    // checks for username in db: if username exists, accept login info, else, redirect to signup
+    // checks for username in db: if username exists, accept login info, else, redirect to signup in render
     const {username, password} = this.state;
     const data = {username, password};
     console.log(data, 'data object to be sent to db');

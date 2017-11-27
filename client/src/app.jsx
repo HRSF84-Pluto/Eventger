@@ -44,7 +44,7 @@ class App extends React.Component {
       method: 'GET',
       contentType: 'application/json',
       success: response => {
-        console.log('response inside getCurrentUser', response);
+        console.log('current authenticated user', response);
         const {username, location} = response;
         if (username) {
           this.setState({username});

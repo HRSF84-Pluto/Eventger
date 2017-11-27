@@ -40,8 +40,8 @@ class Settings extends Component{
     this.setState({city: e.target.value});
   }
   handleUpdatedData(){
-  //sends POST request to server
-    console.log("inside handleUpdateData");
+  //sends PATCH request to server: not implemented
+    console.log("patch request to update user data");
   }
   render() {
     return (

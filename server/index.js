@@ -47,7 +47,7 @@ const options = {
 //stores sessions created by passportjs, set your db password above
 const sessionStore = new MySQLStore(options);
 
-//express router declarations
+//route files used by express router
 const loginRoute = require('../routes/login');
 const signupRoute = require('../routes/signup');
 const userDataRoute = require('../routes/userData');
@@ -94,7 +94,7 @@ app.use('/login', loginRoute);
 
 app.use(checkAuthentication);
 
-//TODO: modify the userDataRoute's content to access user data
+
 app.use('/saveEvent', saveEventRoute);
 app.use('/userData', userDataRoute);
 app.use('/logout', logoutRoute);
