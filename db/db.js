@@ -2,7 +2,8 @@ var Sequelize = require('sequelize');
 var mysql = require('mysql');
 var Promise = require('bluebird');
 const createTables = require('./config');
-const database = 'Eventger';
+const database = 'heroku_e67b3a46e336139';
+// const database = 'Eventger';
 
 // -- OBJECT Example
 // -- User Object
@@ -40,11 +41,20 @@ const database = 'Eventger';
 //  .then(() => {})
 //  .catch(username already exists => {})
 
+//DATABASE_URL: mysql://ba3f260f7ba4c4:0e12068a@us-cdbr-iron-east-05.cleardb.net/heroku_e67b3a46e336139?reconnect=true
+
+// var db = mysql.createConnection({
+//   host: 'us-cdbr-iron-east-05.cleardb.net' || process.env.DBSERVER ||'localhost',
+//   user: 'ba3f260f7ba4c4' || process.env.DBUSER  ||'root',
+//   database: 'heroku_e67b3a46e336139' || 'Eventger',
+//   password: '0e12068a' || process.env.DBPASSWORD || ''
+// });
+
 var db = mysql.createConnection({
-  host: process.env.DBSERVER ||'localhost',
-  user: process.env.DBUSER  ||'root',
-  database: 'Eventger',
-  password: process.env.DBPASSWORD || ''
+  host: 'us-cdbr-iron-east-05.cleardb.net',
+  user: 'ba3f260f7ba4c4',
+  database: 'heroku_e67b3a46e336139',
+  password: '0e12068a' 
 });
 
 
@@ -63,9 +73,11 @@ db.findUsername = (username, id, callback) => {
     if (err) {
       callback(err, null);
     }
-    result[0].preferences = JSON.parse(result[0].preferences);
+    console.log(result)
+    if (result[0] && result[0].preferences) {
+      result[0].preferences = JSON.parse(result[0].preferences)
+    }
     callback(null, result[0]);
-
   })
 };
 
@@ -151,7 +163,9 @@ db.saveEvent = (eventObj, callback) => {
 
 
 db.updatePreferences = (userId, category, callback) => {
-  db = Promise.promisifyAll(db);
+  if (!db.findUsernameAsync) {
+    db = Promise.promisifyAll(db);
+  }
   db.findUsernameAsync(null, userId)
   .then((userData) => {
     var userPrefArr = userData.preferences
@@ -174,8 +188,9 @@ db.updatePreferences = (userId, category, callback) => {
 }
 
 db.saveUserEvent = (userId, eventId, callback) => {
-  db = Promise.promisifyAll(db);
-
+  if (!db.findEventAsync) {
+    db = Promise.promisifyAll(db);
+  }
   db.findEventAsync(eventId)
   .then((eventData) => {
     if (eventData){
@@ -263,54 +278,54 @@ db.connectAsync()
 .then(() => createTables(db))
 .catch((err) => {if (err) console.log('ERROR with Connection', err)})
 .then(() => {
-})////////End of the then after establishing connection - move around for testing
+
 
 
 
 
 //------------------------------Testing Updating Preferences---------------------------
-// var fakeEvent = {
-//     id: 'abcdef',
-//     eventName: 'Blink 182 Concert',
-//     date: 'January 18, 2018',
-//     time: '4:00pm',
-//     location: {
-//         line_1: '1080 Folsom St',
-//         city: 'San Francisco',
-//         state: 'CA',
-//         zip: '94102'
-//     },
-//     price: '$50.00',
-//     url: 'https://www.ticketmaster.com/Blink-182-tickets/artist/790708',
-//     photoUrl: 'https://s1.ticketm.net/tm/en-us/dam/a/9ec/f80aa88d-71fb-4b5f-955c-a3a3e87109ec_118051_CUSTOM.jpg',
-//     category: 'music'
-// }
+var fakeEvent = {
+    id: 'abcdef',
+    eventName: 'Blink 182 Concert',
+    date: 'January 18, 2018',
+    time: '4:00pm',
+    location: {
+        line_1: '1080 Folsom St',
+        city: 'San Francisco',
+        state: 'CA',
+        zip: '94102'
+    },
+    price: '$50.00',
+    url: 'https://www.ticketmaster.com/Blink-182-tickets/artist/790708',
+    photoUrl: 'https://s1.ticketm.net/tm/en-us/dam/a/9ec/f80aa88d-71fb-4b5f-955c-a3a3e87109ec_118051_CUSTOM.jpg',
+    category: 'music'
+}
 
-// var fakeUser = {
-//     username: 'George',
-//     password: '',
-//     location: 'the Bay'
-// }
+var fakeUser = {
+    username: 'George',
+    password: '',
+    location: 'the Bay'
+}
 
-// db.saveUsernameAsync(fakeUser)
-//     .then((userSaveSuccess) => {
-//       console.log('User Saved Successfully ', userSaveSuccess)
-//       return db.saveEventAsync(fakeEvent)
-//     }).then( (eventSaveSuccess) => {
-//       console.log('Successfully Saved Event', eventSaveSuccess)
-//       return db.saveUserEventAsync(1,'abcdef')
-//     }).catch(() => {
-//       console.log('Event Already Saved')
-//       return db.saveUserEventAsync(1,'abcdef')
-//     })
-//     .then( (userEventSaveSuccess) => {
-//       console.log('Successfully Saved User Event Relationship', userEventSaveSuccess)
-//       return db.findUsernameAsync(fakeUser.username, null);
-//     }).then((userData) => {
-//         console.log('Found the user preferences', userData.preferences)
-//     })
+db.saveUsernameAsync(fakeUser)
+    .then((userSaveSuccess) => {
+      console.log('User Saved Successfully ', userSaveSuccess)
+      return db.saveEventAsync(fakeEvent)
+    }).then( (eventSaveSuccess) => {
+      console.log('Successfully Saved Event', eventSaveSuccess)
+      return db.saveUserEventAsync(1,'abcdef')
+    }).catch(() => {
+      console.log('Event Already Saved')
+      return db.saveUserEventAsync(1,'abcdef') 
+    })
+    .then( (userEventSaveSuccess) => {
+      console.log('Successfully Saved User Event Relationship', userEventSaveSuccess)
+      return db.findUsernameAsync(fakeUser.username, null);
+    }).then((userData) => {
+        console.log('Found the user preferences', userData.preferences)
+    })
 
-
+})////////End of the then after establishing connection - move around for testing
 
 
 
@@ -362,183 +377,3 @@ db.connectAsync()
 
 
 
-// db.findUserEvents
-
-//--------------------------------------------------------------------------
-// db.connect((error) => {
-//   if (error) {console.log('ERROR', error)}
-
-//   var userInsert = "INSERT INTO users (username, zip, password) VALUES ?";
-//   var userInput = [['Johnny', '94125', 'purpleNurple']]
-//   // db.query(userInsert, [userInput], function (err, result) {
-//   //   if (err) throw err;
-//   //   console.log(result);
-//   // });
-
-//   var userInput2 = [['George', '94125', 'purpleNurple']]
-
-//   var eventInsert = "INSERT INTO events (eventName, date, time, location, price, url, photoUrl, category) VALUES ?";
-//   var eventInput = [['End of the World', '3/25/2012', '3:15', 'Earth', 'Free', 'blah', 'blah', 'doom']]
-//   // db.query(eventInsert, [eventInput], function (err, result) {
-//   //   if (err) throw err;
-//   //   console.log(result);
-//   // });
-
-//   var eventInput2 = [['Hello World', '3/25/2012', '3:15', 'Earth', 'Free', 'blah', 'blah', 'doom']]
-
-//   var manyInsert = "INSERT INTO usersEvents (user_id, event_id) VALUES ((SELECT id FROM users WHERE username= ?), (SELECT id FROM events WHERE eventName= ?))"
-//   var manyInput = ['Johnny','End of the World']
-//   // db.query(manyInsert, manyInput, function(err, result) {
-//   //   if (err) throw err;
-//   //   console.log(result);
-//   // })
-
-//   var manyInput2 = ['George','End of the World']
-
-//   db.query(userInsert, [userInput], function (err, result) {
-//     if (err) throw err;
-//     console.log(result);
-//     db.query(eventInsert, [eventInput], function (err, result) {
-//         if (err) throw err;
-//         console.log(result);
-//         db.query(manyInsert, manyInput, function(err, result) {
-//             if (err) throw err;
-//             console.log(result);
-//             db.query(userInsert, [userInput2], function(err, result) {
-//                 if (err) throw err;
-//                 console.log(result);
-//                 db.query(eventInsert, [eventInput2], function(err, result) {
-//                     if (err) throw err;
-//                     console.log(result);
-//                     db.query(manyInsert, manyInput2, function(err, result) {
-//                         if (err) throw err;
-//                         console.log(result);
-//                         db.saveUsername({username: 'Gman', password: '', zip: 'the BAY'}, (data) => {
-//                             console.log('DATA AFTER SAVE', data)
-//                         })
-//                         db.findUsername('Johnny', (data) => {
-//                             console.log('DATA AFTER FIND', data)
-//                         });
-//                     })
-//                 })
-//               })
-//           })
-//       });
-//   });
-
-// });
-
-
-
-//------------------------------------Sequelize Format-------------------------------------------
-
-// var sequelize = new Sequelize({
-//   database: 'Eventger',
-//   username: 'root',
-//   host: 'localhost',
-//   dialect: 'mysql',
-
-//   pool: {
-//     max: 5,
-//     min: 0,
-//     acquire: 30000,
-//     idle: 10000
-//   },
-// });
-
-// const User = sequelize.define('user', {
-//   // id: {
-//   //   type: Sequelize.INTEGER,
-//   //   autoIncrement: true,
-//   //   unique: true,
-//   //   primaryKey: true
-//   // },
-//   displayName: {
-//     type: Sequelize.STRING
-//   },
-//   username: {
-//     type: Sequelize.STRING,
-//     // unique: true
-//   },
-//   password: {
-//     type: Sequelize.STRING
-//   },
-//   location: {
-//     type: Sequelize.STRING
-//   }
-// });
-
-
-// const Event = sequelize.define( 'event', {
-//   id: {
-//     type: Sequelize.INTEGER,
-//     autoIncrement: true,
-//     unique: true,
-//     primaryKey: true
-//   },
-//   name: {
-//     type: Sequelize.STRING
-//   },
-//   description: {
-//     type: Sequelize.STRING
-//   },
-//   when: {
-//     type: Sequelize.STRING
-//   },
-//   location: {
-//     type: Sequelize.STRING
-//   },
-//   price: {
-//     type: Sequelize.STRING
-//   },
-//   url: {
-//     type: Sequelize.STRING,
-//     isUrl: true
-//   },
-//   photoUrl: {
-//     type: Sequelize.STRING
-//   },
-//   category: {
-//     type: Sequelize.STRING
-//   }
-// })
-
-// const UserToEvent = () => {
-//     console.log('Create the many to many table')
-//     return User.belongsToMany(Event, {through: 'Users_Events', foreignKey: 'user_id', otherKey: 'event_id'})
-// }
-
-
-// sequelize.authenticate().then(() => {
-//     console.log('Connection to MySQL Database Successful');
-
-//     // force: true will drop the table if it already exists
-//     return User.sync({force: true});
-//     }).then(() => {
-//       // Table created
-//       return User.create({
-//         displayName: 'John',
-//         username: 'Hancock'
-//       });
-//     }).then(() => {
-//       return Event.sync({force: true})
-//     }).then(() => {
-//       // Table created
-//       return Event.create({
-//         name: 'Golden State Warriors vs Los Angeles Lakers',
-//         description: 'The most epic game of the season.'
-//       });
-//     }).then(() => {
-//         return UserToEvent();
-//     }).then(() => {
-//       return Event.create({
-//         name: 'HR Meetup'
-//         description: 'Meet with HR friends!'
-//         user_id
-//       })
-//     }).catch(error => {
-//       console.log('Error with connection to database ', error)
-//     })
-
-// const Eventger = sequelize.define( 'Eventger Profile')
-// module.exports = sequelize
