@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import { Item, Label } from 'semantic-ui-react';
 
-
-
 class Event extends Component{
   constructor(props) {
     super(props);
@@ -12,9 +10,7 @@ class Event extends Component{
     }
   }
   handleSavedBtnClick(id){
-    console.log('item id', id);
-    //key would hold the id or something that identifies the entry to be saved in the db
-
+    //console.log('saved item id', id);
     //unsave the event
     if (this.state.className === 'large bookmark icon saved-bookmark' ){
       this.setState({className: 'large bookmark icon'});

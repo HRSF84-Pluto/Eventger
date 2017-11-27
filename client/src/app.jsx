@@ -32,18 +32,6 @@ class App extends React.Component {
   }
  componentDidMount(){
    this.getCurrentUser();
-   //TODO: This function will fetch events for the user on login according to previously used search terms
-   //get events bound to the current user
-   // $.ajax({
-   //   url: '/eventData',
-   //   method: 'GET',
-   //   success: response => {
-   //     console.log('response inside eventData fetch', response);
-   //   },
-   //   error: (xhr, status, error) => {
-   //     console.log('err inside eventData fetch', xhr, status, error);
-   //   }
-   // })
  }
   handleLogin() {
     console.log("inside handle login");
@@ -56,12 +44,11 @@ class App extends React.Component {
       method: 'GET',
       contentType: 'application/json',
       success: response => {
-        console.log('response inside getCurrentUser', response);
-        if (response.username) {
-          console.log(response.username);
-          this.setState({username: response.username});
-          console.log(this.state.username, "state.username");
-
+        console.log('current authenticated user', response);
+        const {username, location} = response;
+        if (username) {
+          this.setState({username});
+          localStorage.setItem("main page options", JSON.stringify({location, username, date: '', activity: ''}));
         }else{
           this.setState({username: 'Login'});
         }
