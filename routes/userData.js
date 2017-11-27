@@ -8,7 +8,6 @@ router.get('/', function(req, res) {
   if (req.session.passport) {
     const id = req.session.passport.user;
     console.log(id, "id in userData get");
-    console.log('USER ID ', id);
     console.log("get user posting here///");
     db.findUsernameAsync(null, id)
       .then(result => res.status(200).json(result))

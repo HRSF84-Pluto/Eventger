@@ -3,8 +3,6 @@ import $ from 'jquery';
 import EventList from './EventList';
 import SideBar from './SideBar';
 
-
-
 class EventFeed extends Component{
   constructor(props) {
     super(props);
@@ -23,8 +21,7 @@ class EventFeed extends Component{
         method: 'POST',
         data: data,
         success: response => {
-          console.log('SAVE MY EVENT RESPONSE', response);
-
+          console.log('Successful saving of event', response);
         },
         error: () => {
           console.log('there\'s no active session, please login');
@@ -33,7 +30,7 @@ class EventFeed extends Component{
     }
   }
   handleFilterOptions(options,price){
-    console.log(options, price, ": options AND PRICE inside handleFilterOptions");
+
     const {
       nba,
       nfl,
@@ -67,23 +64,28 @@ class EventFeed extends Component{
         optionsObj[key] = key;
       }
     }
-    console.log(optionsObj , "the new Object");
 
-    console.log(dataObj, "object inside handleFliterOptions");
     this.handleDataFetch(optionsObj, price);
   }
 
   setDefaults(activity, location, date, username){
     if (activity === ''){ activity = 'group events';}
-    if (location === ''){location = 'san francisco';}
+    if (location === ''){location =  94102;}
     if (date === ''){date = new Date().toISOString();}
     return {date, location, activity, username};
   }
-//TODO: turns queryTermForYelp property into array of strings, not strings for garrett;
+
   handleDataFetch(options, price='$$'){
      let objWithDefaults;
      //uses local storage to remember the user's most recent search parameters
      const currentStorage = JSON.parse(localStorage.getItem("main page options"));
+    let storageLocation;
+    if (currentStorage.location){
+      storageLocation = currentStorage.location;
+     }
+
+     //reassigns values to the properties of the api query object
+    //the api query object with be sent below
     if (this.props.passDownSearchInput.username === currentStorage.username &&
       (this.props.passDownSearchInput.location === '' ||
         this.props.passDownSearchInput.activity === '' || this.props.passDownSearchInput.date === '')){
@@ -104,6 +106,7 @@ class EventFeed extends Component{
       let {location, activity, date, username} = this.props.passDownSearchInput;
       objWithDefaults = this.setDefaults(activity, location, date, username);
     }
+    //reassigns object stored in localStorage;
     localStorage.setItem("main page options", JSON.stringify(objWithDefaults));
     let {activity, location, date, username} = objWithDefaults;
 
@@ -125,6 +128,8 @@ class EventFeed extends Component{
     const preferenceForMusicOrLeague = [];
     const queryTermForTM = eventMapper[activity]["queryTermForTM"];
     let queryTermForYelp = eventMapper[activity]["queryTermForYelp"];
+
+    //assigns preferences to preferenceForMusicOrLeague object sent to api helper
     if (options) {
       let optionsArr = Object.values(options);
       if (queryTermForTM.includes("music") || queryTermForTM.includes("sports")) {
@@ -159,14 +164,14 @@ class EventFeed extends Component{
       queryTermForYelp = optionsArr.concat(queryTermForYelp.filter(function (item) {
           return optionsArr.indexOf(item) < 0;
         }))
-
-
     }
+
     let apiQueryObj =  {
-      'city': location,
+      location,
       queryTermForTM,
       queryTermForYelp,
       'startDateTime': date,
+      preferenceForMusicOrLeague,
       price
     };
 
@@ -175,6 +180,10 @@ class EventFeed extends Component{
     }
 
     console.log("THE APIQUERYOBJ",apiQueryObj );
+    //resetting location in storage object to the one set at signup
+    let storageObj = JSON.parse(localStorage.getItem("main page options"));
+    storageObj['location'] = storageLocation;
+    localStorage.setItem("main page options", JSON.stringify(storageObj));
 
     $.ajax({
       url: '/eventData',
@@ -189,7 +198,7 @@ class EventFeed extends Component{
         if (ticketmaster && yelp) {
           eventsArray = eventsArray.concat(yelp).concat(ticketmaster).sort();
           this.setState({eventsArray});
-          console.log(this.state.eventsArray, "result array inside ajax call");
+          console.log(this.state.eventsArray, "fetched events array returned from api helper");
         }else{
           ticketmaster ? this.setState({eventsArray: ticketmaster}) : this.setState({eventsArray: yelp}) ;
         }

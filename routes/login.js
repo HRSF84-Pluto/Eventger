@@ -6,15 +6,6 @@ const LocalStrategy = require('passport-local').Strategy;
 const db =  require('../db/db.js');
 
 
-//
-// //Returns users saved results from db
-// app.post('/login', function(req, res) {
-//   db.findUserEventsAsync(req.body.username)
-//     .then(results => res.send(results))
-//     .catch(err => res.send(err))
-// })
-
-
 passport.use(new LocalStrategy({passReqToCallback: true},
   function(req, username, password, done) {
     console.log('username and password:', username, password);
@@ -53,9 +44,7 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
-  console.log('ID inside deserialize', id);
   db.findByIdAsync(id, function(err, user) {
-    console.log('user inside deserialize', user);
     done(err, user);
   });
 });
@@ -65,13 +54,10 @@ passport.deserializeUser(function(id, done) {
 router.post('/',
   passport.authenticate('local', {failureFlash: true, successFlash: true}),
   function(req, res) {
-    console.log('authenticated user here!!!!:', req.user);
+    console.log('authenticated user:', req.user);
     res.json(req.user);
   });
 
-// router.get('/', (req, res) => {
-//   res.end();
-// });
 
 module.exports = router;
 
