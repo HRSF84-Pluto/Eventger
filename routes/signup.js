@@ -7,6 +7,9 @@ const db =  require('../db/db.js');
 
 //Add user to DB
 router.post('/', function(req, res) {
+  if (req.body.username === 'Login'){
+    res.status(403).send();
+  }
   //bcrypt is a hashing library
   //bcrypt generates salt
   bcrypt.genSalt(saltRounds, function(err, salt) {

@@ -29,8 +29,6 @@ class Login extends Component {
     const {username, password} = this.state;
     const data = {username, password};
     console.log(data, 'data object to be sent to db');
-    //this function returns true if login is successful, and returns false if it's not. This returned Boolean will allow
-    //the conditional rendering of the views (done inside the  submit <Button/> below)
     return new Promise((resolve,reject) => {
       $.ajax({
         type: 'POST',

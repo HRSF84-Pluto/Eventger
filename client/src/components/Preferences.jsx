@@ -4,7 +4,7 @@ import FilterOptions from './FilterOptions';
 
 
 
-
+//TODO: refactor to functional component
 class Preferences extends Component{
   constructor(props) {
     super(props);
@@ -17,7 +17,7 @@ class Preferences extends Component{
            <Link className='settings-btn' to='/Settings'>Settings</Link>
            <Link className='saved-btn' to='/SavedEvents'>Saved</Link>
          </div>
-         <FilterOptions/>
+         <FilterOptions  handleFilterOptions={this.props.handleFilterOptions}/>
        </div>
     );
   }
