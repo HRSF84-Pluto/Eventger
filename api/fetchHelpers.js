@@ -35,7 +35,7 @@ const getTMData = (reqBody) => {
         return events.filter(event => {
           let eventPrice = event.priceRanges
           if (eventPrice) { // if event price is available, compare; otherwise, let it filter through
-            return Number(eventPrice[0].max) <= priceMapper(reqBody.price, 'ticketmaster');
+            return (Number(eventPrice[0].min)+Number(eventPrice[0].max))/2 <= priceMapper(reqBody.price, 'ticketmaster');
           }
           return event;
         })
@@ -60,7 +60,7 @@ const getTMData = (reqBody) => {
     })  
   }
 
-  // if fetch from homepage, return an uncustomized array of events
+  // if fetch is from homepage, return an uncustomized array of events
   if (!reqBody.preferenceForMusicOrLeague) {
     return fetchTMData()
   // if user has specified preferences, loop through preferences and return a cummulative array of events
@@ -174,8 +174,8 @@ const priceMapper = (dollarSigns, API) => {
     let map = {
       $: 100,
       $$: 500,
-      $$$: 5000,
-      $$$$: 10000
+      $$$: 1500,
+      $$$$: 5000
     }
     return map[dollarSigns]
   } else if (API === 'yelp') {
@@ -192,17 +192,14 @@ const priceMapper = (dollarSigns, API) => {
 module.exports.getTMData = getTMData;
 module.exports.getYelpData = getYelpData;
 
+// Left To Do: //
+// Do we want to filter out events without a provided price? 
+// When we use SF city as TM param, it doesn't include Oakland games (NBA)..
+  // solution: zipcode node module > get latlong > use radius parameter
 
-// ***************** Preferences built-in ? ************** //
-//                      Ticketmaster        Yelp           //
-//  Music/Sports             Yes              -            // 
-//  Food Type                 -              Yes           // 
-//  Budget                   Yes             Yes           // 
-// ******************************************************* //
-
-// do we want to filter out events without a provided price? 
-// when we use SF city as TM param, it doesn't include Oakland games (NBA)..
-// handle erros in fetches if keyword doesn't yield any results
+// Front-End: must handle fetches that return no results by checking to see result count
+  // if count = 0, keep current event feed
+  // if not, replace with new results
 
 //************************** RETIRED CODE **************************//
 

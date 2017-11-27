@@ -13,12 +13,12 @@ const db =  require('../db/db.js');
 
 // Sample output from Garrett's helper: //
 let sampleReqBody = {
-  city: 'San Francisco',
-  preferenceForMusicOrLeague: ['NBA'], // should be populated with Music Genres or Sporting Leagues
-  queryTermForTM: ['music', 'sports'], // fixed elements and cannot change!
-  queryTermForYelp: ['bar', 'coffee', 'breakfast'], // originally populated with what keyterms from Begona's google sheet, but will revise thereafter with user preferences
+  city: 'Oakland',
+  preferenceForMusicOrLeague: ['NBA', 'NFL', 'pop'], // should be populated with Music Genres or Sporting Leagues
+  queryTermForTM: ['music', 'sports'], // can only have 'music' or 'sports' (couldn't find other options)
+  queryTermForYelp: ['bar', 'coffee', 'breakfast'], // originally populated with the keyterms discussed in Begona's google sheet, but will change thereafter with user preferences
   startDateTime: '2017-11-27T18:00:00Z', 
-  price: '$$$'
+  price: '$$'
 }
 
 app.get('/eventData', function (req, res) {
@@ -55,6 +55,7 @@ app.get('/eventData', function (req, res) {
     })
   })
 
+  // Sally: bug in helper, couldn't use! help Garrett!
   // db.reduceSearchAsync(sampleReqBody, 1)
   // .then(sampleReqBody => {
   //   console.log('Reduced Sample Body', sampleReqBody);
