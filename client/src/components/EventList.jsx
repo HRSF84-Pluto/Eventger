@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Item} from 'semantic-ui-react';
+import myLocalStorage from 'node-localstorage';
 import $ from 'jquery';
 import Event from './Event';
 
@@ -31,9 +32,10 @@ class EventList extends Component{
     //matches one in the saved list, set the css class 'saved-event' to that item
     console.log(this.props.username, "props.username inside componentDidMount");
     if (typeof localStorage === "undefined" || localStorage === null) {
-      let LocalStorage = require('node-localstorage').LocalStorage;
+      LocalStorage = myLocalStorage.LocalStorage;
       localStorage = new LocalStorage('./scratch');
     }
+
     const username = JSON.parse(localStorage.getItem("main page options"))?
       JSON.parse(localStorage.getItem("main page options")).username: this.props.username;
     if (username !== 'Login'){

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import $ from 'jquery';
+import myLocalStorage from 'node-localstorage';
 import EventList from './EventList';
 import SideBar from './SideBar';
 
@@ -77,7 +78,7 @@ class EventFeed extends Component{
 
   handleDataFetch(options, price='$$'){
     if (typeof localStorage === "undefined" || localStorage === null) {
-      let LocalStorage = require('node-localstorage').LocalStorage;
+    LocalStorage = myLocalStorage.LocalStorage;
       localStorage = new LocalStorage('./scratch');
     }
 
