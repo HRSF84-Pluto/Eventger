@@ -10,6 +10,7 @@ const flash = require('connect-flash');
 const passport = require('passport');
 const fetchHelpers = require('../api/fetchHelpers.js');
 const db =  require('../db/db.js');
+const Promise = require('bluebird');
 
 const PORT = process.env.PORT || 3000;
 
@@ -34,36 +35,30 @@ Helpful links:
 
 //TODO: Will move these routes to the routes directory - briceida
 
-//Pulling new data when params change
+// Sample output from Garrett's helper: //
+let sampleReqBody = {
+  city: 'seattle',
+  preferenceForMusicOrLeague: ['rap'], // additional keyword given by user in preferences table [max: 1 word] to narrow down sports or music
+  queryTermForTM: ['music', 'sports'], // both query Terms are defined by homepage selection upon landing on site
+  queryTermForYelp: ['bar', 'coffee', 'dance clubs'], // default Yelp fetch from homepage 
+  startDateTime: '2017-11-27T18:00:00Z',
+  price: '$$$'
+}
+
 app.get('/eventData', function (req, res) {
-  console.log('inside get handler');
+  console.log('=========================== inside get handler ===========================');
 
-  // to test a sample req.body from front-end's get request
-  let sampleReqBody = {
-    queryTermForTM: ['sports', 'music'], // both query Terms are defined by homepage selection upon landing on site
-    preferenceForMusicOrLeague: ['Rock', 'Pop', 'Country'], // additional keyword given by user in preferences table [max: 1 word] to narrow down sports or music
-    queryTermForYelp: ['food', 'brewery', 'winery', 'hike'], // default Yelp fetch from homepage 
-    // preferenceForFoodAndOrSetting: 'Mexican', // additional keyword given by user to narrow down type of food
-    // activity: 'hiking', // if user doesn't want food but wants an activity - yelp category: https://www.yelp.com/developers/documentation/v2/all_category_list
-    city: 'San Francisco',
-    postalCode: '94104',
-    startDateTime: '2017-01-12T18:00:00Z',
-    price: '$$',
-  }
-  
+  // // solo api testing purposes //
+  // fetchHelpers.getTMData(sampleReqBody)
+  // .then(response => {
+  //   console.log('BACK IN SERVER BABY!: ', response);
+  //   res.status(201).send(response);
+  // })
 
-  db.reduceSearchAsync(sampleReqBody, 1)
-  .then(sampleReqBody => {
-
-  console.log('Reduced Sample Body', sampleReqBody);
   let returnedYelpTMDataObj = {};
-
-  // fetch ticketmaster data
-  return fetchHelpers.getTMData(sampleReqBody)
-  }).catch(err => {
-    console.log('ERROR in reduceSearchAsync', err)
-  }).then(ticketMasterEventsArr => {
-
+  
+  fetchHelpers.getTMData(sampleReqBody)
+  .then(ticketMasterEventsArr => {
 
     // include TM event data in the object sent back to front-end //
     returnedYelpTMDataObj.ticketmaster = ticketMasterEventsArr;
@@ -84,16 +79,37 @@ app.get('/eventData', function (req, res) {
     })
   })
 
-  // solo api testing purposes
-  // fetchHelpers.getYelpData(sampleReqBody)
-  // .then(response => {
-  //   res.status(201).send(response);
+  // db.reduceSearchAsync(sampleReqBody, 1)
+  // .then(sampleReqBody => {
+  //   console.log('Reduced Sample Body', sampleReqBody);
+
+  //   let returnedYelpTMDataObj = {};
+  // // fetch ticketmaster data
+  //   return fetchHelpers.getTMData(sampleReqBody)
+  // }).catch(err => {
+  //   console.log('ERROR in reduceSearchAsync', err)
+  // }).then(ticketMasterEventsArr => {
+
+  //   // include TM event data in the object sent back to front-end //
+  //   returnedYelpTMDataObj.ticketmaster = ticketMasterEventsArr;
+  //   return;
+  // })
+  // .then(placeholder => {
+
+  //   // fetch Yelp data
+  //   fetchHelpers.getYelpData(sampleReqBody)
+  //   .then(yelpEventsArr => {
+
+  //     // include Yelp event data in the object sent back to front-end //
+  //     returnedYelpTMDataObj.yelp = yelpEventsArr;
+  //     return;
+  //   })
+  //   .then(placeholder => {
+  //     res.status(201).send(returnedYelpTMDataObj);
+  //   })
   // })
 
 });
-
-
-
 
 const options = {
   host: process.env.DBSERVER || 'localhost',

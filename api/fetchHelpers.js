@@ -1,83 +1,114 @@
 const ticketmaster = require('tm-api');
 const yelp = require('yelp-fusion');
+const Promise = require('bluebird');
   
 const apiKeys = require('./apiKeys.js');
 
 const getTMData = (reqBody) => {
-  console.log('inside TM api fetch');
+  let tmCummulativeEvents = []; 
+  let userPreferences = reqBody.preferenceForMusicOrLeague;
 
-  // Default set of parameters for each search (before additional preferences) //
-  let params = {
-    apikey: apiKeys.tm_api_key,
-    size: '40',
-    sort: 'date,asc',
-    classificationName: JSON.stringify(reqBody.queryTermForTM),
-    startDateTime: reqBody.startDateTime,
-    city: reqBody.city,
-  }
-
-  // Modify fetch params if other preferences are selected by user // 
-  Object.assign(params, 
-    reqBody.preferenceForMusicOrLeague ? { keyword: reqBody.preferenceForMusicOrLeague } : null);
-
-  // BEGIN: API fetch
-  return ticketmaster.events.search(params)
-  .then(results => {
-    console.log('TM API fetch returns - at index 0 - ', results.data._embedded.events[0])
-    if (err => { throw err; })
-    return results.data._embedded.events;
-  })
-  .then(events => {
-    if (reqBody.price) { // filter for price preference if exists
-      return events.filter(event => {
-        let eventPrice = event.priceRanges // array w/each element containing a min and max cost
-        if (eventPrice) { // event price is available, compare; otherwise, let it filter through
-          return Number(eventPrice[0].max) <= priceMapper(reqBody.price, 'ticketmaster');
-        }
-        return event;
-      })
+  return Promise.each(userPreferences, (preference) => {
+    // Default set of parameters for each search (before additional preferences) //
+    let params = {
+      apikey: apiKeys.tm_api_key,
+      size: '40',
+      sort: 'date,asc',
+      classificationName: JSON.stringify(reqBody.queryTermForTM),
+      startDateTime: reqBody.startDateTime,
+      city: reqBody.city,
     }
-    return events;
+
+    // Modify fetch params if other preferences are selected by user // 
+    Object.assign(params, 
+      reqBody.preferenceForMusicOrLeague ? { keyword: preference } : null);
+
+    // BEGIN: API fetch
+    return ticketmaster.events.search(params)
+    .then(results => {
+      // console.log('TM API fetch returns - at index 0 - ', results.data._embedded.events[0])
+      if (err => { throw err; })
+      return results.data._embedded.events;
+    })
+    .then(events => {
+      if (reqBody.price) { // filter for price preference if exists
+        return events.filter(event => {
+          let eventPrice = event.priceRanges // array w/each element containing a min and max cost
+          if (eventPrice) { // event price is available, compare; otherwise, let it filter through
+            return Number(eventPrice[0].max) <= priceMapper(reqBody.price, 'ticketmaster');
+          }
+          return event;
+        })
+      }
+      return events;
+    })
+    // only return data we want
+    .then(events => {
+      return parseForCriticalData(events, 'ticketmaster');
+    })
+    .then(parsedEvents => {
+      let top2EventsForThisPreference = parsedEvents.slice(0, 2)
+      tmCummulativeEvents = tmCummulativeEvents.concat(top2EventsForThisPreference);
+    })
+    .catch(err => {
+      console.log('LOOK HERE!! TM FETCH ERROR: ', err)
+    })
   })
-  // only return data we want
-  .then(events => {
-    return parseForCriticalData(events, 'ticketmaster');
+  // after Fetch Loop is finished, return the final cummulative array of events
+  .then(() => {
+    return tmCummulativeEvents;    
   })
   .catch(err => {
-    console.log('LOOK HERE!! TM FETCH ERROR: ', err)
-  })
+    console.log('LOOK HERE!! TM - OUTSIDE FETCHLOOP ERROR: ', err)
+  });
+
 }
 
 const getYelpData = (reqBody) => {
-  
-  let params = { 
-    open_now: true,
-    sort_by: 'rating',
-    term: reqBody.queryTermForYelp, 
-    location: reqBody.postalCode,
-  }
 
-  // Modify fetch params if other preferences are selected by user // 
-  Object.assign(params, 
-    reqBody.preferenceForFoodAndOrSetting ? { term: reqBody.preferenceForFoodAndOrSetting } : null,
-    reqBody.price ? { price: priceMapper(reqBody.price, 'yelp') } : null,
-    reqBody.activity ? { categories: reqBody.activity } : null);
-   
-  const client = yelp.client(apiKeys.token);
-   
-  // BEGIN: API fetch
-  return client.search(params)
-  .then(res => {
-    console.log('YELP API fetch returns - at index 0 - ', res.jsonBody.businesses[0])
-    if (err => { throw err; })
-    return res.jsonBody.businesses;
+  let yelpCummulativeEvents = []; 
+  let userPreferences = reqBody.queryTermForYelp;
+
+  return Promise.each(userPreferences, (preference) => {
+
+    // prep the fetch
+    let params = { 
+      sort_by: 'rating',
+      term: preference, 
+      location: reqBody.city,
+    }
+ 
+    // Modify fetch params if other preferences are selected by user // 
+    Object.assign(params, 
+      reqBody.price ? { price: priceMapper(reqBody.price, 'yelp') } : null);
+     
+    const client = yelp.client(apiKeys.token);
+
+    // BEGIN: API fetch
+    return client.search(params)
+    .then(res => {
+      // console.log('YELP API fetch returns - at index 0 - ', res.jsonBody.businesses[0])
+      if (err => { throw err; })
+      return res.jsonBody.businesses;
+    })
+    // parse for only data we need and add to the returned cummulative events array
+    .then(businesses => {
+      return parseForCriticalData(businesses, 'yelp')
+    })
+    .then(parsedBusinesses => {
+      let top2EventsForThisPreference = parsedBusinesses.slice(0, 2)
+      yelpCummulativeEvents = yelpCummulativeEvents.concat(top2EventsForThisPreference);
+    })
+    .catch(err => {
+      console.log('LOOK HERE!! Yelp - INSIDE FETCHLOOP ERROR: ', err)
+    });
   })
-  // only return data we want
-  .then(businesses => {
-    return parseForCriticalData(businesses, 'yelp');
+  // after Fetch Loop is finished, return the final cummulative array of events
+  .then(() => {
+    return yelpCummulativeEvents;    
   })
   .catch(err => {
-    console.log('LOOK HERE!! Yelp FETCH ERROR: ', err)
+    console.log('LOOK HERE!! Yelp - OUTSIDE FETCHLOOP ERROR: ', err)
   });
 
 }
@@ -130,10 +161,10 @@ const parseForCriticalData = (results, API) => {
 const priceMapper = (dollarSigns, API) => {
   if (API === 'ticketmaster') { // TM: max must be <= the $ given
     let map = {
-      $: 10,
-      $$: 50,
-      $$$: 100,
-      $$$$: 500
+      $: 100,
+      $$: 500,
+      $$$: 5000,
+      $$$$: 10000
     }
     return map[dollarSigns]
   } else if (API === 'yelp') {
@@ -155,10 +186,13 @@ module.exports.getYelpData = getYelpData;
 //                      Ticketmaster        Yelp           //
 //  Music/Sports             Yes              -            // 
 //  Food Type                 -              Yes           // 
-//  Activity                  -          In Progress       // 
 //  Budget                   Yes             Yes           // 
 // ******************************************************* //
 
 // do we want to filter out events without a provided price? 
+// when we use SF city as TM param, it doesn't include Oakland games (NBA)..
+// handle erros in fetches if keyword doesn't yield any results
+
+//************************** RETIRED CODE **************************//
 
 
