@@ -7,12 +7,6 @@ module.exports = {
     path: path.resolve(__dirname, './client/dist'),
     publicPath: './client/dist',
   },
-  node: {
-    fs: 'empty'
-  },
-  externals: {
-    'fs-extra': '{}'
-  },
   module: {
     loaders: [
       {
