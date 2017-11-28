@@ -16,7 +16,8 @@ router.post('/', function(req, res) {
     //bcrypt generates hash
     bcrypt.hash(req.body.password, salt, function(err, hash) {
       if(err){console.log('error in creating hash, inside routes/signup');}
-        db.saveUsernameAsync(req.body, hash)
+        req.body.hash = hash;
+        db.saveUsernameAsync(req.body)
           .then((results) => res.status(201).send(true))
           .catch((err)=> {
             console.log(err);
