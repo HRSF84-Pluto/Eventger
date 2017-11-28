@@ -23,10 +23,9 @@ class SignUp extends Component {
     this.setState({password: e.target.value});
   }
   handleSignUpInput() {
-    console.log('inside handleSignUpInput');
+    // console.log('inside handleSignUpInput');
     const data = {'username': this.state.username, 'password': this.state.password, 'location': this.state.location};
-    //checks for username in db:
-    // return true;
+
   return new Promise((resolve,reject) => {
     $.ajax({
       type: 'POST',
@@ -79,8 +78,8 @@ class SignUp extends Component {
             </Form.Field>
             <p className='error' style={{color: 'red'}} >{this.state.errorMessage}</p>
               <Form.Field>
-                <label>City</label>
-                <input placeholder='city' onChange={e => this.handleCityInput(e)} />
+                <label>Zip Code</label>
+                <input placeholder='zip code' onChange={e => this.handleCityInput(e)} />
               </Form.Field>
             <Form.Field>
               <label>Password</label>

@@ -13,6 +13,8 @@ const db =  require('../db/db.js');
 
 const PORT = process.env.PORT || 3000;
 
+////TO RUN LOCALLY: DBSERVER=localhost DBUSER=root DBPASSWORD=YOURPASSWORD npm run start
+
 /*
 NOTE: the backend is using passportjs to create sessions and authenticate users.
 * It uses the express router to organize the different routes (the routes corresponding to a certain path are in the routes directory).
@@ -24,7 +26,7 @@ NOTE: the backend is using passportjs to create sessions and authenticate users.
 
 Helpful links:
 * Setting env: https://goo.gl/VJoaUC
-* Express router: https://goo.gl/xntCiX
+* Express router: https://goo.gl/8sZehm
 * Passportjs: https://goo.gl/7kA7Y4
 *             https://goo.gl/iMohYg
 *             https://goo.gl/18wQkG
@@ -35,11 +37,11 @@ Helpful links:
 
 
 const options = {
-  host: process.env.DBSERVER || 'localhost',
+  host: process.env.DBSERVER ||'us-cdbr-iron-east-05.cleardb.net',
   port: 3306,
-  user: process.env.DBUSER || 'root',
-  password: process.env.DBPASSWORD || '',
-  database: 'eventger',
+  user: process.env.DBUSER  ||'ba3f260f7ba4c4',
+  password: process.env.DBPASSWORD || '0e12068a',
+  database: 'eventger' ||'heroku_e67b3a46e336139',
   checkExpirationInterval: 60000,
   expiration: 3600000,
 };
@@ -47,7 +49,7 @@ const options = {
 //stores sessions created by passportjs, set your db password above
 const sessionStore = new MySQLStore(options);
 
-//express router declarations
+//route files used by express router
 const loginRoute = require('../routes/login');
 const signupRoute = require('../routes/signup');
 const userDataRoute = require('../routes/userData');
@@ -94,7 +96,7 @@ app.use('/login', loginRoute);
 
 app.use(checkAuthentication);
 
-//TODO: modify the userDataRoute's content to access user data
+
 app.use('/saveEvent', saveEventRoute);
 app.use('/userData', userDataRoute);
 app.use('/logout', logoutRoute);
