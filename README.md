@@ -52,8 +52,8 @@ From within the root directory:
 
 ```sh
 npm install
-npm start
-npm run server
+npm run start [further instructions in server/index.js]
+npm run react-dev
 ```
 
 ### Roadmap
