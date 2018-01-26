@@ -3,7 +3,6 @@ var mysql = require('mysql');
 var Promise = require('bluebird');
 const createTables = require('./config');
 const database = 'heroku_e67b3a46e336139';
-//const database = 'Eventger';
 
 
 //DATABASE_URL: mysql://ba3f260f7ba4c4:0e12068a@us-cdbr-iron-east-05.cleardb.net/heroku_e67b3a46e336139?reconnect=true
