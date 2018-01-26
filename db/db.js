@@ -24,9 +24,6 @@ var db = mysql.createPool({
   password: '0e12068a'
 });
 
-
-
-
 db.findUsername = (username, id, callback) => {
   var findQuery;
   var queryInput;
