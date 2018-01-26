@@ -3,7 +3,7 @@ var mysql = require('mysql');
 var Promise = require('bluebird');
 const createTables = require('./config');
 const database = 'heroku_e67b3a46e336139';
-// const database = 'Eventger';
+//const database = 'Eventger';
 
 // -- OBJECT Example
 // -- User Object
@@ -36,19 +36,22 @@ const database = 'heroku_e67b3a46e336139';
 //DATABASE_URL: mysql://ba3f260f7ba4c4:0e12068a@us-cdbr-iron-east-05.cleardb.net/heroku_e67b3a46e336139?reconnect=true
 
 // var db = mysql.createConnection({
+//   connectionLimit: 100,
 //   host: 'us-cdbr-iron-east-05.cleardb.net' || process.env.DBSERVER ||'localhost',
 //   user: 'ba3f260f7ba4c4' || process.env.DBUSER  ||'root',
 //   database: 'heroku_e67b3a46e336139' || 'Eventger',
 //   password: '0e12068a' || process.env.DBPASSWORD || ''
 // });
 
-var db = mysql.createConnection({
-  connectionLimit: 100,
-  host: process.env.DBSERVER ||'us-cdbr-iron-east-05.cleardb.net',
-  user: process.env.DBUSER  ||'ba3f260f7ba4c4',
-  database: 'eventger' ||'heroku_e67b3a46e336139',
-  password: process.env.DBPASSWORD || '0e12068a'
+var db = mysql.createPool({
+  connectionLimit : 10,
+  host:  'us-cdbr-iron-east-05.cleardb.net' ||'localhost',
+  user: 'ba3f260f7ba4c4'||'root',
+  database: database,
+  password: '0e12068a'
 });
+
+
 
 
 db.findUsername = (username, id, callback) => {
@@ -265,14 +268,15 @@ db.reduceSearch = (searchObj, userId, callback) => {
 
 module.exports = Promise.promisifyAll(db);
 
-db.connectAsync()
+db.getConnectionAsync()
 .then(() => console.log(`Connected to ${database} database`))
 .then(() => db.queryAsync(`CREATE DATABASE IF NOT EXISTS ${database}`))
 .then(() => db.queryAsync(`USE ${database}`))
 .then(() => createTables(db))
 .catch((err) => {if (err) console.log('ERROR with Connection', err)})
 .then(() => {
-})////////End of the then after establishing connection - move around for testing
+})
+////////End of the then after establishing connection - move around for testing
 
 
 // //------------------------------Testing Updating Preferences---------------------------

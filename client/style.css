@@ -257,11 +257,14 @@ h3{
 }
 
 
-
-
-.go-back-btn{
-  margin-left: 50px;
+.profileTitle{
+  color: black;
 }
+
+.profile{
+  color: black;
+}
+
 
 .go-back-btn:hover{
   text-decoration: underline;
