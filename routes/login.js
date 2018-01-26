@@ -44,7 +44,13 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
-  db.findByIdAsync(id, function(err, user) {
+// <<<<<<< HEAD
+//   db.findByIdAsync(id, function(err, user) {
+// =======
+  console.log('ID inside deserialize', id);
+  db.findUsername(null, id, function(err, user) {
+    console.log('user inside deserialize', user);
+// >>>>>>> Fix the server timeout issue
     done(err, user);
   });
 });

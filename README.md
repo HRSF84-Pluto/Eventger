@@ -39,6 +39,9 @@ doing a group activity, or doing family friendly events.
 - sequelize 4.22.6
 - mysql: 2.13.0
 - mysql2: 1.4.2
+- passport: 0.4.0
+- express router: 4.15.0
+- react router: 4.2.2
 - yelp: 1.0.2
 
 ## Development
@@ -49,8 +52,8 @@ From within the root directory:
 
 ```sh
 npm install
-npm start
-npm run server
+npm run start [further instructions in server/index.js]
+npm run react-dev
 ```
 
 ### Roadmap
