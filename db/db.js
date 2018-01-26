@@ -5,33 +5,6 @@ const createTables = require('./config');
 const database = 'heroku_e67b3a46e336139';
 //const database = 'Eventger';
 
-// -- OBJECT Example
-// -- User Object
-// -- {
-// --   username: string
-// --   location: string with zipcode
-// --   password: leave blank
-// --   preferences: stringified array
-// -- }
-
-// -- Event Obj
-// -- {
-// --   eventName: string
-// --   date: string
-// --   time: string
-// --   location: {
-// --     line_1: string
-// --     line_2: string
-// --     city: string
-// --     state: string two letter
-// --     zip: string
-// --     }
-// --   price: string
-// --   url: string
-// --   photoUrl: string
-// --   category: string
-// -- }
-
 
 //DATABASE_URL: mysql://ba3f260f7ba4c4:0e12068a@us-cdbr-iron-east-05.cleardb.net/heroku_e67b3a46e336139?reconnect=true
 
