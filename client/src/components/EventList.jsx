@@ -27,28 +27,7 @@ class EventList extends Component{
     this.props.postSavedEvents(this.state.savedEvents);
   }
   componentDidMount(){
-    //fetches saved events. The plan is to filter the current events array with this condition: if the id of the current event
-    //matches one in the saved list, set the css class 'saved-event' to that item
-    console.log(this.props.username, "props.username inside componentDidMount");
-    const username = JSON.parse(localStorage.getItem("main page options"))?
-      JSON.parse(localStorage.getItem("main page options")).username: this.props.username;
-    if (username !== 'Login'){
-      $.ajax({
-        url: '/saveEvent',
-        method: 'GET',
-        data: username,
-        success: response => {
-          console.log('success inside fetchSavedEvents: ', response);
-          this.setState({savedEventsToFilter: response});
-        },
-        error: (err)=> {
-          console.log('failure inside fetchSavedEvents: ');
-          console.log(err);
-        }
-      });
-    }else{
-      this.setState({error: "Please login to see saved events"});
-    }
+
   }
 
 

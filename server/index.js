@@ -35,27 +35,27 @@ Helpful links:
 */
 
 
-////USE CREDENTIALS FOR LOCAL MACHINE
+
 // const options = {
 //   host: process.env.DBSERVER ||'us-cdbr-iron-east-05.cleardb.net',
 //   port: 3306,
 //   user: process.env.DBUSER  ||'ba3f260f7ba4c4',
 //   password: process.env.DBPASSWORD || '0e12068a',
-//   database: 'eventger' ||'heroku_e67b3a46e336139',
-//   checkExpirationInterval: 60000,
-//   expiration: 3600000,
+//   database: 'heroku_e67b3a46e336139',
+//   checkExpirationInterval: 1,
+//   expiration: 1,
 // };
 
-//USE CREDENTIALS FOR HEROKU STAGING
 const options = {
-  host: 'us-cdbr-iron-east-05.cleardb.net',
+  host: 'us-cdbr-iron-east-05.cleardb.net' ||'localhost',
   port: 3306,
-  user: 'ba3f260f7ba4c4',
-  password: '0e12068a',
-  database: 'heroku_e67b3a46e336139',
+  user: 'ba3f260f7ba4c4' ||'root',
+  password: '0e12068a' ||'password',
+  database: 'heroku_e67b3a46e336139' ||'Eventger',
   checkExpirationInterval: 60000,
   expiration: 3600000,
 };
+
 
 //stores sessions created by passportjs, set your db password above
 const sessionStore = new MySQLStore(options);
