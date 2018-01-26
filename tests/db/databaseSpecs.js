@@ -1,4 +1,5 @@
 //MAY NEED TO UPDATE USERNAME AND PASSWORD TO ACCESS MYSQL DATABASE
+//BE SURE TO CHANGE THE DB.JS FILE TO LOCAL MACHINE CREDENTIALS AS WELL
 
 const expect = require('chai').expect;
 const mysql = require('mysql');
@@ -19,12 +20,8 @@ describe('', function() {
     var count = 0;
     tablenames.forEach(function(tablename) {
       connection.query('DROP TABLE IF EXISTS ' + tablename, function(err, result) {
-        if (err) {console.log('ERROR', err)}
-        console.log('DROPPED ' + tablename + ' ' + result);
-        console.log(JSON.stringify(result));
+        if (err) {console.log('ERROR', err)};
         count++;
-        console.log('count', count)
-        console.log('Table length',tablenames.length)
         if (count === tablenames.length) {
           return schema(db).then(done);
         }
@@ -205,10 +202,10 @@ describe('Database Table Schema for events:', function() {
 describe('Helper Functions for Table users:', function() {
   it('saveUsernameAsync saves a new user', function(done) {
     var newUser = {
-      id: 'aaaaa',
       username: 'Howard',
       password: 'p@ssw0rd',
-      location: '94102'
+      location: '94102',
+      hash: 'random'
     };
     // console.dir(dbFuncs.saveEvent)
     dbFuncs.saveUsernameAsync(newUser)
@@ -232,7 +229,7 @@ describe('Helper Functions for Table users:', function() {
     };
     dbFuncs.saveUsernameAsync(newUser)
     .then(() => {
-      dbFuncs.findUsernameAsync(newUser.username)
+      dbFuncs.findUsernameAsync(newUser.username, null)
         .then((userData) => {
           expect(userData.username).to.equal('Howard');
           expect(userData.password).to.equal('p@ssw0rd');
